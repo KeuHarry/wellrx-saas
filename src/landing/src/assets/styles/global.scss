@@ -1,0 +1,39 @@
+@use "variables" as *;
+@use "components/header";
+@use "components/intro";
+@use "./main.css";
+
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url(@/assets/fonts/SpaceGrotesk-VariableFont_wght.ttf);
+}
+
+body {
+    font-family: 'Space Grotesk';
+    margin: auto;
+}
+
+.intro-wrapper {
+    height: 1120px;
+    background: linear-gradient(180deg, #1E40AF 0%, #284BB9 45%, #5B7CE3 100%);
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bg-sd-blue {
+    background-color: $secondary-blue;
+    &:hover {
+        background-color: #3455bd;
+    }
+}
+
+.bg-primary-blue {
+    background-color: $primary-blue;
+}
+
+button {
+    &:hover {
+        transform: scale(1.01);
+    }
+
+}

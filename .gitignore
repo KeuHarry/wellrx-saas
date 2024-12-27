@@ -1,0 +1,11 @@
+Vagrantfile
+.env
+vetur.config.js
+.idea
+.idea/workspace.xml
+node_modules/
+docker-compose.prod.yml
+
+
+# IDE
+.vscode

@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+
+  traefik:
+    image: traefik:3.2
+    command:
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      - --api.dashboard=true
+      - --api.insecure=true
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik_dashboard_router.rule=Host(`traefik.$DOMAIN`)
+      - traefik.http.routers.traefik_dashboard_router.service=traefik_dashboard_service
+      - traefik.http.services.traefik_dashboard_service.loadbalancer.server.port=8080
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  saasapp:
+      build: src/pharma
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.saasapp_router.rule=Host(`${DOMAIN}`)
+      command: yarn dev
+      environment:
+        # Docker image.
+        # ---------------------
+        STARTUP_COMMAND_1: "yarn install --ignore-engines"
+        STARTUP_COMMAND_2: "yarn build"
+        APP_NAME: "${APP_NAME}"
+        CHOKIDAR_USEPOLLING: "1"
+        CHOKIDAR_INTERVAL: "3000" # Lower values might increase CPU usage.
+        HOST: "0.0.0.0"
+        # API.
+        VITE_APP_API_URL: "${PROTOCOL}://${API_SUBDOMAIN}.${DOMAIN}"
+        VITE_STRIPE_KEY: "${STRIPE_KEY}"
+      ports:
+        - "5173:5173"
+        - "24678:24678"
+      volumes:
+        - ./src/pharma:/app
+        - /app/node_modules
+
+  api:
+      build:
+        context: .
+        args:
+          uid: ${UID}
+        dockerfile: src/api/Dockerfile
+      restart: unless-stopped
+      labels: 
+        - traefik.enable=true
+        - traefik.http.routers.api_router.rule=Host(`${API_SUBDOMAIN}.${DOMAIN}`) || Host(`${DOMAIN}`) && PathPrefix(`/api`)
+      environment:
+        #APACHE_RUN_USER:  ${UID}
+        #APACHE_RUN_GROUP: ${UID}
+        PHP_INI_MEMORY_LIMIT: "1G"
+        STARTUP_COMMAND_1: "composer install"
+        STARTUP_COMMAND_2: "php artisan key:generate"
+      volumes:
+        - ./src/api:/var/www/html
+
+  mariadb:
+      image: mariadb:10.4
+      container_name: pharma_db
+      restart: on-failure
+      ports:
+        - "3307:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: "$MYSQL_ROOT_PASSWORD"
+        MYSQL_DATABASE: "$DB_DATABASE"
+        MYSQL_USER: "$DB_USERNAME"
+        MYSQL_PASSWORD: "$DB_PASSWORD"
+      volumes: 
+        - mysql_data:/var/lib/mysql
+  
+  # For testing.
+  mariadb_tests:
+    image: 'mariadb:10.4'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${TEST_DATABASE_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    tmpfs:
+        - /var/lib/mysql
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin:5.0
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.phpmyadmin_router.rule=Host(`phpmyadmin.$DOMAIN`)
+      environment:
+        PMA_HOSTS: "mariadb, mariadb_tests"
+        # PMA_USER: "$DB_USERNAME"
+        # PMA_PASSWORD: "$DB_PASSWORD"
+        UPLOAD_LIMIT: "1024M"
+        MEMORY_LIMIT: "1024M"
+  
+  # For catching and displaying emails.
+  mailhog:
+    image: mailhog/mailhog:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mailhog_router.rule=Host(`mailhog.$DOMAIN`)
+      - traefik.http.routers.mailhog_router.service=mailhog_service
+      - traefik.http.services.mailhog_service.loadbalancer.server.port=8025
+  
+#Volumes
+volumes:
+
+  mysql_data:
+    driver: local
+
+  minio_data:
+    driver: local
+  
