@@ -1,1 +1,7 @@
-export const CODE = 'code'
+export const CODE = 'code';
+export const LABEL = 'label';
+export const FIRSTNAME = 'first_name';
+export const NAME = 'name';
+export const CATEGORY_CODE = 'category_code';
+export const SHELF_CODE = 'shelf_code';
+export const FEE_CODE = 'fee_code';

@@ -2,157 +2,59 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\InvalidInputTypeException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\SearchRequest;
+use App\Http\Requests\SupplierRequest;
 use App\Models\Tenant\Supplier;
 use App\Services\SupplierService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class SupplierController extends ApiController
 {
     private SupplierService $supplierService;
+
     public function __construct(SupplierService $supplierService)
     {
         $this->supplierService = $supplierService;
         $this->model = new Supplier();
-        parent::__construct();
+        parent::__construct($supplierService);
     }
 
-    public function createSupplier(Request $request) 
+    public function getSuppliers(SearchRequest $request): JsonResponse
     {
-        $content = $request->all();
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        $validator = Validator::make($content, [
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'phone' => 'required|string'
-        ]);
+            $users = $this->supplierService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
 
-        if($validator->fails()){
-            throw new InvalidInputTypeException($validator);
-        }
-
-        $supplier = $this->supplierService->createSupplier(
-            $content['name'],
-            $content['address'],
-            $content['city'],
-            $content['contact'],
-            $content['phone'],
-            $content['fax'],
-            $content['email'],
-            $content['postalCode']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'supplier' => $supplier
-        ]);
-    }
-
-    public function getSupplier(int $supplierId)
-    {
-        $supplier = $this->supplierService->getSupplier($supplierId);
-
-        if(! isset($supplier)){
-            throw new ObjectNotFountException($supplierId, 'Supplier');
-        }
-        return $this->successResponse($supplier);
-    }
-
-    public function getSuppliers(SearchRequest $request)
-    {
-        $search = $request->query->get('search');
-        $sortBy = $request->query->get('sortBy');
-        $sortOrder = $request->query->get('sortOrder');
-        $offset = $request->query->get('offset');
-        $limit = $request->query->get('limit');
-
-        $suppliers = $this->supplierService->search(
-            $search,
-            $sortBy,
-            $sortOrder,
-            $offset,
-            $limit
-        );
-
-        if (! assert($suppliers instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'success' => true,
-            'total' => empty($search) ? count($this->model->all()) : count($suppliers),
-            'data' => $suppliers
-        ]);
-    }
-
-    public function deleteSupplier(int $supplierId)
-    {
-        $supplier = $this->supplierService->getSupplier($supplierId);
-
-        if(! isset($supplier)){
-            throw new ObjectNotFountException($supplierId, 'Supplier');
-        }
-
-        if($this->supplierService->deleteSupplier($supplier->id)){
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'supplier' => $supplierId,
-                'message' => 'Supplier successfully deleted.'
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
 
-    public function updateSupplier(Request $request, int $supplierId)
+    public function createSupplier(SupplierRequest $request): JsonResponse
     {
-        $supplier = $this->supplierService->getSupplier($supplierId);
+        return $this->store($request);
+    }
 
-        if(! isset($supplier)){
-            throw new ObjectNotFountException($supplierId, 'Supplier');
-        }
-
-        $content = $request->all();
-
-        $validator = Validator::make($content, [
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'phone' => 'required|string'
-        ]);
-
-        if($validator->fails()){
-            throw new InvalidInputTypeException($validator);
-        }
-
-        $updatedSupplier = $this->supplierService->updateSupplier(
-            $supplier,
-            $content['name'],
-            $content['address'],
-            $content['city'],
-            $content['contact'],
-            $content['phone'],
-            $content['fax'],
-            $content['email'],
-            $content['postalCode']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'supplier' => $updatedSupplier
-        ]);
+    public function updateSupplier(SupplierRequest $request, int $supplierId): JsonResponse
+    {
+        return $this->update($supplierId, $request);
     }
 }

@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->nullable();
-            $table->float('credit_limit', 20, 2)->default(0);
-            $table->float('balance', 20, 2)->default(0);
-            $table->float('deposit', 20, 2)->default(0);
+            $table->float('credit_limit', 25, 2)->default(0);
+            $table->float('balance', 25, 2)->default(0);
+            $table->float('deposit', 25, 2)->default(0);
             $table->string('phone');
             $table->string('address')->nullable();
             $table->string('city')->nullable();

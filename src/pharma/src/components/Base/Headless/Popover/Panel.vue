@@ -1,10 +1,10 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopoverPanel> {
-  as?: string | object
+  as?: string | object;
   placement?:
     | 'top-start'
     | 'top'
@@ -17,25 +17,25 @@ export interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof Headle
     | 'bottom-start'
     | 'left-start'
     | 'left'
-    | 'left-end'
+    | 'left-end';
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { PopoverPanel as HeadlessPopoverPanel, TransitionRoot } from '@headlessui/vue'
-import { useAttrs, computed } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { PopoverPanel as HeadlessPopoverPanel, TransitionRoot } from '@headlessui/vue';
+import { useAttrs, computed } from 'vue';
 
-const { as = 'div', placement = 'bottom-end' } = defineProps<PanelProps>()
+const { as = 'div', placement = 'bottom-end' } = defineProps<PanelProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 const computedClass = computed(() =>
   twMerge([
     'p-2 shadow-[0px_3px_20px_#0000000b] bg-white border-transparent rounded-md dark:bg-darkmode-600 dark:border-transparent',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

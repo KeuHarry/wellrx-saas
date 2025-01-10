@@ -27,7 +27,7 @@ class InventoryRequest extends FormRequest
             'quantity' => 'numeric|min:1',
             'type' => 'required',
             'expiryDate' => 'required',
-            'batchId' => 'required|string'
+            'batchId' => 'required|string',
         ];
     }
 }

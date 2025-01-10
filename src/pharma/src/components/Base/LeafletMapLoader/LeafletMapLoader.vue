@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import '@/assets/css/vendors/leaflet.css'
-import { initializeMap, type MapConfig, type LeafletElement } from './leaflet-map-loader'
-import { type HTMLAttributes, ref, onMounted } from 'vue'
+import '@/assets/css/vendors/leaflet.css';
+import { initializeMap, type MapConfig, type LeafletElement } from './leaflet-map-loader';
+import { type HTMLAttributes, ref, onMounted } from 'vue';
 
 export type Init = (
   callback: (mapConfig: MapConfig) => ReturnType<typeof initializeMap> | undefined,
-) => void
+) => void;
 
 interface LeafletMapLoaderProps extends /* @vue-ignore */ HTMLAttributes {
-  init: Init
-  darkMode?: boolean
+  init: Init;
+  darkMode?: boolean;
 }
 
-const props = defineProps<LeafletMapLoaderProps>()
+const props = defineProps<LeafletMapLoaderProps>();
 
-const mapRef = ref<LeafletElement>()
+const mapRef = ref<LeafletElement>();
 
 onMounted(() => {
   props.init((mapConfig) => {
     if (mapRef.value) {
-      return initializeMap(mapRef.value, mapConfig)
+      return initializeMap(mapRef.value, mapConfig);
     }
-  })
-})
+  });
+});
 </script>
 
 <template>

@@ -29,7 +29,7 @@ class RegistrationRequest extends FormRequest
             'pharmacyCountry' => 'required|string',
             'email' => 'email:rfc,dns',
             'phoneNumber' => 'required|string',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
         ];
     }
 }

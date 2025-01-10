@@ -1,0 +1,21 @@
+import axiosTenant from '../useAxiosTenant';
+import useTenantStore from '@/stores/tenant';
+import { ApiResponse } from '@/composables/models/ApiResponse';
+import { FeeRequest } from '@/composables/models/FeeRequest';
+
+const tenantStore = useTenantStore();
+
+export default function useUpdateFee(): (
+  id: number,
+  payload: FeeRequest,
+) => Promise<ApiResponse<number>> {
+  return async (id: number, payload: FeeRequest) => {
+    const response = await axiosTenant.put<ApiResponse<number>>(`/fees/${id}`, payload);
+
+    if (!response) {
+      throw new Error(`${tenantStore.getTenantUrl}/fees, can't update fee`);
+    }
+
+    return response.data;
+  };
+}

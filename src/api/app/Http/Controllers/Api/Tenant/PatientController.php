@@ -5,27 +5,26 @@ namespace App\Http\Controllers\Api\Tenant;
 use App\Exceptions\InternalServerErrorException;
 use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Patient\PatientRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Patient;
 use App\Services\PatientService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class PatientController extends ApiController
 {
     private PatientService $patientService;
+
     public function __construct(PatientService $patientService)
     {
         $this->patientService = $patientService;
-        $this->model = new Patient();
+        $this->model = new Patient;
         parent::__construct();
     }
 
-    public function createPatient(PatientRequest $request) 
+    public function createPatient(PatientRequest $request)
     {
         $content = $request->all();
 
@@ -33,7 +32,7 @@ class PatientController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'patient' => $patient
+            'patient' => $patient,
         ]);
     }
 
@@ -41,7 +40,7 @@ class PatientController extends ApiController
     {
         $patient = $this->patientService->getPatient($patientId);
 
-        if(! isset($patient)){
+        if (! isset($patient)) {
             throw new ObjectNotFountException($patientId, 'Patient');
         }
 
@@ -72,7 +71,7 @@ class PatientController extends ApiController
             'code' => Response::HTTP_OK,
             'success' => true,
             'total' => empty($search) ? count($this->model->all()) : count($patients),
-            'data' => $patients
+            'data' => $patients,
         ]);
     }
 
@@ -80,22 +79,22 @@ class PatientController extends ApiController
     {
         $patient = $this->patientService->getPatient($patientId);
 
-        if(! isset($patient)){
+        if (! isset($patient)) {
             throw new ObjectNotFountException($patientId, 'Patient');
         }
 
         $result = $this->patientService->deletePatient($patient->id);
-        if(! $result){
+        if (! $result) {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'patient' => $patientId,
-            'message' => 'Patient successfully deleted.'
+            'message' => 'Patient successfully deleted.',
         ]);
     }
 
@@ -103,7 +102,7 @@ class PatientController extends ApiController
     {
         $patient = $this->patientService->getPatient($patientId);
 
-        if(! isset($patient)){
+        if (! isset($patient)) {
             throw new ObjectNotFountException($patientId, 'Patient');
         }
 
@@ -114,7 +113,7 @@ class PatientController extends ApiController
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'patient' => $updatedPatient,
-            'message' => 'Insurer successfully updated.'
+            'message' => 'Insurer successfully updated.',
         ]);
     }
 }

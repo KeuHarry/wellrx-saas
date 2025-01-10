@@ -28,7 +28,7 @@ class SearchRequest extends FormRequest
             'sortBy' => 'required|string',
             'sortOrder' => 'required|string',
             'offset' => 'required|integer',
-            'limit' => 'required|integer'
+            'limit' => 'required|integer',
         ];
     }
 }

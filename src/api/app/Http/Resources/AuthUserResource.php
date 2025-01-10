@@ -17,7 +17,7 @@ class AuthUserResource extends JsonResource
         return [
             'username' => $this->username,
             'email' => $this->email,
-            'changeDefaultPass' => $this->change_default_pass
+            'changeDefaultPass' => $this->change_default_pass,
         ];
     }
 }

@@ -105,16 +105,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Dialog, DialogPanel, PopoverGroup } from '@headlessui/vue'
-import { XIcon, MenuIcon } from 'lucide-vue-next'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { Dialog, DialogPanel, PopoverGroup } from '@headlessui/vue';
+import { XIcon, MenuIcon } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 
-const mobileMenuOpen = ref(false)
+const mobileMenuOpen = ref(false);
 
-const router = useRouter()
+const router = useRouter();
 
 const goToSignUp = (): void => {
-  router.push({ path: '/sign-up' })
-}
+  router.push({ path: '/sign-up' });
+};
 </script>

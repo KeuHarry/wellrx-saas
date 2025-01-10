@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useDarkModeStore } from '@/stores/dark-mode'
+import { computed } from 'vue';
+import { useDarkModeStore } from '@/stores/dark-mode';
 
 const props = withDefaults(
   defineProps<{
@@ -16,19 +16,19 @@ const props = withDefaults(
       | 'rings'
       | 'spinning-circles'
       | 'tail-spin'
-      | 'three-dots'
-    color?: string
+      | 'three-dots';
+    color?: string;
   }>(),
   {
     color: '#2d3748',
   },
-)
+);
 
-const darkMode = computed(() => useDarkModeStore().darkMode)
+const darkMode = computed(() => useDarkModeStore().darkMode);
 const iconColor = computed(() => {
-  return !darkMode.value ? props.color : '#ffffff'
-})
-const { icon } = props
+  return !darkMode.value ? props.color : '#ffffff';
+});
+const { icon } = props;
 </script>
 
 <template>

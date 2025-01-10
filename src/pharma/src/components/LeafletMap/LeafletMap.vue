@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import LeafletMapLoader, { type Init } from '@/components/Base/LeafletMapLoader'
-import { getColor } from '@/utils/colors'
-import { useDarkModeStore } from '@/stores/dark-mode'
-import location from '@/assets/json/location.json'
-import { useColorSchemeStore } from '@/stores/color-scheme'
-import { computed, watch } from 'vue'
+import LeafletMapLoader, { type Init } from '@/components/Base/LeafletMapLoader';
+import { getColor } from '@/utils/colors';
+import { useDarkModeStore } from '@/stores/dark-mode';
+import location from '@/assets/json/location.json';
+import { useColorSchemeStore } from '@/stores/color-scheme';
+import { computed, watch } from 'vue';
 
-const darkMode = computed(() => useDarkModeStore().darkMode)
-const colorScheme = computed(() => useColorSchemeStore().colorScheme)
+const darkMode = computed(() => useDarkModeStore().darkMode);
+const colorScheme = computed(() => useColorSchemeStore().colorScheme);
 
 const init: Init = async (initializeMap) => {
   const mapInstance = await initializeMap({
@@ -15,17 +15,17 @@ const init: Init = async (initializeMap) => {
       center: [-6.2425342, 106.8626478],
       zoom: 9,
     },
-  })
+  });
 
   if (mapInstance) {
-    const apiKey = '1e86fd5a7f60486a8e899411776f60d5'
-    const { map, leaflet } = mapInstance
+    const apiKey = '1e86fd5a7f60486a8e899411776f60d5';
+    const { map, leaflet } = mapInstance;
 
     leaflet
       .tileLayer(`https://tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.png?apikey=${apiKey}`, {
         attribution: 'Map data &copy; OpenStreetMap contributors, Tiles &copy; Thunderforest',
       })
-      .addTo(map)
+      .addTo(map);
 
     const markers = leaflet.markerClusterGroup({
       maxClusterRadius: 30,
@@ -33,7 +33,7 @@ const init: Init = async (initializeMap) => {
         const color =
           darkMode.value && colorScheme.value
             ? getColor('darkmode.100', 0.6)
-            : getColor('primary', 0.8)
+            : getColor('primary', 0.8);
         const mapMarkerRegionSvg =
           window.btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="55.066" height="47.691" viewBox="0 0 55.066 47.691">
                 <g id="Group_15" data-name="Group 15" transform="translate(-319.467 -83.991)">
@@ -55,7 +55,7 @@ const init: Init = async (initializeMap) => {
                   </g>
                 </g>
               </svg>
-            `)
+            `);
 
         return leaflet.divIcon({
           html: `<div class="relative w-full h-full">
@@ -65,16 +65,16 @@ const init: Init = async (initializeMap) => {
           className: '',
           iconSize: leaflet.point(42, 42),
           iconAnchor: leaflet.point(20, 45),
-        })
+        });
       },
       spiderfyOnMaxZoom: false,
       showCoverageOnHover: false,
-    })
+    });
 
-    map.addLayer(markers)
+    map.addLayer(markers);
 
     const color =
-      darkMode.value && colorScheme.value ? getColor('darkmode.100') : getColor('primary')
+      darkMode.value && colorScheme.value ? getColor('darkmode.100') : getColor('primary');
     const mapMarkerSvg =
       window.btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="31.063" viewBox="0 0 20 31.063">
               <g id="Group_16" data-name="Group 16" transform="translate(-408 -150.001)">
@@ -82,7 +82,7 @@ const init: Init = async (initializeMap) => {
                 <circle id="Ellipse_26" data-name="Ellipse 26" cx="6" cy="6" r="6" transform="translate(412 154)" fill="${color}"/>
               </g>
             </svg>
-          `)
+          `);
     location.map(function (markerElem) {
       const marker = leaflet.marker(
         {
@@ -96,16 +96,16 @@ const init: Init = async (initializeMap) => {
             iconAnchor: leaflet.point(10, 35),
           }),
         },
-      )
-      markers.addLayer(marker)
-    })
+      );
+      markers.addLayer(marker);
+    });
 
     const unwatch = watch([colorScheme, darkMode], () => {
-      unwatch()
-      init(initializeMap)
-    })
+      unwatch();
+      init(initializeMap);
+    });
   }
-}
+};
 </script>
 
 <template>

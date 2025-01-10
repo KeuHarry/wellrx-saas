@@ -27,7 +27,7 @@ class OrderItemRequest extends FormRequest
             'orderId' => 'required|integer',
             'productId' => 'required|integer',
             'quantity' => 'required|integer',
-            'expiryDate' => 'required'
+            'expiryDate' => 'required',
         ];
     }
 }

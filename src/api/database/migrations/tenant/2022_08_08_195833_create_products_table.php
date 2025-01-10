@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('product_code')->unique();
             $table->float('stock_number', 20, 2)->nullable();
             $table->string('label')->unique();
             $table->boolean('is_prescription')->default(0);

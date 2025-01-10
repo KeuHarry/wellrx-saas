@@ -1,10 +1,10 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface ItemsProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuItems> {
-  as?: string | object
+  as?: string | object;
   placement?:
     | 'top-start'
     | 'top'
@@ -17,25 +17,25 @@ export interface ItemsProps extends /* @vue-ignore */ ExtractProps<typeof Headle
     | 'bottom-start'
     | 'left-start'
     | 'left'
-    | 'left-end'
+    | 'left-end';
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { MenuItems as HeadlessMenuItems, TransitionRoot } from '@headlessui/vue'
-import { useAttrs, computed } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { MenuItems as HeadlessMenuItems, TransitionRoot } from '@headlessui/vue';
+import { useAttrs, computed } from 'vue';
 
-const { as = 'div', placement = 'bottom-end' } = defineProps<ItemsProps>()
+const { as = 'div', placement = 'bottom-end' } = defineProps<ItemsProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 const computedClass = computed(() =>
   twMerge([
     'p-2 shadow-[0px_3px_10px_#00000017] bg-white border-transparent rounded-md dark:bg-darkmode-600 dark:border-transparent',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

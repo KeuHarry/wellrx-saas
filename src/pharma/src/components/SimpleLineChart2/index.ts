@@ -1,3 +1,3 @@
-import SimpleLineChart2 from './SimpleLineChart2.vue'
+import SimpleLineChart2 from './SimpleLineChart2.vue';
 
-export default SimpleLineChart2
+export default SimpleLineChart2;

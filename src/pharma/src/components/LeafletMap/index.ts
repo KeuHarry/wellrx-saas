@@ -1,3 +1,3 @@
-import LeafletMap from './LeafletMap.vue'
+import LeafletMap from './LeafletMap.vue';
 
-export default LeafletMap
+export default LeafletMap;

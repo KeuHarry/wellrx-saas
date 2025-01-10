@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 
 class InitiatePaymentController extends Controller
 {
-    public function __construct(private SubscriptionService $subscriptionService) {
+    public function __construct(private SubscriptionService $subscriptionService)
+    {
         $this->subscriptionService = $subscriptionService;
     }
 

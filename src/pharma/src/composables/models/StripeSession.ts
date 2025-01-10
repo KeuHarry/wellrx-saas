@@ -1,3 +1,3 @@
 export interface StripeSession {
-  sessionId: string
+  sessionId: string;
 }

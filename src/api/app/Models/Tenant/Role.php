@@ -3,19 +3,13 @@
 namespace App\Models\Tenant;
 
 use App\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-class Role extends Model
+class Role extends BaseModel
 {
     use Notifiable;
 
-    public $validation_rules = [
-        'label' => 'required|max:225',
-        'description' => 'required|max:225'
-    ];
-    
     /**
      * The database table used by the model.
      *
@@ -30,17 +24,20 @@ class Role extends Model
      */
     protected $fillable = [
         'label',
-        'description'
+        'description',
     ];
 
     /**
-     * Get the role permissions.
+     * Get the permissions.
      */
-    public function role_perms(): HasMany
+    // public function role_perms(): HasMany
+    // {
+    //     return $this->hasMany('App\Models\Tenant\RolePermission', 'role_id');
+    // }
+    public function permissions()
     {
-        return $this->hasMany('App\Models\Tenant\RolePermission', 'role_id');
+        return $this->belongsToMany(Permission::class, 'role_permissions');
     }
-
 
     /**
      * Get the role users.
@@ -68,6 +65,7 @@ class Role extends Model
         $json['id'] = $this->id;
         $json['label'] = $this->label;
         $json['description'] = $this->description;
+        $json['permissionsCount'] = $this->permissions()->count();
 
         return $json;
     }

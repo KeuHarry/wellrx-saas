@@ -1,3 +1,3 @@
-import StackedBarChart1 from './StackedBarChart1.vue'
+import StackedBarChart1 from './StackedBarChart1.vue';
 
-export default StackedBarChart1
+export default StackedBarChart1;

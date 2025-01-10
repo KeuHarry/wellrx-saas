@@ -1,24 +1,24 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface FooterProps {
-  as?: string | object
+  as?: string | object;
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { useAttrs, computed } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { useAttrs, computed } from 'vue';
 
-const { as = 'div' } = defineProps<FooterProps>()
+const { as = 'div' } = defineProps<FooterProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 const computedClass = computed(() =>
   twMerge(['flex p-1', typeof attrs.class === 'string' && attrs.class]),
-)
+);
 </script>
 
 <template>

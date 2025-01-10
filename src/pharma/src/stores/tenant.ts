@@ -1,15 +1,15 @@
-import useRegisterTenant from '@/composables/api/subscriptions/useRegisterTenant'
-import useVerifyTenant from '@/composables/api/subscriptions/useVerifyTenant'
-import { Tenant } from '@/composables/models/Tenant'
-import { API_URL } from '@/utils/apiUrl'
-import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
+import useRegisterTenant from '@/composables/api/subscriptions/useRegisterTenant';
+import useVerifyTenant from '@/composables/api/subscriptions/useVerifyTenant';
+import { Tenant } from '@/composables/models/Tenant';
+import { API_URL } from '@/utils/apiUrl';
+import { defineStore } from 'pinia';
+import { useRouter } from 'vue-router';
 
 type TenantState = {
-  tenantIdentifier: string
-  tenantUrl: string
-  isPending: boolean
-}
+  tenantIdentifier: string;
+  tenantUrl: string;
+  isPending: boolean;
+};
 
 export const useTenantStore = defineStore('tenant-store', {
   state: (): TenantState => ({
@@ -25,34 +25,34 @@ export const useTenantStore = defineStore('tenant-store', {
 
   actions: {
     async registerTenantApi(tenant: Tenant) {
-      const registerTenant = useRegisterTenant()
+      const registerTenant = useRegisterTenant();
       try {
-        this.isPending = true
-        const response = await registerTenant(tenant)
-        this.tenantIdentifier = response.tenant.identifier
-        return response
+        this.isPending = true;
+        const response = await registerTenant(tenant);
+        this.tenantIdentifier = response.tenant.identifier;
+        return response;
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
       }
     },
 
     async accountVerificationApi(account: string) {
-      const router = useRouter()
-      const verifyTenant = useVerifyTenant()
+      const router = useRouter();
+      const verifyTenant = useVerifyTenant();
       try {
-        this.isPending = true
-        const response = await verifyTenant(account)
-        this.tenantIdentifier = response.tenant.identifier
-        this.tenantUrl = `${API_URL}/${response.tenant.id}/v1`
-        return response
+        this.isPending = true;
+        const response = await verifyTenant(account);
+        this.tenantIdentifier = response.tenant.identifier;
+        this.tenantUrl = `${API_URL}/${response.tenant.id}/v1`;
+        return response;
       } catch (error) {
-        this.isPending = false
-        router.push({ path: '/verification' })
-        throw error
+        this.isPending = false;
+        router.push({ path: '/verification' });
+        throw error;
       }
     },
   },
-})
+});
 
-export default useTenantStore
+export default useTenantStore;

@@ -17,14 +17,15 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends ApiController
 {
     private ProductService $productService;
+
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
-        $this->model = new Product();
+        $this->model = new Product;
         parent::__construct();
     }
 
-    public function createProduct(Request $request) 
+    public function createProduct(Request $request)
     {
         $content = $request->all();
 
@@ -41,10 +42,10 @@ class ProductController extends ApiController
             'description' => 'nullable|string',
             'qoh' => 'numeric',
             'minQuantity' => 'numeric',
-            'maxQuantity' => 'numeric'
+            'maxQuantity' => 'numeric',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new InvalidInputTypeException($validator);
         }
 
@@ -74,7 +75,7 @@ class ProductController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
@@ -82,9 +83,10 @@ class ProductController extends ApiController
     {
         $product = $this->productService->getProduct($productId);
 
-        if(! isset($product)){
+        if (! isset($product)) {
             throw new ObjectNotFountException($productId, 'Product');
         }
+
         return $this->successResponse($product);
     }
 
@@ -95,6 +97,7 @@ class ProductController extends ApiController
         if (! assert($products instanceof Collection)) {
             throw new InternalServerErrorException;
         }
+
         return $this->successResponse($products);
     }
 
@@ -102,20 +105,20 @@ class ProductController extends ApiController
     {
         $product = $this->productService->getProduct($productId);
 
-        if(! isset($product)){
+        if (! isset($product)) {
             throw new ObjectNotFountException($productId, 'Product');
         }
 
-        if($this->productService->deleteProduct($product->id)){
+        if ($this->productService->deleteProduct($product->id)) {
             return new JsonResponse([
                 'code' => Response::HTTP_OK,
                 'product' => $productId,
-                'message' => 'Product successfully deleted.'
+                'message' => 'Product successfully deleted.',
             ]);
         } else {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -124,7 +127,7 @@ class ProductController extends ApiController
     {
         $product = $this->productService->getProduct($productId);
 
-        if(! isset($product)){
+        if (! isset($product)) {
             throw new ObjectNotFountException($productId, 'Product');
         }
 
@@ -143,10 +146,10 @@ class ProductController extends ApiController
             'description' => 'nullable|string',
             'qoh' => 'numeric',
             'minQuantity' => 'numeric',
-            'maxQuantity' => 'numeric'
+            'maxQuantity' => 'numeric',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new InvalidInputTypeException($validator);
         }
 
@@ -177,27 +180,28 @@ class ProductController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'product' => $updatedProduct
+            'product' => $updatedProduct,
         ]);
     }
 
-    public function searchProduct(Request $request) {
-         $search = $request->query->get('search');
-         $sortBy = $request->query->get('sortBy');
-         $sortOrder = $request->query->get('sortOrder');
-         $limit = $request->query->get('limit');
+    public function searchProduct(Request $request)
+    {
+        $search = $request->query->get('search');
+        $sortBy = $request->query->get('sortBy');
+        $sortOrder = $request->query->get('sortOrder');
+        $limit = $request->query->get('limit');
 
-         $products = $this->productService->search(
+        $products = $this->productService->search(
             $search,
             $sortBy,
             $sortOrder,
             $limit
-         );
+        );
 
         if (! assert($products instanceof Collection)) {
             throw new InternalServerErrorException;
         }
-        
+
         return $this->successResponse($products);
 
     }

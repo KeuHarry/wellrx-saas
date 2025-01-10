@@ -212,28 +212,28 @@
   </div>
 </template>
 <script setup lang="ts">
-import useSubscriptionStore from '@/stores/subscription'
-import { Country } from '@/types/country'
-import { countries } from 'countries-list'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { loadStripe } from '@stripe/stripe-js'
-import { getEnv } from '@/utils/getEnv'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
-import { reactive } from '@vue/reactivity'
-import useTenantStore from '@/stores/tenant'
-import { useRouter } from 'vue-router'
+import useSubscriptionStore from '@/stores/subscription';
+import { Country } from '@/types/country';
+import { countries } from 'countries-list';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { loadStripe } from '@stripe/stripe-js';
+import { getEnv } from '@/utils/getEnv';
+import { useVuelidate } from '@vuelidate/core';
+import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators';
+import { reactive } from 'vue';
+import useTenantStore from '@/stores/tenant';
+import { useRouter } from 'vue-router';
 
-const countryList: Country[] = Object.values(countries) as Country[]
+const countryList: Country[] = Object.values(countries) as Country[];
 
 // Reactive variables
-const selectedCountry = ref('')
-const isDropdownClosed = ref(false)
-const publicKey = getEnv('STRIPE_KEY')
-const stripePromise = loadStripe(publicKey)
-const isLoading = ref(false)
+const selectedCountry = ref('');
+const isDropdownClosed = ref(false);
+const publicKey = getEnv('STRIPE_KEY');
+const stripePromise = loadStripe(publicKey);
+const isLoading = ref(false);
 
-const router = useRouter()
+const router = useRouter();
 
 const formData = reactive({
   pharmacyName: '',
@@ -245,7 +245,7 @@ const formData = reactive({
   phoneNumber: '',
   password: '',
   confirmPassword: '',
-})
+});
 
 const rules = computed(() => {
   return {
@@ -267,82 +267,82 @@ const rules = computed(() => {
       required: helpers.withMessage('Confirmation is required', required),
       sameAs: sameAs(formData.password),
     },
-  }
-})
+  };
+});
 
-const validation = useVuelidate(rules, formData)
+const validation = useVuelidate(rules, formData);
 
 // store
-const subscriptionStore = useSubscriptionStore()
-const tenantStore = useTenantStore()
+const subscriptionStore = useSubscriptionStore();
+const tenantStore = useTenantStore();
 
 // COMPUTED
 const filteredCountries = computed(() => {
   return countryList.filter((country) =>
     country.name.toLowerCase().includes(formData.pharmacyCountry.toLowerCase()),
-  )
-})
+  );
+});
 
-const sessionId = computed(() => subscriptionStore.getStripeSessionId)
+const sessionId = computed(() => subscriptionStore.getStripeSessionId);
 
 // Select a country
 const selectCountry = (country: Country) => {
-  selectedCountry.value = country.name
-  formData.pharmacyCountry = country.name
-  isDropdownClosed.value = true
-}
+  selectedCountry.value = country.name;
+  formData.pharmacyCountry = country.name;
+  isDropdownClosed.value = true;
+};
 
 const showCountryDropdown = () => {
-  isDropdownClosed.value = false
-}
+  isDropdownClosed.value = false;
+};
 
 // Close dropdown when clicking outside
 const closeDropdown = (event: MouseEvent) => {
-  const dropdown = document.querySelector('.w-full') // Adjust the class selector as needed
-  const inputField = document.querySelector('#country') // Adjust the selector as needed
+  const dropdown = document.querySelector('.w-full'); // Adjust the class selector as needed
+  const inputField = document.querySelector('#country'); // Adjust the selector as needed
   if (
     dropdown &&
     !dropdown.contains(event.target as Node) &&
     !inputField?.contains(event.target as Node)
   ) {
-    isDropdownClosed.value = true
+    isDropdownClosed.value = true;
   }
-}
+};
 
 const submit = async () => {
-  const stripe = await stripePromise
+  const stripe = await stripePromise;
 
   if (!stripe) {
-    console.error('Stripe failed to initialize.')
-    return
+    console.error('Stripe failed to initialize.');
+    return;
   }
 
   try {
     // Redirect to Stripe's hosted checkout page
-    const { error } = await stripe.redirectToCheckout({ sessionId: sessionId.value })
+    const { error } = await stripe.redirectToCheckout({ sessionId: sessionId.value });
 
     if (error) {
-      console.error('Stripe Checkout error:', error.message)
+      console.error('Stripe Checkout error:', error.message);
     }
   } catch (error) {
-    console.error('Error redirecting to Stripe:', error)
+    console.error('Error redirecting to Stripe:', error);
   }
-}
+};
 
 const handleRegistration = async () => {
   try {
-    const result = await validation.value.$validate()
+    const result = await validation.value.$validate();
     if (!result) {
-      return
+      return;
     }
-    isLoading.value = true
-    await registerTenant()
-    isLoading.value = false
+    isLoading.value = true;
+    await registerTenant();
+    isLoading.value = false;
   } catch (error) {
-    isLoading.value = false
-    throw error
+    isLoading.value = false;
+    throw error;
   }
-}
+};
 
 const registerTenant = async () => {
   await tenantStore.registerTenantApi({
@@ -354,27 +354,27 @@ const registerTenant = async () => {
     pharmacyAddress: formData.pharmacyAddress,
     phoneNumber: formData.phoneNumber,
     password: formData.password,
-  })
-  goToLogin()
-}
+  });
+  goToLogin();
+};
 
 const goToLogin = (): void => {
   if (tenantStore.getTenantIdentifier) {
     router.push({
       name: 'login',
       params: { identifier: tenantStore.getTenantIdentifier },
-    })
+    });
   }
-}
+};
 
 onMounted(async () => {
-  document.addEventListener('click', closeDropdown)
+  document.addEventListener('click', closeDropdown);
   //await subscriptionStore.createSessionApi('price_1QXKWzLt3tZinhYdQGxh9rr2')
-})
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', closeDropdown)
-})
+  document.removeEventListener('click', closeDropdown);
+});
 </script>
 <style lang="scss">
 @use '@/assets/css/landing-font';

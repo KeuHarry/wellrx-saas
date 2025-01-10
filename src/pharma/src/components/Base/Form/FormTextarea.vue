@@ -1,31 +1,31 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type InputHTMLAttributes, useAttrs, inject } from 'vue'
-import { type ProvideFormInline } from './FormInline.vue'
-import { type ProvideInputGroup } from './InputGroup/InputGroup.vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type InputHTMLAttributes, useAttrs, inject } from 'vue';
+import { type ProvideFormInline } from './FormInline.vue';
+import { type ProvideInputGroup } from './InputGroup/InputGroup.vue';
 
 export interface FormTextareaProps extends /* @vue-ignore */ InputHTMLAttributes {
-  value?: InputHTMLAttributes['value']
-  modelValue?: InputHTMLAttributes['value']
-  formTextareaSize?: 'sm' | 'lg'
-  rounded?: boolean
+  value?: InputHTMLAttributes['value'];
+  modelValue?: InputHTMLAttributes['value'];
+  formTextareaSize?: 'sm' | 'lg';
+  rounded?: boolean;
 }
 
 interface FormTextareaEmit {
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void;
 }
 
-const props = defineProps<FormTextareaProps>()
-const attrs = useAttrs()
-const formInline = inject<ProvideFormInline>('formInline', false)
-const inputGroup = inject<ProvideInputGroup>('inputGroup', false)
+const props = defineProps<FormTextareaProps>();
+const attrs = useAttrs();
+const formInline = inject<ProvideFormInline>('formInline', false);
+const inputGroup = inject<ProvideInputGroup>('inputGroup', false);
 
 const computedClass = computed(() =>
   twMerge([
@@ -40,18 +40,18 @@ const computedClass = computed(() =>
       'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
-const emit = defineEmits<FormTextareaEmit>()
+const emit = defineEmits<FormTextareaEmit>();
 
 const localValue = computed({
   get() {
-    return props.modelValue === undefined ? props.value : props.modelValue
+    return props.modelValue === undefined ? props.value : props.modelValue;
   },
   set(newValue) {
-    emit('update:modelValue', newValue)
+    emit('update:modelValue', newValue);
   },
-})
+});
 </script>
 
 <template>

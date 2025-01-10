@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('label_codes', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->string('label_code');
             $table->string('label');
             $table->timestamps();
         });

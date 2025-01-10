@@ -1,3 +1,3 @@
-import VerticalBarChart from './VerticalBarChart.vue'
+import VerticalBarChart from './VerticalBarChart.vue';
 
-export default VerticalBarChart
+export default VerticalBarChart;

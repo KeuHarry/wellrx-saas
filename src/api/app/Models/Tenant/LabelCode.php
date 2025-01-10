@@ -9,11 +9,6 @@ class LabelCode extends BaseModel
 {
     use Notifiable;
 
-    public $validation_rules = [
-        'code' => 'required|max:225',
-        'label' => 'required|max:225'
-    ];
-    
     /**
      * The database table used by the model.
      *
@@ -27,15 +22,15 @@ class LabelCode extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'code',
-        'label'
+        'label_code',
+        'label',
     ];
 
     public function jsonSerialize(): mixed
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['code'] = $this->code;
+        $json['labelCode'] = $this->label_code;
         $json['label'] = $this->label;
 
         return $json;

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import '@/assets/css/themes/rubick/top-nav.css'
-import { useRoute, useRouter } from 'vue-router'
-import logoUrl from '@/assets/images/logo.svg'
-import MobileMenu from '@/components/MobileMenu'
-import fakerData from '@/utils/faker'
-import _ from 'lodash'
-import { useMenuStore } from '@/stores/menu'
+import '@/assets/css/themes/rubick/top-nav.css';
+import { useRoute, useRouter } from 'vue-router';
+import logoUrl from '@/assets/images/logo.svg';
+import MobileMenu from '@/components/MobileMenu';
+import fakerData from '@/utils/faker';
+import _ from 'lodash';
+import { useMenuStore } from '@/stores/menu';
 import {
   type ProvideForceActiveMenu,
   forceActiveMenu,
@@ -13,49 +13,49 @@ import {
   type FormattedMenu,
   nestedMenu,
   linkTo,
-} from './top-menu'
-import Lucide from '@/components/Base/Lucide'
-import Breadcrumb from '@/components/Base/Breadcrumb'
-import { FormInput } from '@/components/Base/Form'
-import { Menu, Popover } from '@/components/Base/Headless'
-import { TransitionRoot } from '@headlessui/vue'
-import { watch, reactive, computed, onMounted, ref, provide } from 'vue'
+} from './top-menu';
+import Lucide from '@/components/Base/Lucide';
+import Breadcrumb from '@/components/Base/Breadcrumb';
+import { FormInput } from '@/components/Base/Form';
+import { Menu, Popover } from '@/components/Base/Headless';
+import { TransitionRoot } from '@headlessui/vue';
+import { watch, reactive, computed, onMounted, ref, provide } from 'vue';
 
-const searchDropdown = ref(false)
+const searchDropdown = ref(false);
 const showSearchDropdown = () => {
-  searchDropdown.value = true
-}
+  searchDropdown.value = true;
+};
 const hideSearchDropdown = () => {
-  searchDropdown.value = false
-}
-const route: Route = useRoute()
-const router = useRouter()
-const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([])
+  searchDropdown.value = false;
+};
+const route: Route = useRoute();
+const router = useRouter();
+const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
 const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
-  Object.assign(formattedMenu, computedFormattedMenu)
-}
-const menuStore = useMenuStore()
-const menu = computed(() => nestedMenu(menuStore.menu('top-menu'), route))
+  Object.assign(formattedMenu, computedFormattedMenu);
+};
+const menuStore = useMenuStore();
+const menu = computed(() => nestedMenu(menuStore.menu('top-menu'), route));
 
 provide<ProvideForceActiveMenu>('forceActiveMenu', (pageName: string) => {
-  forceActiveMenu(route, pageName)
-  setFormattedMenu(menu.value)
-})
+  forceActiveMenu(route, pageName);
+  setFormattedMenu(menu.value);
+});
 
 watch(menu, () => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 
 watch(
   computed(() => route.path),
   () => {
-    delete route.forceActiveMenu
+    delete route.forceActiveMenu;
   },
-)
+);
 
 onMounted(() => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 </script>
 
 <template>
@@ -282,17 +282,17 @@ onMounted(() => {
                       try {
                         return router.resolve({
                           name: pageName,
-                        }).fullPath
+                        }).fullPath;
                       } catch (err) {
-                        return ''
+                        return '';
                       }
                     })(menu.pageName)
               "
               :class="[menu.active ? 'top-menu top-menu--active' : 'top-menu']"
               @click="
                 (event: MouseEvent) => {
-                  event.preventDefault()
-                  linkTo(menu, router)
+                  event.preventDefault();
+                  linkTo(menu, router);
                 }
               "
             >
@@ -314,17 +314,17 @@ onMounted(() => {
                           try {
                             return router.resolve({
                               name: pageName,
-                            }).fullPath
+                            }).fullPath;
                           } catch (err) {
-                            return ''
+                            return '';
                           }
                         })(subMenu.pageName)
                   "
                   class="top-menu"
                   @click="
                     (event: MouseEvent) => {
-                      event.preventDefault()
-                      linkTo(subMenu, router)
+                      event.preventDefault();
+                      linkTo(subMenu, router);
                     }
                   "
                 >
@@ -352,17 +352,17 @@ onMounted(() => {
                               try {
                                 return router.resolve({
                                   name: pageName,
-                                }).fullPath
+                                }).fullPath;
                               } catch (err) {
-                                return ''
+                                return '';
                               }
                             })(lastSubMenu.pageName)
                       "
                       class="top-menu"
                       @click="
                         (event: MouseEvent) => {
-                          event.preventDefault()
-                          linkTo(lastSubMenu, router)
+                          event.preventDefault();
+                          linkTo(lastSubMenu, router);
                         }
                       "
                     >

@@ -5,7 +5,6 @@ namespace App\Models\Tenant;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 
 class Category extends BaseModel
 {
@@ -17,6 +16,7 @@ class Category extends BaseModel
      * @var string
      */
     protected $table = 'categories';
+
     /**
      * The model's default values for attributes.
      *
@@ -32,10 +32,10 @@ class Category extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'code', 
+        'category_code',
         'name',
         'markup',
-        'description'
+        'description',
     ];
 
     protected static function boot()
@@ -52,9 +52,10 @@ class Category extends BaseModel
         static::saving(
             function ($item) {
                 /* $item->modifying_user_id = self::getCurrentUser()->id; */
-                if(empty($item->code)) {
-                    $item->code = 'CAT'.str_pad(strval(self::getNextId()), 4, "0", STR_PAD_LEFT);
+                if (empty($item->category_code)) {
+                    $item->category_code = 'CAT'.str_pad(strval(self::getNextId()), 4, '0', STR_PAD_LEFT);
                 }
+
                 return self::beforeSave($item);
             }
         );
@@ -63,14 +64,15 @@ class Category extends BaseModel
     /**
      * Function to do smth before save
      */
-    static public function beforeSave(Category $item): bool
+    public static function beforeSave(Category $item): bool
     {
         return true;
     }
 
-    static public function getNextId(): mixed
+    public static function getNextId(): mixed
     {
         $lastCat = Category::orderBy('id', 'desc')->first();
+
         return $lastCat ? $lastCat->id + 1 : 1;
     }
 
@@ -84,7 +86,7 @@ class Category extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['code'] = $this->code;
+        $json['categoryCode'] = $this->category_code;
         $json['name'] = $this->name;
         $json['markup'] = $this->markup;
         $json['description'] = $this->description;

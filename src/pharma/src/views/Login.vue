@@ -69,38 +69,38 @@
 </template>
 
 <script setup lang="ts">
-import useAuthStore from '@/stores/auth'
-import useTenantStore from '@/stores/tenant'
-import { onBeforeMount, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import useAuthStore from '@/stores/auth';
+import useTenantStore from '@/stores/tenant';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-const email = ref('')
-const password = ref('')
-const tenantStore = useTenantStore()
-const authStore = useAuthStore()
-const route = useRoute()
-const router = useRouter()
+const email = ref('');
+const password = ref('');
+const tenantStore = useTenantStore();
+const authStore = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 
 //METHODS
 const accountVerification = async () => {
-  await tenantStore.accountVerificationApi(route.params.identifier as string)
-}
+  await tenantStore.accountVerificationApi(route.params.identifier as string);
+};
 
 const login = async () => {
   await authStore.loginApi({
     email: email.value,
     password: password.value,
-  })
+  });
 
   if (authStore.getAuthUser?.email) {
     router.push({
       name: 'dashboard-overview-1',
       params: { identifier: route.params.identifier },
-    })
+    });
   }
-}
+};
 
-onBeforeMount(async () => {
-  await accountVerification()
-})
+onMounted(async () => {
+  await accountVerification();
+});
 </script>

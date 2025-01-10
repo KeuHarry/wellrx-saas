@@ -9,12 +9,6 @@ class Fee extends BaseModel
 {
     use Notifiable;
 
-    public $validation_rules = [
-        'label' => 'required|max:20|unique:App\Models\Tenant\Fee,label',
-        'cost' => 'required|numeric',
-        'description' => 'string|nullable',
-    ];
-
     /**
      * The table associated with the model.
      *
@@ -37,17 +31,44 @@ class Fee extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'label',
-        'cost', 
-        'description'
+        'fee_code',
+        'name',
+        'cost',
+        'tag',
+        'description',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(
+            function ($item) {
+                /* $item->modifying_user_id = self::getCurrentUser()->id; */
+                if (empty($item->fee_code)) {
+                    $item->fee_code = 'FT'.str_pad(strval(self::getNextId()), 4, '0', STR_PAD_LEFT);
+                }
+
+                //return self::beforeSave($item);
+            }
+        );
+    }
+
+    public static function getNextId(): mixed
+    {
+        $lastFee = Fee::orderBy('id', 'desc')->first();
+
+        return $lastFee ? $lastFee->id + 1 : 1;
+    }
 
     public function jsonSerialize(): mixed
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['label'] = $this->label;
+        $json['feeCode'] = $this->fee_code;
+        $json['name'] = $this->name;
         $json['cost'] = $this->cost;
+        $json['tag'] = $this->tag;
         $json['description'] = $this->description;
 
         return $json;

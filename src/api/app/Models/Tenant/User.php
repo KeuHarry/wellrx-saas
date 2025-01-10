@@ -4,23 +4,19 @@ namespace App\Models\Tenant;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model implements AuthenticatableContract,
-                                        AuthorizableContract,
-                                        CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use HasApiTokens, HasFactory, Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword, HasApiTokens, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +32,7 @@ class User extends Model implements AuthenticatableContract,
         'pin',
         'is_active',
         'preferred_lang',
-        'change_default_pass'
+        'change_default_pass',
     ];
 
     /**
@@ -56,6 +52,7 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean'
     ];
 
     public function setPasswordAttribute($value)
@@ -71,6 +68,11 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsTo('App\Models\Tenant\Role', 'role_id');
     }
 
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
     public function jsonSerialize(): mixed
     {
         $json = [];
@@ -79,8 +81,10 @@ class User extends Model implements AuthenticatableContract,
         $json['lastName'] = $this->last_name;
         $json['email'] = $this->email;
         $json['username'] = $this->username;
-        $json['roleId'] = $this->role_id;
-        $json['role'] = $this->role?->label;
+        $json['role'] = $this->getRole() ? [
+            'id' => $this->role->id,
+            'label' => $this->role->label
+        ] : null ;
         $json['pin'] = $this->pin;
         $json['isActive'] = $this->is_active;
         $json['preferredLang'] = $this->preferred_lang;

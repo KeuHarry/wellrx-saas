@@ -1,44 +1,44 @@
-import _ from 'lodash'
-import dayjs from 'dayjs'
+import _ from 'lodash';
+import dayjs from 'dayjs';
 
 interface Users {
-  name: string
-  gender: string
-  email: string
+  name: string;
+  gender: string;
+  email: string;
 }
 
 interface Products {
-  name: string
-  category: string
+  name: string;
+  category: string;
 }
 
 interface Categories {
-  name: string
-  tags: string
-  slug: string
+  name: string;
+  tags: string;
+  slug: string;
 }
 
 interface News {
-  title: string
-  superShortContent: string
-  shortContent: string
-  content: string
+  title: string;
+  superShortContent: string;
+  shortContent: string;
+  content: string;
 }
 
 interface Files {
-  fileName: string
-  type: string
-  size: string
+  fileName: string;
+  type: string;
+  size: string;
 }
 
 interface Foods {
-  name: string
-  image: string
+  name: string;
+  image: string;
 }
 
 const imageAssets = import.meta.glob<{
-  default: string
-}>('/src/assets/images/fakers/*.{jpg,jpeg,png,svg}', { eager: true })
+  default: string;
+}>('/src/assets/images/fakers/*.{jpg,jpeg,png,svg}', { eager: true });
 
 const fakers = {
   fakeUsers() {
@@ -73,44 +73,44 @@ const fakers = {
       { name: 'Matt Damon', gender: 'male' },
       { name: 'Richard Gere', gender: 'male' },
       { name: 'Catherine Zeta-Jones', gender: 'female' },
-    ]
+    ];
 
     return _.sampleSize(users, 3).map((user) => {
       return {
         name: user.name,
         gender: user.gender,
         email: _.toLower(_.replace(user.name, / /g, '') + '@left4code.com'),
-      }
-    })
+      };
+    });
   },
   fakePhotos() {
-    const photos = []
+    const photos = [];
     for (let i = 0; i < 15; i++) {
       photos[photos.length] =
-        imageAssets['/src/assets/images/fakers/profile-' + _.random(1, 15) + '.jpg'].default
+        imageAssets['/src/assets/images/fakers/profile-' + _.random(1, 15) + '.jpg'].default;
     }
-    return _.sampleSize(photos, 10)
+    return _.sampleSize(photos, 10);
   },
   fakeImages() {
-    const images = []
+    const images = [];
     for (let i = 0; i < 15; i++) {
       images[images.length] =
-        imageAssets['/src/assets/images/fakers/preview-' + _.random(1, 15) + '.jpg'].default
+        imageAssets['/src/assets/images/fakers/preview-' + _.random(1, 15) + '.jpg'].default;
     }
-    return _.sampleSize(images, 10)
+    return _.sampleSize(images, 10);
   },
   fakeDates() {
-    const dates = []
+    const dates = [];
     for (let i = 0; i < 5; i++) {
       dates[dates.length] = dayjs
         .unix(_.random(1586584776897, 1672333200000) / 1000)
-        .format('DD MMMM YYYY')
+        .format('DD MMMM YYYY');
     }
-    return _.sampleSize(dates, 3)
+    return _.sampleSize(dates, 3);
   },
   fakeTimes() {
-    const times = ['01:10 PM', '05:09 AM', '06:05 AM', '03:20 PM', '04:50 AM', '07:00 PM']
-    return _.sampleSize(times, 3)
+    const times = ['01:10 PM', '05:09 AM', '06:05 AM', '03:20 PM', '04:50 AM', '07:00 PM'];
+    return _.sampleSize(times, 3);
   },
   fakeFormattedTimes() {
     const times = [
@@ -119,17 +119,17 @@ const fakers = {
       _.random(10, 24) + ' hours ago',
       _.random(10, 20) + ' days ago',
       _.random(10, 12) + ' months ago',
-    ]
-    return _.sampleSize(times, 3)
+    ];
+    return _.sampleSize(times, 3);
   },
   fakeTotals() {
-    return _.shuffle([_.random(20, 220), _.random(20, 120), _.random(20, 50)])
+    return _.shuffle([_.random(20, 220), _.random(20, 120), _.random(20, 50)]);
   },
   fakeTrueFalse() {
-    return _.sampleSize([false, true, true], 1)
+    return _.sampleSize([false, true, true], 1);
   },
   fakeStocks() {
-    return _.shuffle([_.random(50, 220), _.random(50, 120), _.random(50, 50)])
+    return _.shuffle([_.random(50, 220), _.random(50, 120), _.random(50, 50)]);
   },
   fakeProducts() {
     const products = [
@@ -143,8 +143,8 @@ const fakers = {
       { name: 'Nike Tanjun', category: 'Sport & Outdoor' },
       { name: 'Nikon Z6', category: 'Photography' },
       { name: 'Sony A7 III', category: 'Photography' },
-    ]
-    return _.shuffle(products)
+    ];
+    return _.shuffle(products);
   },
   fakeCategories() {
     const categories = [
@@ -169,15 +169,15 @@ const fakers = {
         name: 'Sport & Outdoor',
         tags: 'Nike, Adidas, Puma, Rebook, Under Armour',
       },
-    ]
+    ];
 
     return _.sampleSize(categories, 3).map((category) => {
       return {
         name: category.name,
         tags: category.tags,
         slug: _.replace(_.replace(_.toLower(category.name), / /g, '-'), '&', 'and'),
-      }
-    })
+      };
+    });
   },
   fakeNews() {
     const news = [
@@ -257,8 +257,8 @@ const fakers = {
         content:
           "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.",
       },
-    ]
-    return _.shuffle(news)
+    ];
+    return _.shuffle(news);
   },
   fakeFiles() {
     const files = [
@@ -272,15 +272,15 @@ const fakers = {
       { fileName: 'Documentation', type: 'Empty Folder', size: '4 MB' },
       { fileName: fakers.fakeImages()[0], type: 'Image', size: '1.4 MB' },
       { fileName: fakers.fakeImages()[0], type: 'Image', size: '1 MB' },
-    ]
-    return _.shuffle(files)
+    ];
+    return _.shuffle(files);
   },
   fakeJobs() {
-    const jobs = ['Frontend Engineer', 'Software Engineer', 'Backend Engineer', 'DevOps Engineer']
-    return _.shuffle(jobs)
+    const jobs = ['Frontend Engineer', 'Software Engineer', 'Backend Engineer', 'DevOps Engineer'];
+    return _.shuffle(jobs);
   },
   fakeNotificationCount() {
-    return _.random(1, 7)
+    return _.random(1, 7);
   },
   fakeFoods() {
     const foods = [
@@ -360,29 +360,29 @@ const fakers = {
         name: 'Snack Platter',
         image: imageAssets['/src/assets/images/fakers/food-beverage-19.jpg'].default,
       },
-    ]
-    return _.shuffle(foods)
+    ];
+    return _.shuffle(foods);
   },
-}
+};
 
 const fakerData: Array<{
-  users: Users[]
-  photos: string[]
-  images: string[]
-  dates: string[]
-  times: string[]
-  formattedTimes: string[]
-  totals: number[]
-  trueFalse: boolean[]
-  stocks: number[]
-  products: Products[]
-  categories: Categories[]
-  news: News[]
-  files: Files[]
-  jobs: string[]
-  notificationCount: number
-  foods: Foods[]
-}> = []
+  users: Users[];
+  photos: string[];
+  images: string[];
+  dates: string[];
+  times: string[];
+  formattedTimes: string[];
+  totals: number[];
+  trueFalse: boolean[];
+  stocks: number[];
+  products: Products[];
+  categories: Categories[];
+  news: News[];
+  files: Files[];
+  jobs: string[];
+  notificationCount: number;
+  foods: Foods[];
+}> = [];
 for (let i = 0; i < 20; i++) {
   fakerData[fakerData.length] = {
     users: fakers.fakeUsers(),
@@ -401,7 +401,7 @@ for (let i = 0; i < 20; i++) {
     jobs: fakers.fakeJobs(),
     notificationCount: fakers.fakeNotificationCount(),
     foods: fakers.fakeFoods(),
-  }
+  };
 }
 
-export default fakerData
+export default fakerData;

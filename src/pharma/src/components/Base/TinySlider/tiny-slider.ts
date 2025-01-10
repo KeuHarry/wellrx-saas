@@ -1,5 +1,5 @@
-import { tns } from 'tiny-slider/src/tiny-slider'
-import { type TinySliderElement, type TinySliderProps } from './TinySlider.vue'
+import { tns } from 'tiny-slider/src/tiny-slider';
+import { type TinySliderElement, type TinySliderProps } from './TinySlider.vue';
 
 const init = (el: TinySliderElement, props: TinySliderProps) => {
   el.tns = tns({
@@ -11,14 +11,14 @@ const init = (el: TinySliderElement, props: TinySliderProps) => {
     nav: false,
     speed: 500,
     ...props.options,
-  })
-}
+  });
+};
 
 const reInit = (el: TinySliderElement) => {
   if (el.tns.version !== null) {
-    el.tns.destroy()
-    el.tns = el.tns.rebuild()
+    el.tns.destroy();
+    el.tns = el.tns.rebuild();
   }
-}
+};
 
-export { init, reInit }
+export { init, reInit };

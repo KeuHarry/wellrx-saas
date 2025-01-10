@@ -1,3 +1,3 @@
-import ReportPieChart from './ReportPieChart.vue'
+import ReportPieChart from './ReportPieChart.vue';
 
-export default ReportPieChart
+export default ReportPieChart;

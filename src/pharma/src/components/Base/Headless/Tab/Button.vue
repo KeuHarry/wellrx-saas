@@ -1,26 +1,26 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
-  as?: string | object
+  as?: string | object;
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type ButtonHTMLAttributes, useAttrs, inject } from 'vue'
-import { type ProvideTab } from './Tab/Provider.vue'
-import { type ProvideList } from './List.vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type ButtonHTMLAttributes, useAttrs, inject } from 'vue';
+import { type ProvideTab } from './Tab/Provider.vue';
+import { type ProvideList } from './List.vue';
 
-const { as = 'a' } = defineProps<ButtonProps>()
+const { as = 'a' } = defineProps<ButtonProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
-const tab = inject<ProvideTab>('tab')
-const list = inject<ProvideList>('list')
+const tab = inject<ProvideTab>('tab');
+const list = inject<ProvideList>('list');
 
 const computedClass = computed(() =>
   twMerge([
@@ -54,7 +54,7 @@ const computedClass = computed(() =>
 
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

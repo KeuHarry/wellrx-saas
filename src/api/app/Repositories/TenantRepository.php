@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Tenant;
-use App\Models\Tenant\User;
 
 class TenantRepository
 {
@@ -18,17 +17,16 @@ class TenantRepository
     }
 
     public function create(
-        string $pharmacyName, 
-        string $registrationNumber, 
-        string $account, 
-        string $email, 
-        string $country, 
-        string $address, 
+        string $pharmacyName,
+        string $registrationNumber,
+        string $account,
+        string $email,
+        string $country,
+        string $address,
         string $phoneNumber,
         string $identifier
-    ): Tenant
-    {
-        $tenant = new Tenant();
+    ): Tenant {
+        $tenant = new Tenant;
         $tenant->setPharmacyName($pharmacyName);
         $tenant->setRegistrationNumber($registrationNumber);
         $tenant->setAccount($account);
@@ -41,5 +39,4 @@ class TenantRepository
 
         return $tenant;
     }
-
 }

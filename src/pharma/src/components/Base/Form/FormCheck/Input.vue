@@ -1,26 +1,26 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type InputHTMLAttributes, useAttrs } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type InputHTMLAttributes, useAttrs } from 'vue';
 
 export interface InputProps extends /* @vue-ignore */ InputHTMLAttributes {
-  modelValue?: InputHTMLAttributes['value']
-  type: 'radio' | 'checkbox'
+  modelValue?: InputHTMLAttributes['value'];
+  type: 'radio' | 'checkbox';
 }
 
 interface InputEmit {
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void;
 }
 
-const props = defineProps<InputProps>()
+const props = defineProps<InputProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
@@ -47,18 +47,18 @@ const computedClass = computed(() =>
 
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
-const emit = defineEmits<InputEmit>()
+const emit = defineEmits<InputEmit>();
 
 const localValue = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(newValue) {
-    emit('update:modelValue', newValue)
+    emit('update:modelValue', newValue);
   },
-})
+});
 </script>
 
 <template>

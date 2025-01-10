@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Landing from '@/views/Landing.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/Home.vue';
+import Landing from '@/views/Landing.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +50,18 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/users',
+          name: 'user-list',
+          component: () => import('../views/UserList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/roles',
+          name: 'role-list',
+          component: () => import('../views/RoleList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/categories',
           name: 'category-list',
           component: () => import('../views/CategoryList.vue'),
@@ -61,9 +73,63 @@ const router = createRouter({
           component: () => import('../views/ShelfList.vue'),
           meta: { requiresAuth: true },
         },
+        {
+          path: '/:identifier/fees',
+          name: 'fee-list',
+          component: () => import('../views/FeeList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/products',
+          name: 'product-list',
+          component: () => import('../views/ProductList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/customers',
+          name: 'customer-list',
+          component: () => import('../views/CustomerList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/prescribers',
+          name: 'prescriber-list',
+          component: () => import('../views/PrescriberList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/patients',
+          name: 'patient-list',
+          component: () => import('../views/PatientList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/intermediaries',
+          name: 'intermediary-list',
+          component: () => import('../views/IntermediaryList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/insurers',
+          name: 'insurer-list',
+          component: () => import('../views/InsurerList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/suppliers',
+          name: 'supplier-list',
+          component: () => import('../views/SupplierList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/labels',
+          name: 'labelcode-list',
+          component: () => import('../views/LabelCodeList.vue'),
+          meta: { requiresAuth: true },
+        },
       ],
     },
   ],
-})
+});
 
-export default router
+export default router;

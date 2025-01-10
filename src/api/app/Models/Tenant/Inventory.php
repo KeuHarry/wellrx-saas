@@ -4,7 +4,6 @@ namespace App\Models\Tenant;
 
 use App\Models\BaseModel;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Auth;
 
 class Inventory extends BaseModel
@@ -12,7 +11,9 @@ class Inventory extends BaseModel
     use Notifiable;
 
     const OUT = 0;
+
     const IN = 1;
+
     const SELL = 2;
 
     /**
@@ -21,6 +22,7 @@ class Inventory extends BaseModel
      * @var string
      */
     protected $table = 'inventory';
+
     /**
      * The model's default values for attributes.
      *
@@ -35,7 +37,7 @@ class Inventory extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'product_id',
         'quantity',
         'type',
@@ -47,7 +49,7 @@ class Inventory extends BaseModel
         'unit_cost',
         'supplier_id',
         'created_by',
-        'reason'
+        'reason',
     ];
 
     /**
@@ -72,6 +74,7 @@ class Inventory extends BaseModel
 
         static::creating(function ($item) {
             self::beforeSave($item);
+
             return true;
         });
 
@@ -87,24 +90,28 @@ class Inventory extends BaseModel
     /**
      * Function to update smth before create item
      */
-    static public function beforeCreate($item) {
+    public static function beforeCreate($item)
+    {
         $current_user = Auth::user();
         $item->created_by = $current_user->id;
     }
 
-    static public function beforeSave($item){
+    public static function beforeSave($item)
+    {
         if ($item->type == self::IN) {
             $item->batch_id = self::getNextBatchId($item->product_id);
         }
     }
 
-    static public function getNextBatchId($productId)
+    public static function getNextBatchId($productId)
     {
-        $last = self::where('type', self::IN)->where('product_id', $productId)->orderBy('batch_id','desc')->take(1)->get()->first();
+        $last = self::where('type', self::IN)->where('product_id', $productId)->orderBy('batch_id', 'desc')->take(1)->get()->first();
+
         return $last ? $last->batch_id + 1 : 1;
     }
 
-    static public function afterSave($item) {
+    public static function afterSave($item)
+    {
         $sum = self::where('product_id', $item->product_id)->sum('quantity');
         Product::where('id', $item->product_id)->first()->update(['qoh' => $sum]);
     }
@@ -114,7 +121,7 @@ class Inventory extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['productId'] = $this->product_id;
-        $json['productCode'] = $this->product->code;
+        $json['productCode'] = $this->product->product_code;
         $json['productLabel'] = $this->product->label;
         $json['wholesaleCost'] = $this->product->wholesale_cost;
         $json['retailCost'] = $this->product->retail_cost;

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Tenant\CategoryController;
 use App\Http\Controllers\Api\Tenant\CustomerController;
 use App\Http\Controllers\Api\Tenant\FeeController;
 use App\Http\Controllers\Api\Tenant\InsurerController;
+use App\Http\Controllers\Api\Tenant\IntermediaryController;
 use App\Http\Controllers\Api\Tenant\InventoryController;
 use App\Http\Controllers\Api\Tenant\LabelCodeController;
 use App\Http\Controllers\Api\Tenant\OrderController;
@@ -20,7 +21,6 @@ use App\Http\Controllers\Api\Tenant\SupplierController;
 use App\Http\Controllers\Api\Tenant\TaxController;
 use App\Http\Controllers\Api\Tenant\UserController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 //use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 
@@ -57,32 +57,34 @@ Route::group([
         Route::post('logout', [AuthenticationController::class, 'logout']);
 
         //users rest crud
-        Route::get('users/{userId}', [UserController::class, 'getUser']);
+        Route::get('users/{userId}', [UserController::class, 'show']);
         Route::get('users', [UserController::class, 'getUsers']);
         Route::post('users', [UserController::class, 'createUser']);
         Route::put('users/{userId}', [UserController::class, 'updateUser']);
-        Route::delete('users/{userId}', [UserController::class, 'deleteUser']);
+        Route::delete('users/{userId}', [UserController::class, 'delete']);
 
         //roles rest crud
-        Route::get('roles/{roleId}', [RoleController::class, 'getRole']);
+        Route::get('roles/{roleId}', [RoleController::class, 'show']);
         Route::get('roles', [RoleController::class, 'getRoles']);
         Route::post('roles', [RoleController::class, 'createRole']);
         Route::put('roles/{roleId}', [RoleController::class, 'updateRole']);
-        Route::delete('roles/{roleId}', [RoleController::class, 'deleteRole']);
+        Route::delete('roles/{roleId}', [RoleController::class, 'delete']);
+        Route::get('permissions', [RoleController::class, 'getPermissions']);
+        Route::post('assign', [RoleController::class, 'assign']);
 
         //shelves rest crud
-        Route::get('shelves/{shelfId}', [ShelfController::class, 'getShelf']);
+        Route::get('shelves/{shelfId}', [ShelfController::class, 'show']);
         Route::get('shelves', [ShelfController::class, 'getShelves']);
         Route::post('shelves', [ShelfController::class, 'createShelf']);
         Route::put('shelves/{shelfId}', [ShelfController::class, 'updateShelf']);
-        Route::delete('shelves/{shelfId}', [ShelfController::class, 'deleteShelf']);
+        Route::delete('shelves/{shelfId}', [ShelfController::class, 'delete']);
 
         //Categories rest crud
-        Route::get('categories/{categoryId}', [CategoryController::class, 'getCategory']);
+        Route::get('categories/{categoryId}', [CategoryController::class, 'show']);
         Route::get('categories', [CategoryController::class, 'getCategories']);
         Route::post('categories', [CategoryController::class, 'createCategory']);
         Route::put('categories/{categoryId}', [CategoryController::class, 'updateCategory']);
-        Route::delete('categories/{categoryId}', [CategoryController::class, 'deleteCategory']);
+        Route::delete('categories/{categoryId}', [CategoryController::class, 'delete']);
 
         //Taxes rest crud
         Route::get('taxes/{taxId}', [TaxController::class, 'getTax']);
@@ -99,25 +101,25 @@ Route::group([
         Route::delete('insurers/{insurerId}', [InsurerController::class, 'deleteInsurer']);
 
         //Customers rest crud
-        Route::get('customers/{customerId}', [CustomerController::class, 'getCustomer']);
+        Route::get('customers/{customerId}', [CustomerController::class, 'show']);
         Route::get('customers', [CustomerController::class, 'getCustomers']);
         Route::post('customers', [CustomerController::class, 'createCustomer']);
         Route::put('customers/{customerId}', [CustomerController::class, 'updateCustomer']);
-        Route::delete('customers/{customerId}', [CustomerController::class, 'deleteCustomer']);
+        Route::delete('customers/{customerId}', [CustomerController::class, 'delete']);
 
         //Fees rest crud
-        Route::get('fees/{feeId}', [FeeController::class, 'getFee']);
+        Route::get('fees/{feeId}', [FeeController::class, 'show']);
         Route::get('fees', [FeeController::class, 'getFees']);
         Route::post('fees', [FeeController::class, 'createFee']);
         Route::put('fees/{feeId}', [FeeController::class, 'updateFee']);
-        Route::delete('fees/{feeId}', [FeeController::class, 'deleteFee']);
+        Route::delete('fees/{feeId}', [FeeController::class, 'delete']);
 
         //Supplier rest crud
-        Route::get('suppliers/{supplierId}', [SupplierController::class, 'getSupplier']);
+        Route::get('suppliers/{supplierId}', [SupplierController::class, 'show']);
         Route::get('suppliers', [SupplierController::class, 'getSuppliers']);
         Route::post('suppliers', [SupplierController::class, 'createSupplier']);
         Route::put('suppliers/{supplierId}', [SupplierController::class, 'updateSupplier']);
-        Route::delete('suppliers/{supplierId}', [SupplierController::class, 'deleteSupplier']);
+        Route::delete('suppliers/{supplierId}', [SupplierController::class, 'delete']);
 
         //Product
         Route::get('products/{productId}', [ProductController::class, 'getProduct']);
@@ -139,27 +141,34 @@ Route::group([
         Route::put('cashregisters/{cashregisterId}', [CashRegisterController::class, 'closeCashRegister']);
 
         //Prescriber
-        Route::get('prescribers/{prescriberId}', [PrescriberController::class, 'getPrescriber']);
+        Route::get('prescribers/{prescriberId}', [PrescriberController::class, 'show']);
         Route::get('prescribers', [PrescriberController::class, 'getPrescribers']);
         Route::post('prescribers', [PrescriberController::class, 'createPrescriber']);
         Route::put('prescribers/{prescriberId}', [PrescriberController::class, 'updatePrescriber']);
-        Route::delete('prescribers/{prescriberId}', [PrescriberController::class, 'deletePrescriber']);
+        Route::delete('prescribers/{prescriberId}', [PrescriberController::class, 'delete']);
 
         //LabelCode
-        Route::get('labelcodes/{labelcodeId}', [LabelCodeController::class, 'getLabelCode']);
-        Route::get('labelcodes', [LabelCodeController::class, 'getLabelCodes']);
-        Route::post('labelcodes', [LabelCodeController::class, 'createLabelCode']);
-        Route::put('labelcodes/{labelcodeId}', [LabelCodeController::class, 'updateLabelCode']);
-        Route::delete('labelcodes/{labelcodeId}', [LabelCodeController::class, 'deleteLabelCode']);
+        Route::get('labels/{labelcodeId}', [LabelCodeController::class, 'show']);
+        Route::get('labels', [LabelCodeController::class, 'getLabelCodes']);
+        Route::post('labels', [LabelCodeController::class, 'createLabelCode']);
+        Route::put('labels/{labelcodeId}', [LabelCodeController::class, 'updateLabelCode']);
+        Route::delete('labels/{labelcodeId}', [LabelCodeController::class, 'delete']);
 
-        //patients
-        Route::get('patients/{patientId}', [PatientController::class, 'getPatient']);
+        // patients
+        Route::get('patients/{patientId}', [PatientController::class, 'show']);
         Route::get('patients', [PatientController::class, 'getPatients']);
         Route::post('patients', [PatientController::class, 'createPatient']);
         Route::put('patients/{patientId}', [PatientController::class, 'updatePatient']);
-        Route::delete('patients/{patientId}', [PatientController::class, 'deletePatient']);
+        Route::delete('patients/{patientId}', [PatientController::class, 'delete']);
 
-        //orders
+        // intermediaries
+        Route::get('intermediaries/{intermediaryId}', [IntermediaryController::class, 'show']);
+        Route::get('intermediaries', [IntermediaryController::class, 'getIntermediaries']);
+        Route::post('intermediaries', [IntermediaryController::class, 'createIntermediary']);
+        Route::put('intermediaries/{intermediaryId}', [IntermediaryController::class, 'updateIntermediary']);
+        Route::delete('intermediaries/{intermediaryId}', [IntermediaryController::class, 'delete']);
+
+        // orders
         Route::get('orders/{orderId}', [OrderController::class, 'getOrder']);
         Route::get('orders', [OrderController::class, 'getOrders']);
         Route::post('orders', [OrderController::class, 'createOrder']);

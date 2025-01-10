@@ -27,7 +27,7 @@ class OrderRequest extends FormRequest
             'invoice' => 'required|string',
             'supplierId' => 'required|integer',
             'status' => 'required|integer',
-            'orderItems' => 'required|array'
+            'orderItems' => 'required|array',
         ];
     }
 }

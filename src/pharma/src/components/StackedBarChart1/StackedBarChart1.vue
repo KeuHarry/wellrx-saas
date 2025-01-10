@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { type ChartData, type ChartOptions } from 'chart.js/auto'
-import { useDarkModeStore } from '@/stores/dark-mode'
-import Chart from '@/components/Base/Chart'
-import { getColor } from '@/utils/colors'
-import { randomNumbers } from '@/utils/helper'
+import { computed } from 'vue';
+import { type ChartData, type ChartOptions } from 'chart.js/auto';
+import { useDarkModeStore } from '@/stores/dark-mode';
+import Chart from '@/components/Base/Chart';
+import { getColor } from '@/utils/colors';
+import { randomNumbers } from '@/utils/helper';
 
 const props = defineProps<{
-  width?: number
-  height?: number
-  lineColor?: string
-}>()
+  width?: number;
+  height?: number;
+  lineColor?: string;
+}>();
 
-const darkMode = computed(() => useDarkModeStore().darkMode)
+const darkMode = computed(() => useDarkModeStore().darkMode);
 
 const data = computed<ChartData>(() => {
   return {
@@ -37,8 +37,8 @@ const data = computed<ChartData>(() => {
         data: randomNumbers(-100, 100, 16),
       },
     ],
-  }
-})
+  };
+});
 
 const options = computed<ChartOptions>(() => {
   return {
@@ -72,7 +72,7 @@ const options = computed<ChartOptions>(() => {
           },
           color: getColor('slate.500', 0.8),
           callback: function (value) {
-            return '$' + value
+            return '$' + value;
           },
         },
         grid: {
@@ -84,8 +84,8 @@ const options = computed<ChartOptions>(() => {
         },
       },
     },
-  }
-})
+  };
+});
 </script>
 
 <template>

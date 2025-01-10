@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { type ChartData, type ChartOptions } from 'chart.js/auto'
-import { useColorSchemeStore } from '@/stores/color-scheme'
-import Chart from '@/components/Base/Chart'
-import { getColor } from '@/utils/colors'
-import { randomNumbers } from '@/utils/helper'
+import { computed } from 'vue';
+import { type ChartData, type ChartOptions } from 'chart.js/auto';
+import { useColorSchemeStore } from '@/stores/color-scheme';
+import Chart from '@/components/Base/Chart';
+import { getColor } from '@/utils/colors';
+import { randomNumbers } from '@/utils/helper';
 
 const props = defineProps<{
-  width?: number
-  height?: number
-  lineColor?: string
-}>()
+  width?: number;
+  height?: number;
+  lineColor?: string;
+}>();
 
-const colorScheme = computed(() => useColorSchemeStore().colorScheme)
+const colorScheme = computed(() => useColorSchemeStore().colorScheme);
 
 const data = computed<ChartData>(() => {
   return {
@@ -29,8 +29,8 @@ const data = computed<ChartData>(() => {
         tension: 0.4,
       },
     ],
-  }
-})
+  };
+});
 
 const options = computed<ChartOptions>(() => {
   return {
@@ -64,8 +64,8 @@ const options = computed<ChartOptions>(() => {
         },
       },
     },
-  }
-})
+  };
+});
 </script>
 
 <template>

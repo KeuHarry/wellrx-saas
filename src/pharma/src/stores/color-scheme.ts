@@ -1,19 +1,19 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-const colorSchemes = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4'] as const
+const colorSchemes = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4'] as const;
 
-export type ColorSchemes = (typeof colorSchemes)[number]
+export type ColorSchemes = (typeof colorSchemes)[number];
 
 interface ColorSchemeState {
-  colorSchemeValue: ColorSchemes
+  colorSchemeValue: ColorSchemes;
 }
 
 const getColorScheme = () => {
-  const colorScheme = localStorage.getItem('colorScheme')
+  const colorScheme = localStorage.getItem('colorScheme');
   return colorSchemes.filter((item, key) => {
-    return item === colorScheme
-  })[0]
-}
+    return item === colorScheme;
+  })[0];
+};
 
 export const useColorSchemeStore = defineStore('colorScheme', {
   state: (): ColorSchemeState => ({
@@ -22,16 +22,16 @@ export const useColorSchemeStore = defineStore('colorScheme', {
   getters: {
     colorScheme(state) {
       if (localStorage.getItem('colorScheme') === null) {
-        localStorage.setItem('colorScheme', 'default')
+        localStorage.setItem('colorScheme', 'default');
       }
 
-      return state.colorSchemeValue
+      return state.colorSchemeValue;
     },
   },
   actions: {
     setColorScheme(colorScheme: ColorSchemes) {
-      localStorage.setItem('colorScheme', colorScheme)
-      this.colorSchemeValue = colorScheme
+      localStorage.setItem('colorScheme', colorScheme);
+      this.colorSchemeValue = colorScheme;
     },
   },
-})
+});

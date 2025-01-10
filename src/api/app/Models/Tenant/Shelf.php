@@ -16,6 +16,7 @@ class Shelf extends BaseModel
      * @var string
      */
     protected $table = 'shelves';
+
     /**
      * The model's default values for attributes.
      *
@@ -31,9 +32,9 @@ class Shelf extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'code', 
-        'title',
-        'description'
+        'shelf_code',
+        'name',
+        'description',
     ];
 
     protected static function boot()
@@ -50,24 +51,26 @@ class Shelf extends BaseModel
         static::saving(
             function ($item) {
                 //$item->modifying_user_id = self::getCurrentUser()->id;
-                if(empty($item->code)) {
-                    $item->code = 'SH'.str_pad(strval(self::getNextId()), 4, "0", STR_PAD_LEFT);
+                if (empty($item->shelf_code)) {
+                    $item->shelf_code = 'SH'.str_pad(strval(self::getNextId()), 4, '0', STR_PAD_LEFT);
                 }
+
                 return self::beforeSave($item);
             }
         );
     }
 
-    static public function getNextId(): mixed
+    public static function getNextId(): mixed
     {
         $lastCat = Shelf::orderBy('id', 'desc')->first();
+
         return $lastCat ? $lastCat->id + 1 : 1;
     }
 
     /**
      * Function to do smth before save
      */
-    static public function beforeSave(Shelf $item): bool
+    public static function beforeSave(Shelf $item): bool
     {
         return true;
     }
@@ -80,7 +83,7 @@ class Shelf extends BaseModel
 
     public function getProductsCount(): int
     {
-        if (!array_key_exists('products', $this->relations)) {
+        if (! array_key_exists('products', $this->relations)) {
             $this->load('products');
         }
 
@@ -93,7 +96,7 @@ class Shelf extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['code'] = $this->code;
+        $json['shelfCode'] = $this->shelf_code;
         $json['name'] = $this->name;
         $json['description'] = $this->description;
         $json['productCount'] = count($this->products);

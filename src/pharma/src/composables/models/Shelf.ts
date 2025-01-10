@@ -1,7 +1,7 @@
 export interface Shelf {
-  id: number
-  code: string
-  name: string
-  description: string
-  productCount: number
+  id: number;
+  shelfCode: string;
+  name: string;
+  description: string;
+  productCount: number;
 }

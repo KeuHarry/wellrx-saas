@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import '@/assets/css/themes/tinker/side-nav.css'
-import { useRoute, useRouter } from 'vue-router'
-import logoUrl from '@/assets/images/logo.svg'
-import Tippy from '@/components/Base/Tippy'
-import Lucide from '@/components/Base/Lucide'
-import TopBar from '@/components/Themes/Tinker/TopBar'
-import MobileMenu from '@/components/MobileMenu'
-import { useMenuStore } from '@/stores/menu'
+import '@/assets/css/themes/tinker/side-nav.css';
+import { useRoute, useRouter } from 'vue-router';
+import logoUrl from '@/assets/images/logo.svg';
+import Tippy from '@/components/Base/Tippy';
+import Lucide from '@/components/Base/Lucide';
+import TopBar from '@/components/Themes/Tinker/TopBar';
+import MobileMenu from '@/components/MobileMenu';
+import { useMenuStore } from '@/stores/menu';
 import {
   type ProvideForceActiveMenu,
   forceActiveMenu,
@@ -16,42 +16,42 @@ import {
   linkTo,
   enter,
   leave,
-} from './side-menu'
-import { watch, reactive, ref, computed, onMounted, provide } from 'vue'
+} from './side-menu';
+import { watch, reactive, ref, computed, onMounted, provide } from 'vue';
 
-const route: Route = useRoute()
-const router = useRouter()
-const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([])
+const route: Route = useRoute();
+const router = useRouter();
+const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
 const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
-  Object.assign(formattedMenu, computedFormattedMenu)
-}
-const menuStore = useMenuStore()
-const menu = computed(() => nestedMenu(menuStore.menu('side-menu'), route))
-const windowWidth = ref(window.innerWidth)
+  Object.assign(formattedMenu, computedFormattedMenu);
+};
+const menuStore = useMenuStore();
+const menu = computed(() => nestedMenu(menuStore.menu('side-menu'), route));
+const windowWidth = ref(window.innerWidth);
 
 provide<ProvideForceActiveMenu>('forceActiveMenu', (pageName: string) => {
-  forceActiveMenu(route, pageName)
-  setFormattedMenu(menu.value)
-})
+  forceActiveMenu(route, pageName);
+  setFormattedMenu(menu.value);
+});
 
 watch(menu, () => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 
 watch(
   computed(() => route.path),
   () => {
-    delete route.forceActiveMenu
+    delete route.forceActiveMenu;
   },
-)
+);
 
 onMounted(() => {
-  setFormattedMenu(menu.value)
+  setFormattedMenu(menu.value);
 
   window.addEventListener('resize', () => {
-    windowWidth.value = window.innerWidth
-  })
-})
+    windowWidth.value = window.innerWidth;
+  });
+});
 </script>
 
 <template>
@@ -98,17 +98,17 @@ onMounted(() => {
                         try {
                           return router.resolve({
                             name: pageName,
-                          }).fullPath
+                          }).fullPath;
                         } catch (err) {
-                          return ''
+                          return '';
                         }
                       })(menu.pageName)
                 "
                 @click="
                   (event: MouseEvent) => {
-                    event.preventDefault()
-                    linkTo(menu, router)
-                    setFormattedMenu([...formattedMenu])
+                    event.preventDefault();
+                    linkTo(menu, router);
+                    setFormattedMenu([...formattedMenu]);
                   }
                 "
                 :class="[menu.active ? 'side-menu side-menu--active' : 'side-menu']"
@@ -149,18 +149,18 @@ onMounted(() => {
                               try {
                                 return router.resolve({
                                   name: pageName,
-                                }).fullPath
+                                }).fullPath;
                               } catch (err) {
-                                return ''
+                                return '';
                               }
                             })(subMenu.pageName)
                       "
                       :class="[subMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                       @click="
                         (event: MouseEvent) => {
-                          event.preventDefault()
-                          linkTo(subMenu, router)
-                          setFormattedMenu([...formattedMenu])
+                          event.preventDefault();
+                          linkTo(subMenu, router);
+                          setFormattedMenu([...formattedMenu]);
                         }
                       "
                     >
@@ -205,9 +205,9 @@ onMounted(() => {
                                     try {
                                       return router.resolve({
                                         name: pageName,
-                                      }).fullPath
+                                      }).fullPath;
                                     } catch (err) {
-                                      return ''
+                                      return '';
                                     }
                                   })(lastSubMenu.pageName)
                             "
@@ -216,9 +216,9 @@ onMounted(() => {
                             ]"
                             @click="
                               (event: MouseEvent) => {
-                                event.preventDefault()
-                                linkTo(lastSubMenu, router)
-                                setFormattedMenu([...formattedMenu])
+                                event.preventDefault();
+                                linkTo(lastSubMenu, router);
+                                setFormattedMenu([...formattedMenu]);
                               }
                             "
                           >

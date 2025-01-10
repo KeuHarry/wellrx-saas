@@ -17,24 +17,25 @@ use Illuminate\Support\Facades\Validator;
 class TaxController extends ApiController
 {
     private TaxService $taxService;
+
     public function __construct(TaxService $taxService)
     {
         $this->taxService = $taxService;
-        $this->model = new Tax();
+        $this->model = new Tax;
         parent::__construct();
     }
 
-    public function createTax(Request $request) 
+    public function createTax(Request $request)
     {
         $content = $request->all();
 
         $validator = Validator::make($content, [
             'label' => 'required|string',
             'cost' => 'required|numeric',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new InvalidInputTypeException($validator);
         }
 
@@ -46,7 +47,7 @@ class TaxController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'tax' => $tax
+            'tax' => $tax,
         ]);
     }
 
@@ -54,9 +55,10 @@ class TaxController extends ApiController
     {
         $tax = $this->taxService->getTax($taxId);
 
-        if(! isset($tax)){
+        if (! isset($tax)) {
             throw new ObjectNotFountException($taxId, 'Tax');
         }
+
         return $this->successResponse($tax);
     }
 
@@ -79,11 +81,12 @@ class TaxController extends ApiController
         if (! assert($taxes instanceof Collection)) {
             throw new InternalServerErrorException;
         }
+
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'success' => true,
             'total' => empty($search) ? count($this->model->all()) : count($taxes),
-            'data' => $taxes
+            'data' => $taxes,
         ]);
     }
 
@@ -91,20 +94,20 @@ class TaxController extends ApiController
     {
         $tax = $this->taxService->getTax($taxId);
 
-        if(! isset($tax)){
+        if (! isset($tax)) {
             throw new ObjectNotFountException($taxId, 'Tax');
         }
 
-        if($this->taxService->deleteTax($tax->id)){
+        if ($this->taxService->deleteTax($tax->id)) {
             return new JsonResponse([
                 'code' => Response::HTTP_OK,
                 'tax' => $taxId,
-                'message' => 'Tax successfully deleted.'
+                'message' => 'Tax successfully deleted.',
             ]);
         } else {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -113,7 +116,7 @@ class TaxController extends ApiController
     {
         $tax = $this->taxService->getTax($taxId);
 
-        if(! isset($tax)){
+        if (! isset($tax)) {
             throw new ObjectNotFountException($taxId, 'Tax');
         }
 
@@ -122,10 +125,10 @@ class TaxController extends ApiController
         $validator = Validator::make($content, [
             'label' => 'required|string',
             'cost' => 'required|numeric',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             throw new InvalidInputTypeException($validator);
         }
 
@@ -138,7 +141,7 @@ class TaxController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'tax' => $updatedTax
+            'tax' => $updatedTax,
         ]);
     }
 }

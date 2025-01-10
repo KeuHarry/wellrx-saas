@@ -16,14 +16,15 @@ use Illuminate\Http\Response;
 class InsurerController extends ApiController
 {
     private InsuranceService $insuranceService;
+
     public function __construct(InsuranceService $insuranceService)
     {
         $this->insuranceService = $insuranceService;
-        $this->model = new Insurer();
+        $this->model = new Insurer;
         parent::__construct();
     }
 
-    public function createInsurer(InsurerRequest $request) 
+    public function createInsurer(InsurerRequest $request)
     {
         $content = $request->all();
 
@@ -31,7 +32,7 @@ class InsurerController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'insurer' => $insurer
+            'insurer' => $insurer,
         ]);
     }
 
@@ -39,9 +40,10 @@ class InsurerController extends ApiController
     {
         $insurer = $this->insuranceService->getInsurer($insurerId);
 
-        if(! isset($insurer)){
+        if (! isset($insurer)) {
             throw new ObjectNotFountException($insurerId, 'Insurer');
         }
+
         return $this->successResponse($insurer);
     }
 
@@ -64,12 +66,12 @@ class InsurerController extends ApiController
         if (! assert($insurers instanceof Collection)) {
             throw new InternalServerErrorException;
         }
-        
+
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'success' => true,
             'total' => empty($search) ? count($this->model->all()) : count($insurers),
-            'data' => $insurers
+            'data' => $insurers,
         ]);
     }
 
@@ -77,20 +79,20 @@ class InsurerController extends ApiController
     {
         $insurer = $this->insuranceService->getInsurer($insurerId);
 
-        if(! isset($insurer)){
+        if (! isset($insurer)) {
             throw new ObjectNotFountException($insurerId, 'Insurer');
         }
 
-        if($this->insuranceService->deleteInsurer($insurer->id)){
+        if ($this->insuranceService->deleteInsurer($insurer->id)) {
             return new JsonResponse([
                 'code' => Response::HTTP_OK,
                 'insurer' => $insurerId,
-                'message' => 'Insurer successfully deleted.'
+                'message' => 'Insurer successfully deleted.',
             ]);
         } else {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -99,7 +101,7 @@ class InsurerController extends ApiController
     {
         $insurer = $this->insuranceService->getInsurer($insurerId);
 
-        if(! isset($insurer)){
+        if (! isset($insurer)) {
             throw new ObjectNotFountException($insurerId, 'Insurer');
         }
 
@@ -110,7 +112,7 @@ class InsurerController extends ApiController
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'insurer' => $updatedInsurer,
-            'message' => 'Insurer successfully updated.'
+            'message' => 'Insurer successfully updated.',
         ]);
     }
 }

@@ -1,18 +1,23 @@
-import useCreateCategory from '@/composables/api/categories/useCreateCategory'
-import useGetCategories from '@/composables/api/categories/useGetCategories'
-import { Category } from '@/composables/models/Category'
-import { CategoryRequest } from '@/composables/models/CategoryRequest'
-import { SearchParams } from '@/composables/models/SearchParams'
-import { CODE } from '@/constants/properties'
-import SortOrder from '@/enums/sortOrder'
-import { defineStore } from 'pinia'
+import useCreateCategory from '@/composables/api/categories/useCreateCategory';
+import useGetCategories from '@/composables/api/categories/useGetCategories';
+import { Category } from '@/composables/models/Category';
+import { CategoryRequest } from '@/composables/models/CategoryRequest';
+import { SearchParams } from '@/composables/models/SearchParams';
+import { CATEGORY_CODE } from '@/constants/properties';
+import SortOrder from '@/enums/sortOrder';
+import { defineStore } from 'pinia';
+import useToastStore from './toast';
+import useUpdateCategory from '@/composables/api/categories/useUpdateCategory';
+import useDeleteCategory from '@/composables/api/categories/useDeleteCategory';
 
 type CategoryState = {
-  categories: Category[]
-  category: Category | null
-  searchParams: SearchParams
-  isPending: boolean
-}
+  categories: Category[];
+  category: Category | null;
+  searchParams: SearchParams;
+  isPending: boolean;
+};
+
+const toastStore = useToastStore();
 
 export const useCategoryStore = defineStore('category-store', {
   state: (): CategoryState => ({
@@ -20,7 +25,7 @@ export const useCategoryStore = defineStore('category-store', {
     category: null,
     searchParams: {
       search: '',
-      sortBy: CODE,
+      sortBy: CATEGORY_CODE,
       sortOrder: SortOrder.ASC,
       offset: 0,
       limit: 10,
@@ -35,30 +40,58 @@ export const useCategoryStore = defineStore('category-store', {
 
   actions: {
     async getCategoriesApi() {
-      const getCategories = useGetCategories(this.searchParams)
+      const getCategories = useGetCategories(this.searchParams);
       try {
-        this.isPending = true
-        const response = await getCategories()
-        this.categories = response.data ?? []
-        return response
+        this.isPending = true;
+        const response = await getCategories();
+        this.categories = response.data ?? [];
+        return response;
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
       }
     },
     async createCategoryApi(categoryRequest: CategoryRequest) {
-      const createCategory = useCreateCategory()
+      const createCategory = useCreateCategory();
       try {
-        this.isPending = true
-        const response = await createCategory(categoryRequest)
-        this.category = response.data
-        return response
+        this.isPending = true;
+        const response = await createCategory(categoryRequest);
+        this.category = response.data;
+        toastStore.setMessage('Category successfully created!');
+        return response;
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async updateCategoryApi(id: number, categoryRequest: CategoryRequest) {
+      const udpateCategory = useUpdateCategory();
+      try {
+        this.isPending = true;
+        const response = await udpateCategory(id, categoryRequest);
+        toastStore.setMessage('Category successfully updated!');
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async deleteCategoryApi(id: number) {
+      const deleteCategory = useDeleteCategory();
+      try {
+        this.isPending = true;
+        const response = await deleteCategory(id);
+        if (response.success) {
+          this.categories = this.categories.filter((category) => category.id !== id);
+        }
+        toastStore.setMessage('Category successfully deleted!');
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
       }
     },
   },
-})
+});
 
-export default useCategoryStore
+export default useCategoryStore;

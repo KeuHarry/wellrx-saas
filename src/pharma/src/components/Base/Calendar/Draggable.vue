@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { type HTMLAttributes, ref, onMounted } from 'vue'
-import { Draggable as FullCalendarDraggable } from '@fullcalendar/interaction'
+import { type HTMLAttributes, ref, onMounted } from 'vue';
+import { Draggable as FullCalendarDraggable } from '@fullcalendar/interaction';
 
 interface DraggableProps extends /* @vue-ignore */ HTMLAttributes {
-  options: FullCalendarDraggable['settings']
+  options: FullCalendarDraggable['settings'];
 }
 
-const props = defineProps<DraggableProps>()
+const props = defineProps<DraggableProps>();
 
-const draggableRef = ref<HTMLDivElement>()
+const draggableRef = ref<HTMLDivElement>();
 
 const init = () => {
   if (draggableRef.value) {
-    new FullCalendarDraggable(draggableRef.value, props.options)
+    new FullCalendarDraggable(draggableRef.value, props.options);
   }
-}
+};
 
 onMounted(() => {
-  init()
-})
+  init();
+});
 </script>
 
 <template>

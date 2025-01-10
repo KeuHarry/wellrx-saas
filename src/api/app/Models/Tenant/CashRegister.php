@@ -11,6 +11,7 @@ class CashRegister extends BaseModel
     use HasFactory, Notifiable;
 
     const OPEN = 1;
+
     const CLOSED = 0;
 
     /**
@@ -19,6 +20,7 @@ class CashRegister extends BaseModel
      * @var string
      */
     protected $table = 'cash_registers';
+
     /**
      * The model's default values for attributes.
      *
@@ -33,12 +35,12 @@ class CashRegister extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'status',
         'opening_time',
         'closing_time',
         'opened_by',
-        'closed_by'
+        'closed_by',
     ];
 
     /**
@@ -61,7 +63,7 @@ class CashRegister extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['openedBy'] = $this->opener->first_name . " " . $this->opener->last_name;
+        $json['openedBy'] = $this->opener->first_name.' '.$this->opener->last_name;
         $json['openingTime'] = date('Y-m-d H:i:s', strtotime($this->opening_time));
         $json['closedBy'] = $this->closed_by;
         $json['closingTime'] = $this->closing_time;

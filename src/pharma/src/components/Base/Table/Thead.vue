@@ -1,27 +1,27 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface TheadProps extends /* @vue-ignore */ HTMLAttributes {
-  variant?: 'default' | 'light' | 'dark'
+  variant?: 'default' | 'light' | 'dark';
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type HTMLAttributes, useAttrs, provide } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type HTMLAttributes, useAttrs, provide } from 'vue';
 
 export type ProvideThead = {
-  variant?: 'default' | 'light' | 'dark'
-}
+  variant?: 'default' | 'light' | 'dark';
+};
 
 const props = withDefaults(defineProps<TheadProps>(), {
   variant: 'default',
-})
+});
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
@@ -29,11 +29,11 @@ const computedClass = computed(() =>
     props.variant === 'dark' && 'bg-dark text-white dark:bg-black/30',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
 provide<ProvideThead>('thead', {
   variant: props.variant,
-})
+});
 </script>
 
 <template>

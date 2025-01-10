@@ -1,4 +1,4 @@
-import { type Menu } from '@/stores/menu'
+import { type Menu } from '@/stores/menu';
 
 const menu: Array<Menu | 'divider'> = [
   {
@@ -13,13 +13,13 @@ const menu: Array<Menu | 'divider'> = [
     subMenu: [
       {
         icon: 'UsersIcon',
-        pageName: 'user-accounts',
+        pageName: 'user-list',
         title: 'Users',
       },
       {
         icon: 'LayersIcon',
-        pageName: 'user-roles',
-        title: 'User Roles',
+        pageName: 'role-list',
+        title: 'Roles & Permissions',
       },
       {
         icon: 'SettingsIcon',
@@ -45,12 +45,12 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'PillIcon',
-        pageName: 'products',
+        pageName: 'product-list',
         title: 'Products',
       },
       {
         icon: 'BanknoteIcon',
-        pageName: 'fees',
+        pageName: 'fee-list',
         title: 'Fees / Taxes',
       },
     ],
@@ -77,7 +77,7 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'User',
-        pageName: 'customer',
+        pageName: 'customer-list',
         title: 'Customers',
       },
     ],
@@ -94,7 +94,7 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'Truck',
-        pageName: 'supplier',
+        pageName: 'supplier-list',
         title: 'Suppliers',
       },
       {
@@ -116,22 +116,22 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'User',
-        pageName: 'patient',
+        pageName: 'patient-list',
         title: 'Patients',
       },
       {
         icon: 'Stethoscope',
-        pageName: 'doctor',
+        pageName: 'prescriber-list',
         title: 'Doctors',
       },
       {
         icon: 'User',
-        pageName: 'intermediary',
+        pageName: 'intermediary-list',
         title: 'Intermediaries',
       },
       {
         icon: 'Tags',
-        pageName: 'label',
+        pageName: 'labelcode-list',
         title: 'Labels',
       },
     ],
@@ -143,7 +143,7 @@ const menu: Array<Menu | 'divider'> = [
     subMenu: [
       {
         icon: 'Briefcase',
-        pageName: 'insurer',
+        pageName: 'insurer-list',
         title: 'Insurers',
       },
     ],
@@ -176,6 +176,6 @@ const menu: Array<Menu | 'divider'> = [
       },
     ],
   },
-]
+];
 
-export default menu
+export default menu;

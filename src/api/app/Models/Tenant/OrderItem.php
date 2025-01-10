@@ -16,6 +16,7 @@ class OrderItem extends BaseModel
      * @var string
      */
     protected $table = 'order_items';
+
     /**
      * The model's default values for attributes.
      *
@@ -30,7 +31,7 @@ class OrderItem extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'order_id',
         'product_id',
         'quantity',
@@ -40,7 +41,7 @@ class OrderItem extends BaseModel
         'tax',
         'wholesale_cost',
         'markup',
-        'retail_cost'
+        'retail_cost',
     ];
 
     /**
@@ -64,7 +65,7 @@ class OrderItem extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['productId'] = $this->product_id;
-        $json['productName'] = $this->product->label . "(" . $this->product->qoh . ")";
+        $json['productName'] = $this->product->label.'('.$this->product->qoh.')';
         $json['quantity'] = $this->quantity;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['price'] = $this->price;

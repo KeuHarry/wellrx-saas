@@ -1,39 +1,39 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface HighlightProps extends /* @vue-ignore */ HTMLAttributes {
-  copyButton?: boolean
-  type?: 'html' | 'javascript'
+  copyButton?: boolean;
+  type?: 'html' | 'javascript';
 }
 </script>
 
 <script setup lang="ts">
-import '@/assets/css/vendors/highlight.css'
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import Button from '../Button'
-import Lucide from '../Lucide'
-import jsBeautify from 'js-beautify'
-import hljs from 'highlight.js'
-import { computed, type HTMLAttributes, useAttrs, ref, onMounted } from 'vue'
+import '@/assets/css/vendors/highlight.css';
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import Button from '../Button';
+import Lucide from '../Lucide';
+import jsBeautify from 'js-beautify';
+import hljs from 'highlight.js';
+import { computed, type HTMLAttributes, useAttrs, ref, onMounted } from 'vue';
 
 const props = withDefaults(defineProps<HighlightProps>(), {
   copyButton: true,
   type: 'html',
-})
+});
 
-const copyText = ref('Copy example code')
-const highlightRef = ref<HTMLDivElement>()
-const copySourceEl = ref<HTMLTextAreaElement>()
-const copySource = ref('')
+const copyText = ref('Copy example code');
+const highlightRef = ref<HTMLDivElement>();
+const copySourceEl = ref<HTMLTextAreaElement>();
+const copySource = ref('');
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const buttonComputedClass = computed(() =>
   twMerge(['py-1 px-2', typeof attrs.class === 'string' && attrs.class]),
-)
+);
 
 const highlightComputedClass = computed(() =>
   twMerge([
@@ -41,7 +41,7 @@ const highlightComputedClass = computed(() =>
     props.copyButton && 'mt-3',
     !props.copyButton && typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
 const codePreviewComputedClass = computed(() =>
   twMerge([
@@ -51,43 +51,43 @@ const codePreviewComputedClass = computed(() =>
     "[&.javascript]:before:content-['JS']",
     props.type,
   ]),
-)
+);
 
 const copyCode = () => {
-  copyText.value = 'Copied!'
+  copyText.value = 'Copied!';
   setTimeout(() => {
-    copyText.value = 'Copy example code'
-  }, 1500)
+    copyText.value = 'Copy example code';
+  }, 1500);
 
-  copySourceEl.value?.select()
-  copySourceEl.value?.setSelectionRange(0, 99999)
-  document.execCommand('copy')
-}
+  copySourceEl.value?.select();
+  copySourceEl.value?.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+};
 
 onMounted(() => {
   if (highlightRef.value) {
-    const codeEl = highlightRef.value.querySelectorAll('code')[0]
-    let source = codeEl.innerHTML
+    const codeEl = highlightRef.value.querySelectorAll('code')[0];
+    let source = codeEl.innerHTML;
 
     // Format for beautify
-    source = _.replace(source, /&lt;/g, '<')
-    source = _.replace(source, /&gt;/g, '>')
+    source = _.replace(source, /&lt;/g, '<');
+    source = _.replace(source, /&gt;/g, '>');
 
     // Beautify code
-    source = jsBeautify.html(source)
+    source = jsBeautify.html(source);
 
     // Save for copy code function
-    copySource.value = source
+    copySource.value = source;
 
     // Format for highlight.js
-    source = _.replace(source, /</g, '&lt;')
-    source = _.replace(source, />/g, '&gt;')
+    source = _.replace(source, /</g, '&lt;');
+    source = _.replace(source, />/g, '&gt;');
 
-    codeEl.innerHTML = source
+    codeEl.innerHTML = source;
 
-    hljs.highlightElement(codeEl)
+    hljs.highlightElement(codeEl);
   }
-})
+});
 </script>
 
 <template>
@@ -99,7 +99,7 @@ onMounted(() => {
       v-bind="_.omit(attrs, 'class')"
       @click="
         () => {
-          copyCode()
+          copyCode();
         }
       "
     >

@@ -21,11 +21,12 @@ return new class extends Migration
             $table->date('dob');
             $table->string('address')->nullable();
             $table->string('city');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->string('company')->nullable();
             $table->foreignId('insurer_id')->nullable()->constrained('insurers');
             $table->foreignId('caretaker_id')->nullable()->constrained('patients');
+            $table->foreignId('intermediary_id')->nullable()->constrained('intermediaries');
             $table->text('allergies')->nullable();
             $table->text('medecine_history')->nullable();
             $table->timestamps();

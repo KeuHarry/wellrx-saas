@@ -1,36 +1,36 @@
-import { type Router, type RouteLocationNormalizedLoaded } from 'vue-router'
-import { slideUp, slideDown } from '@/utils/helper'
-import { type Menu } from '@/stores/menu'
+import { type Router, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { slideUp, slideDown } from '@/utils/helper';
+import { type Menu } from '@/stores/menu';
 
 export interface FormattedMenu extends Menu {
-  active?: boolean
-  activeDropdown?: boolean
-  subMenu?: FormattedMenu[]
+  active?: boolean;
+  activeDropdown?: boolean;
+  subMenu?: FormattedMenu[];
 }
 
 export interface Route extends RouteLocationNormalizedLoaded {
-  forceActiveMenu?: string
+  forceActiveMenu?: string;
 }
 
 // Setup side menu
 const findActiveMenu = (subMenu: Menu[], route: Route): boolean => {
-  let match = false
+  let match = false;
   subMenu.forEach((item) => {
     if (
       ((route.forceActiveMenu !== undefined && item.pageName === route.forceActiveMenu) ||
         (route.forceActiveMenu === undefined && item.pageName === route.name)) &&
       !item.ignore
     ) {
-      match = true
+      match = true;
     } else if (!match && item.subMenu) {
-      match = findActiveMenu(item.subMenu, route)
+      match = findActiveMenu(item.subMenu, route);
     }
-  })
-  return match
-}
+  });
+  return match;
+};
 
 const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
-  const formattedMenu: Array<FormattedMenu | 'divider'> = []
+  const formattedMenu: Array<FormattedMenu | 'divider'> = [];
   menu.forEach((item) => {
     if (typeof item !== 'string') {
       const menuItem: FormattedMenu = {
@@ -39,32 +39,32 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
         pageName: item.pageName,
         subMenu: item.subMenu,
         ignore: item.ignore,
-      }
+      };
       menuItem.active =
         ((route.forceActiveMenu !== undefined && menuItem.pageName === route.forceActiveMenu) ||
           (route.forceActiveMenu === undefined && menuItem.pageName === route.name) ||
           (menuItem.subMenu && findActiveMenu(menuItem.subMenu, route))) &&
-        !menuItem.ignore
+        !menuItem.ignore;
 
       if (menuItem.subMenu) {
-        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, route)
+        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, route);
 
         // Nested menu
-        const subMenu: Array<FormattedMenu> = []
+        const subMenu: Array<FormattedMenu> = [];
         nestedMenu(menuItem.subMenu, route).map(
           (menu) => typeof menu !== 'string' && subMenu.push(menu),
-        )
-        menuItem.subMenu = subMenu
+        );
+        menuItem.subMenu = subMenu;
       }
 
-      formattedMenu.push(menuItem)
+      formattedMenu.push(menuItem);
     } else {
-      formattedMenu.push(item)
+      formattedMenu.push(item);
     }
-  })
+  });
 
-  return formattedMenu
-}
+  return formattedMenu;
+};
 
 const linkTo = (
   menu: FormattedMenu,
@@ -72,23 +72,23 @@ const linkTo = (
   setActiveMobileMenu: (active: boolean) => void,
 ) => {
   if (menu.subMenu) {
-    menu.activeDropdown = !menu.activeDropdown
+    menu.activeDropdown = !menu.activeDropdown;
   } else {
     if (menu.pageName !== undefined) {
-      setActiveMobileMenu(false)
+      setActiveMobileMenu(false);
       router.push({
         name: menu.pageName,
-      })
+      });
     }
   }
-}
+};
 
 const enter = (el: Element) => {
-  slideDown(el as HTMLElement, 300)
-}
+  slideDown(el as HTMLElement, 300);
+};
 
 const leave = (el: Element) => {
-  slideUp(el as HTMLElement, 300)
-}
+  slideUp(el as HTMLElement, 300);
+};
 
-export { nestedMenu, linkTo, enter, leave }
+export { nestedMenu, linkTo, enter, leave };

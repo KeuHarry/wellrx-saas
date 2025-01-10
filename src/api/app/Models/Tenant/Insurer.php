@@ -26,6 +26,7 @@ class Insurer extends BaseModel
      * @var string
      */
     protected $table = 'insurers';
+
     /**
      * The model's default values for attributes.
      *
@@ -40,7 +41,7 @@ class Insurer extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'name',
         'tax_payer_number',
         'registration_number',
@@ -48,9 +49,8 @@ class Insurer extends BaseModel
         'balance',
         'deposit',
         'address',
-        'neighborhood'
+        'neighborhood',
     ];
-
 
     public function jsonSerialize(): mixed
     {

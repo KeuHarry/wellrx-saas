@@ -1,14 +1,14 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, useAttrs, inject } from 'vue'
-import { type ProvideTable } from './Table.vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, useAttrs, inject } from 'vue';
+import { type ProvideTable } from './Table.vue';
 
 const table = inject<ProvideTable>('table', {
   dark: false,
@@ -16,9 +16,9 @@ const table = inject<ProvideTable>('table', {
   hover: false,
   striped: false,
   sm: false,
-})
+});
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
@@ -28,7 +28,7 @@ const computedClass = computed(() =>
     table?.sm && 'px-4 py-2',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

@@ -1,44 +1,44 @@
 <script setup lang="ts">
-import '@/assets/css/vendors/simplebar.css'
-import '@/assets/css/components/mobile-menu.css'
-import { useRoute, useRouter } from 'vue-router'
-import { twMerge } from 'tailwind-merge'
-import logoUrl from '@/assets/images/logo.svg'
-import Lucide from '@/components/Base/Lucide'
-import { useMenuStore } from '@/stores/menu'
-import { useThemeStore } from '@/stores/theme'
-import { type FormattedMenu, nestedMenu, linkTo, enter, leave } from './mobile-menu'
-import { watch, reactive, computed, onMounted, ref } from 'vue'
-import SimpleBar from 'simplebar'
+import '@/assets/css/vendors/simplebar.css';
+import '@/assets/css/components/mobile-menu.css';
+import { useRoute, useRouter } from 'vue-router';
+import { twMerge } from 'tailwind-merge';
+import logoUrl from '@/assets/images/logo.svg';
+import Lucide from '@/components/Base/Lucide';
+import { useMenuStore } from '@/stores/menu';
+import { useThemeStore } from '@/stores/theme';
+import { type FormattedMenu, nestedMenu, linkTo, enter, leave } from './mobile-menu';
+import { watch, reactive, computed, onMounted, ref } from 'vue';
+import SimpleBar from 'simplebar';
 
-const route = useRoute()
-const router = useRouter()
-const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([])
+const route = useRoute();
+const router = useRouter();
+const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
 const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
-  Object.assign(formattedMenu, computedFormattedMenu)
-}
-const themeStore = useThemeStore()
-const menuStore = useMenuStore()
-const menu = computed(() => nestedMenu(menuStore.menu(themeStore.theme.layout), route))
+  Object.assign(formattedMenu, computedFormattedMenu);
+};
+const themeStore = useThemeStore();
+const menuStore = useMenuStore();
+const menu = computed(() => nestedMenu(menuStore.menu(themeStore.theme.layout), route));
 
-const activeMobileMenu = ref(false)
+const activeMobileMenu = ref(false);
 const setActiveMobileMenu = (active: boolean) => {
-  activeMobileMenu.value = active
-}
+  activeMobileMenu.value = active;
+};
 
-const scrollableRef = ref<HTMLDivElement>()
+const scrollableRef = ref<HTMLDivElement>();
 
 watch(menu, () => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 
 onMounted(() => {
   if (scrollableRef.value) {
-    new SimpleBar(scrollableRef.value)
+    new SimpleBar(scrollableRef.value);
   }
 
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 </script>
 
 <template>
@@ -62,7 +62,7 @@ onMounted(() => {
           class="w-8 h-8 text-white transform -rotate-90"
           @click="
             () => {
-              setActiveMobileMenu(!activeMobileMenu)
+              setActiveMobileMenu(!activeMobileMenu);
             }
           "
         />
@@ -92,7 +92,7 @@ onMounted(() => {
           class="w-8 h-8 text-white transform -rotate-90"
           @click="
             () => {
-              setActiveMobileMenu(!activeMobileMenu)
+              setActiveMobileMenu(!activeMobileMenu);
             }
           "
         />
@@ -110,17 +110,17 @@ onMounted(() => {
                       try {
                         return router.resolve({
                           name: pageName,
-                        }).fullPath
+                        }).fullPath;
                       } catch (err) {
-                        return ''
+                        return '';
                       }
                     })(menu.pageName)
               "
               @click="
                 (event) => {
-                  event.preventDefault()
-                  linkTo(menu, router, setActiveMobileMenu)
-                  setFormattedMenu([...formattedMenu])
+                  event.preventDefault();
+                  linkTo(menu, router, setActiveMobileMenu);
+                  setFormattedMenu([...formattedMenu]);
                 }
               "
               :class="[menu.active ? 'menu menu--active' : 'menu']"
@@ -152,17 +152,17 @@ onMounted(() => {
                             try {
                               return router.resolve({
                                 name: pageName,
-                              }).fullPath
+                              }).fullPath;
                             } catch (err) {
-                              return ''
+                              return '';
                             }
                           })(subMenu.pageName)
                     "
                     @click="
                       (event) => {
-                        event.preventDefault()
-                        linkTo(subMenu, router, setActiveMobileMenu)
-                        setFormattedMenu([...formattedMenu])
+                        event.preventDefault();
+                        linkTo(subMenu, router, setActiveMobileMenu);
+                        setFormattedMenu([...formattedMenu]);
                       }
                     "
                     :class="[subMenu.active ? 'menu menu--active' : 'menu']"
@@ -200,17 +200,17 @@ onMounted(() => {
                                   try {
                                     return router.resolve({
                                       name: pageName,
-                                    }).fullPath
+                                    }).fullPath;
                                   } catch (err) {
-                                    return ''
+                                    return '';
                                   }
                                 })(lastSubMenu.pageName)
                           "
                           @click="
                             (event) => {
-                              event.preventDefault()
-                              linkTo(lastSubMenu, router, setActiveMobileMenu)
-                              setFormattedMenu([...formattedMenu])
+                              event.preventDefault();
+                              linkTo(lastSubMenu, router, setActiveMobileMenu);
+                              setFormattedMenu([...formattedMenu]);
                             }
                           "
                           :class="[lastSubMenu.active ? 'menu menu--active' : 'menu']"

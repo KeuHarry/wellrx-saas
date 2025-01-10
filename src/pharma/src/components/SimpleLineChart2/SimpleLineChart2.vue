@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { type ChartData, type ChartOptions } from 'chart.js/auto'
-import { useColorSchemeStore } from '@/stores/color-scheme'
-import Chart from '@/components/Base/Chart'
-import { getColor } from '@/utils/colors'
+import { computed } from 'vue';
+import { type ChartData, type ChartOptions } from 'chart.js/auto';
+import { useColorSchemeStore } from '@/stores/color-scheme';
+import Chart from '@/components/Base/Chart';
+import { getColor } from '@/utils/colors';
 
 const props = defineProps<{
-  width?: number
-  height?: number
-  lineColor?: string
-}>()
+  width?: number;
+  height?: number;
+  lineColor?: string;
+}>();
 
-const colorScheme = computed(() => useColorSchemeStore().colorScheme)
+const colorScheme = computed(() => useColorSchemeStore().colorScheme);
 
 const data = computed<ChartData>(() => {
   return {
@@ -28,8 +28,8 @@ const data = computed<ChartData>(() => {
         pointBorderColor: 'transparent',
       },
     ],
-  }
-})
+  };
+});
 
 const options = computed<ChartOptions>(() => {
   return {
@@ -63,8 +63,8 @@ const options = computed<ChartOptions>(() => {
         },
       },
     },
-  }
-})
+  };
+});
 </script>
 
 <template>

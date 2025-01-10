@@ -1,57 +1,57 @@
 <script setup lang="ts">
-import { Slideover } from '@/components/Base/Headless'
-import Lucide from '@/components/Base/Lucide'
-import { useThemeStore, type Themes } from '@/stores/theme'
-import { useColorSchemeStore, type ColorSchemes } from '@/stores/color-scheme'
-import { useDarkModeStore } from '@/stores/dark-mode'
-import { ref } from 'vue'
+import { Slideover } from '@/components/Base/Headless';
+import Lucide from '@/components/Base/Lucide';
+import { useThemeStore, type Themes } from '@/stores/theme';
+import { useColorSchemeStore, type ColorSchemes } from '@/stores/color-scheme';
+import { useDarkModeStore } from '@/stores/dark-mode';
+import { ref } from 'vue';
 
-const themeSwitcherSlideover = ref(false)
+const themeSwitcherSlideover = ref(false);
 const setThemeSwitcherSlideover = (value: boolean) => {
-  themeSwitcherSlideover.value = value
-}
+  themeSwitcherSlideover.value = value;
+};
 
-const themeStore = useThemeStore()
+const themeStore = useThemeStore();
 const switchTheme = (theme: Themes['name']) => {
-  useThemeStore().setTheme(theme)
-}
+  useThemeStore().setTheme(theme);
+};
 const switchLayout = (layout: Themes['layout']) => {
-  useThemeStore().setLayout(layout)
-}
+  useThemeStore().setLayout(layout);
+};
 
 const setColorSchemeClass = () => {
-  const el = document.querySelectorAll('html')[0]
-  el.setAttribute('class', useColorSchemeStore().colorSchemeValue)
-  useDarkModeStore().darkModeValue && el.classList.add('dark')
-}
-const colorSchemeStore = useColorSchemeStore()
+  const el = document.querySelectorAll('html')[0];
+  el.setAttribute('class', useColorSchemeStore().colorSchemeValue);
+  useDarkModeStore().darkModeValue && el.classList.add('dark');
+};
+const colorSchemeStore = useColorSchemeStore();
 const switchColorScheme = (colorScheme: ColorSchemes) => {
-  useColorSchemeStore().setColorScheme(colorScheme)
-  setColorSchemeClass()
-}
-setColorSchemeClass()
+  useColorSchemeStore().setColorScheme(colorScheme);
+  setColorSchemeClass();
+};
+setColorSchemeClass();
 
 const setDarkModeClass = () => {
-  const el = document.querySelectorAll('html')[0]
-  useDarkModeStore().darkModeValue ? el.classList.add('dark') : el.classList.remove('dark')
-}
-const darkModeStore = useDarkModeStore()
+  const el = document.querySelectorAll('html')[0];
+  useDarkModeStore().darkModeValue ? el.classList.add('dark') : el.classList.remove('dark');
+};
+const darkModeStore = useDarkModeStore();
 const switchDarkMode = (darkMode: boolean) => {
-  useDarkModeStore().setDarkMode(darkMode)
-  setDarkModeClass()
-}
-setDarkModeClass()
+  useDarkModeStore().setDarkMode(darkMode);
+  setDarkModeClass();
+};
+setDarkModeClass();
 
-const themes: Array<Themes['name']> = ['rubick', 'icewall', 'tinker', 'enigma']
-const layouts: Array<Themes['layout']> = ['side-menu', 'simple-menu', 'top-menu']
-const colorSchemes: Array<ColorSchemes> = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4']
+const themes: Array<Themes['name']> = ['rubick', 'icewall', 'tinker', 'enigma'];
+const layouts: Array<Themes['layout']> = ['side-menu', 'simple-menu', 'top-menu'];
+const colorSchemes: Array<ColorSchemes> = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4'];
 
 const themeImages = import.meta.glob<{
-  default: string
-}>('/src/assets/images/themes/*.{jpg,jpeg,png,svg}', { eager: true })
+  default: string;
+}>('/src/assets/images/themes/*.{jpg,jpeg,png,svg}', { eager: true });
 const layoutImages = import.meta.glob<{
-  default: string
-}>('/src/assets/images/layouts/*.{jpg,jpeg,png,svg}', { eager: true })
+  default: string;
+}>('/src/assets/images/layouts/*.{jpg,jpeg,png,svg}', { eager: true });
 </script>
 
 <template>
@@ -60,7 +60,7 @@ const layoutImages = import.meta.glob<{
       :open="themeSwitcherSlideover"
       @close="
         () => {
-          setThemeSwitcherSlideover(false)
+          setThemeSwitcherSlideover(false);
         }
       "
     >
@@ -69,8 +69,8 @@ const layoutImages = import.meta.glob<{
           class="absolute inset-y-0 left-0 right-auto my-auto -ml-[60px] flex h-8 w-8 items-center justify-center rounded-full border border-white/90 bg-white/5 text-white/90 transition-all hover:rotate-180 hover:scale-105 hover:bg-white/10 focus:outline-none sm:-ml-[105px] sm:h-14 sm:w-14"
           @click="
             (event: MouseEvent) => {
-              event.preventDefault()
-              setThemeSwitcherSlideover(false)
+              event.preventDefault();
+              setThemeSwitcherSlideover(false);
             }
           "
         >
@@ -86,8 +86,8 @@ const layoutImages = import.meta.glob<{
                   <a
                     @click="
                       (event: MouseEvent) => {
-                        event.preventDefault()
-                        switchTheme(theme)
+                        event.preventDefault();
+                        switchTheme(theme);
                       }
                     "
                     :class="[
@@ -118,8 +118,8 @@ const layoutImages = import.meta.glob<{
                   <a
                     @click="
                       (event: MouseEvent) => {
-                        event.preventDefault()
-                        switchLayout(layout)
+                        event.preventDefault();
+                        switchLayout(layout);
                       }
                     "
                     :class="[
@@ -150,8 +150,8 @@ const layoutImages = import.meta.glob<{
                   <a
                     @click="
                       (event: MouseEvent) => {
-                        event.preventDefault()
-                        switchColorScheme(colorScheme)
+                        event.preventDefault();
+                        switchColorScheme(colorScheme);
                       }
                     "
                     :class="[
@@ -179,8 +179,8 @@ const layoutImages = import.meta.glob<{
                   <a
                     @click="
                       (event: MouseEvent) => {
-                        event.preventDefault()
-                        switchDarkMode(false)
+                        event.preventDefault();
+                        switchDarkMode(false);
                       }
                     "
                     :class="[
@@ -197,8 +197,8 @@ const layoutImages = import.meta.glob<{
                   <a
                     @click="
                       (event: MouseEvent) => {
-                        event.preventDefault()
-                        switchDarkMode(true)
+                        event.preventDefault();
+                        switchDarkMode(true);
                       }
                     "
                     :class="[
@@ -221,8 +221,8 @@ const layoutImages = import.meta.glob<{
       class="fixed bottom-0 right-0 z-50 flex items-center justify-center mb-5 mr-5 text-white rounded-full shadow-lg cursor-pointer h-14 w-14 bg-theme-1"
       @click="
         (event: MouseEvent) => {
-          event.preventDefault()
-          setThemeSwitcherSlideover(true)
+          event.preventDefault();
+          setThemeSwitcherSlideover(true);
         }
       "
     >

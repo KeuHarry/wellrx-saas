@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('fees', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('label');
+            $table->string('fee_code')->unique();
+            $table->string('name');
             $table->float('cost');
             $table->tinyInteger('tag');
             $table->text('description')->nullable();

@@ -9,20 +9,13 @@ class Customer extends BaseModel
 {
     use Notifiable;
 
-    public $validation_rules = [
-        'name' => 'required|unique:App\Models\Tenant\Customer,name',
-        'email' => 'email',
-        'credit_limit' => 'numeric|min:0',
-        'balance' => 'numeric|min:0',
-        'deposit' => 'numeric|min:0',
-    ];
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'customers';
+
     /**
      * The model's default values for attributes.
      *
@@ -37,7 +30,7 @@ class Customer extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'name',
         'email',
         'credit_limit',
@@ -45,9 +38,8 @@ class Customer extends BaseModel
         'deposit',
         'phone',
         'address',
-        'city'
+        'city',
     ];
-
 
     public function jsonSerialize(): mixed
     {

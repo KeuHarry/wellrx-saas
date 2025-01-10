@@ -1,3 +1,3 @@
-import PieChart from './PieChart.vue'
+import PieChart from './PieChart.vue';
 
-export default PieChart
+export default PieChart;

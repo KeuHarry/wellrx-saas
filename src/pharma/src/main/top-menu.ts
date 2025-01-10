@@ -1,4 +1,4 @@
-import { type Menu } from '@/stores/menu'
+import { type Menu } from '@/stores/menu';
 
 const menu: Array<Menu | 'divider'> = [
   {
@@ -465,6 +465,6 @@ const menu: Array<Menu | 'divider'> = [
       },
     ],
   },
-]
+];
 
-export default menu
+export default menu;

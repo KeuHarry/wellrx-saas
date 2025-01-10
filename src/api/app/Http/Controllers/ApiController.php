@@ -2,43 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Services\ApiService;
 use Countable;
+use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ApiController extends Controller
 {
-   
-    public object $model;
+    protected Model $model;
+
     public object $query;
+
     public array $query_with = [];
+
     public int $user_field;
 
-    public bool $is_success_request;
     public object $item;
+
     public array $_validators;
 
-    public mixed $current_user;
+    public mixed $currentUser;
 
-    public function __construct()
+    public function __construct(private ApiService $apiService)
     {
-        $this->current_user = auth()->user();
-        $this->query = $this->getNewQuery();
-        if (!empty($this->query_with)) {
-            $this->query->with($this->query_with);
-        }
-        $this->_validators = $this->model->getValidationRules();
-    }
-
-    public function getNewQuery(): object
-    {
-        return $this->model->newQuery();
+        $this->apiService = $apiService;
+        $this->currentUser = Auth::user();
     }
 
     /**
@@ -58,7 +54,7 @@ class ApiController extends Controller
 
         $output = [
             'total' => $total,
-            'data' => []
+            'data' => [],
         ];
 
         foreach ($items as $item) {
@@ -68,200 +64,94 @@ class ApiController extends Controller
         return $this->successResponse($output);
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * Create a resource.
      */
-    public function store(Request $request): JsonResponse
+    public function store(FormRequest $request): JsonResponse
     {
-        $data = [];
-        if ($this->user_field) {
-            $data = [$this->user_field => $this->current_user->id];
-        }
+        try {
+            $content = $request->safe();
+            $result = $this->apiService->create($content->toArray());
 
-        $validator = Validator::make($request->all()+$data, $this->getValidators());
-        
-        if ($validator->fails() ) {
-            return $this->errorResponse(
-                [
-                'errors' => $validator->errors()->all(['field' => ':key', 'message' => ':message'])
-                ]
-            );
-        } 
-
-        $requestData = $request->all();
-        foreach ($requestData as $name=>$value) {
-            foreach ($this->model->getFillable() as $fillable) {
-                if ($fillable == $name) {
-                    $data[$name] = $value;
-                }
-            }
-        }
-
-        if (!$item = $this->model->create($data)) {
-            return $this->errorResponse(
-                [
-                'errors' => 'Internal Error. No item created'
-                ]
-            );
-        } else {
-            $this->setItem($item);
-            return $this->successResponse($this->getSuccessStoreResponseData());
+            return $this->successResponse($result, class_basename($this->model).' successfully created');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to create '.class_basename($this->model));
         }
     }
 
     /**
-     * Display the specified resource.
+     * Get a resource.
      */
     public function show(int $id): JsonResponse
     {
-        $item = $this->query->where('id', $id)->first();
+        try {
+            $result = $this->apiService->getById($id);
 
-        if (!$item) {
-            return $this->errorResponse(
-                [
-                'errors' => 'Item not found'
-                ]
-            );
-        } else {
-            $this->setItem($item);
-            return $this->successResponse($item->getItemData(true));
-        }
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, int $id): JsonResponse
-    {
-        $validator = Validator::make($request->all(), $this->getValidators($id));
-
-        if ($validator->fails() ) {
-            return $this->errorResponse(
-                [
-                'errors' => $validator->errors()->all(['field' => ':key', 'message' => ':message'])
-                ]
-            );
-        }
-
-        if (!$item = $this->query->where('id', $id)->first()) {
-            return $this->errorResponse(
-                [
-                'errors' => 'Internal Error. Item not found'
-                ]
-            );
-        }
-
-        $requestData = $request->all();
-        $data = [];
-        foreach ($requestData as $name=>$value) {
-            foreach ($this->model->getFillable() as $fillable) {
-                if ($fillable == $name) {
-                    $data[$name] = $value;
-                }
-            }
-        }
-
-        $update = $item->update($data);
-
-        if (!$update) {
-            return $this->errorResponse(
-                [
-                'errors' => 'Internal Error. Item not updated'
-                ]
-            );
-        } else {
-            $this->setItem($item);
-            return $this->successResponse($this->getSuccessUpdateResponseData());
+            return $this->successResponse($result, class_basename($this->model).' successfully retrieved');
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse($e->getMessage(), 'Not found', Response::HTTP_NOT_FOUND);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to retrieve the resource');
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Update a specified resource.
      */
-    public function destroy(int $id): JsonResponse
+    public function update(int $id, FormRequest $request): JsonResponse
     {
-        if (!$this->model->destroy($id)) {
-            return $this->errorResponse(
-                [
-                'errors' => 'Internal Error. Item not deleted'
-                ]
-            );
-        } else {
-            return $this->successResponse(
-                [
-                'message' => 'Successfully deleted!'
-                ]
-            );
+        try {
+            $content = $request->safe();
+            $result = $this->apiService->update($id, $content->toArray());
+            return $this->successResponse($result, class_basename($this->model).' successfully updated');
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse($e->getMessage(), 'Resource not found', Response::HTTP_NOT_FOUND);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to update the resource');
         }
     }
 
-    protected function setItem(object $item): void
+    /**
+     * Delete a specified resource.
+     */
+    public function delete(int $id): JsonResponse
     {
-        $this->item = $item;
-    }
-
-    protected function getValidators(int $id = null): array
-    {
-        if ($id) {
-            foreach ($this->_validators as $field=>$validator) {
-                if (strpos($validator, 'unique') !== false) {
-                    $this->_validators[$field] .= ','.$id;
-                }
-            }
+        try {
+            $result = $this->apiService->delete($id);
+            return $this->successResponse($result, class_basename($this->model).' successfully deleted');
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse($e->getMessage(), 'Resource not found', Response::HTTP_NOT_FOUND);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to delete '.$id);
         }
-        return $this->_validators;
-    }
-
-    /**
-     * Get success store response data.
-     */
-    public function getSuccessStoreResponseData(): array
-    {
-        return [
-            'message' => 'Successfully added!',
-            'item' => $this->item->getItemData(true)
-        ];
-    }
-
-    /**
-     * Get success update response data.
-     */
-    public function getSuccessUpdateResponseData(): array
-    {
-        return [
-            'message' => 'Successfully updated!',
-            'item' => $this->item->getItemData(true)
-        ];
     }
 
     /**
      * Returns error json response
      */
-    public function errorResponse(mixed $data): JsonResponse
+    public function errorResponse(mixed $errors, $message = 'An error occurred', $statusCode = 500): JsonResponse
     {
-        $this->is_success_request = false;
-        return response()->json(
-            [
+        return response()->json([
             'success' => false,
-            'data' => $data
-            ], 422
-        );
+            'message' => $message,
+            'errors' => $errors,
+        ], $statusCode);
     }
 
     /**
      * Returns success json response
      */
-    public function successResponse(mixed $data): JsonResponse
+    public function successResponse(mixed $data, $message = '', $statusCode = 200, ?int $total = null): JsonResponse
     {
-        $this->is_success_request = true;
-        return response()->json(
-            [
+        return response()->json([
             'success' => true,
-            'total' => $data instanceof Countable || is_array($data) ? count($data) : 1,
-            'data' => $data
-            ], 200
-        );
+            'message' => $message,
+            'total' => $total,
+            'data' => $data,
+        ], $statusCode);
     }
 }

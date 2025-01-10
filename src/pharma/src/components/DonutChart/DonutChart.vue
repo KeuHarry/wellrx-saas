@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { type ChartData, type ChartOptions } from 'chart.js/auto'
-import { useColorSchemeStore } from '@/stores/color-scheme'
-import { useDarkModeStore } from '@/stores/dark-mode'
-import Chart from '@/components/Base/Chart'
-import { getColor } from '@/utils/colors'
+import { computed } from 'vue';
+import { type ChartData, type ChartOptions } from 'chart.js/auto';
+import { useColorSchemeStore } from '@/stores/color-scheme';
+import { useDarkModeStore } from '@/stores/dark-mode';
+import Chart from '@/components/Base/Chart';
+import { getColor } from '@/utils/colors';
 
 const props = defineProps<{
-  width?: number
-  height?: number
-}>()
+  width?: number;
+  height?: number;
+}>();
 
-const colorScheme = computed(() => useColorSchemeStore().colorScheme)
-const darkMode = computed(() => useDarkModeStore().darkMode)
+const colorScheme = computed(() => useColorSchemeStore().colorScheme);
+const darkMode = computed(() => useDarkModeStore().darkMode);
 
-const chartData = [15, 10, 65]
+const chartData = [15, 10, 65];
 const chartColors = () => [
   getColor('pending', 0.9),
   getColor('warning', 0.9),
   getColor('primary', 0.9),
-]
+];
 const data = computed<ChartData>(() => {
   return {
     labels: ['Html', 'Vuejs', 'Laravel'],
@@ -32,8 +32,8 @@ const data = computed<ChartData>(() => {
         borderColor: darkMode.value ? getColor('darkmode.700') : getColor('white'),
       },
     ],
-  }
-})
+  };
+});
 
 const options = computed<ChartOptions>(() => {
   return {
@@ -46,8 +46,8 @@ const options = computed<ChartOptions>(() => {
       },
     },
     cutout: '80%',
-  }
-})
+  };
+});
 </script>
 
 <template>

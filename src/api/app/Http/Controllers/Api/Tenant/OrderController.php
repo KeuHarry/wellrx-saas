@@ -17,16 +17,18 @@ use Illuminate\Http\Response;
 class OrderController extends ApiController
 {
     private OrderService $orderService;
+
     private OrderItemService $orderItemService;
+
     public function __construct(OrderService $orderService, OrderItemService $orderItemService)
     {
         $this->orderService = $orderService;
         $this->orderItemService = $orderItemService;
-        $this->model = new Order();
+        $this->model = new Order;
         parent::__construct();
     }
 
-    public function createOrder(OrderRequest $request) 
+    public function createOrder(OrderRequest $request)
     {
         $content = $request->all();
         $content['createdBy'] = $request->user()->id;
@@ -41,7 +43,7 @@ class OrderController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'order' => $order
+            'order' => $order,
         ]);
     }
 
@@ -49,9 +51,10 @@ class OrderController extends ApiController
     {
         $order = $this->orderService->getOrder($orderId);
 
-        if(! isset($order)){
+        if (! isset($order)) {
             throw new ObjectNotFountException($orderId, 'Order');
         }
+
         return $this->successResponse($order);
     }
 
@@ -79,7 +82,7 @@ class OrderController extends ApiController
             'code' => Response::HTTP_OK,
             'success' => true,
             'total' => empty($search) ? count($this->model->all()) : count($orders),
-            'data' => $orders
+            'data' => $orders,
         ]);
     }
 
@@ -87,20 +90,20 @@ class OrderController extends ApiController
     {
         $order = $this->orderService->getOrder($orderId);
 
-        if(! isset($order)){
+        if (! isset($order)) {
             throw new ObjectNotFountException($orderId, 'Order');
         }
 
-        if($this->orderService->deleteOrder($order->id)){
+        if ($this->orderService->deleteOrder($order->id)) {
             return new JsonResponse([
                 'code' => Response::HTTP_OK,
                 'order' => $orderId,
-                'message' => 'Order successfully deleted.'
+                'message' => 'Order successfully deleted.',
             ]);
         } else {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -109,7 +112,7 @@ class OrderController extends ApiController
     {
         $order = $this->orderService->getOrder($orderId);
 
-        if(! isset($order)){
+        if (! isset($order)) {
             throw new ObjectNotFountException($orderId, 'Order');
         }
 
@@ -127,7 +130,7 @@ class OrderController extends ApiController
         return new JsonResponse([
             'code' => Response::HTTP_OK,
             'order' => $updatedOrder,
-            'message' => 'Order successfully updated.'
+            'message' => 'Order successfully updated.',
         ]);
     }
 }

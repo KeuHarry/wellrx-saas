@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Lucide from '@/components/Base/Lucide'
-import logoUrl from '@/assets/images/logo.svg'
-import Breadcrumb from '@/components/Base/Breadcrumb'
-import { FormInput } from '@/components/Base/Form'
-import { Menu, Popover } from '@/components/Base/Headless'
-import fakerData from '@/utils/faker'
-import _ from 'lodash'
-import { TransitionRoot } from '@headlessui/vue'
+import { ref } from 'vue';
+import Lucide from '@/components/Base/Lucide';
+import logoUrl from '@/assets/images/logo.svg';
+import Breadcrumb from '@/components/Base/Breadcrumb';
+import { FormInput } from '@/components/Base/Form';
+import { Menu, Popover } from '@/components/Base/Headless';
+import fakerData from '@/utils/faker';
+import _ from 'lodash';
+import { TransitionRoot } from '@headlessui/vue';
 
 const props = defineProps<{
-  layout?: 'side-menu' | 'simple-menu' | 'top-menu'
-}>()
+  layout?: 'side-menu' | 'simple-menu' | 'top-menu';
+}>();
 
-const searchDropdown = ref(false)
+const searchDropdown = ref(false);
 const showSearchDropdown = () => {
-  searchDropdown.value = true
-}
+  searchDropdown.value = true;
+};
 const hideSearchDropdown = () => {
-  searchDropdown.value = false
-}
+  searchDropdown.value = false;
+};
 </script>
 
 <template>

@@ -1,29 +1,29 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface TableProps extends /* @vue-ignore */ TableHTMLAttributes {
-  dark?: boolean
-  bordered?: boolean
-  hover?: boolean
-  striped?: boolean
-  sm?: boolean
+  dark?: boolean;
+  bordered?: boolean;
+  hover?: boolean;
+  striped?: boolean;
+  sm?: boolean;
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type TableHTMLAttributes, useAttrs, provide } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type TableHTMLAttributes, useAttrs, provide } from 'vue';
 
 export type ProvideTable = {
-  dark: boolean
-  bordered: boolean
-  hover: boolean
-  striped: boolean
-  sm: boolean
-}
+  dark: boolean;
+  bordered: boolean;
+  hover: boolean;
+  striped: boolean;
+  sm: boolean;
+};
 
 const {
   dark = false,
@@ -31,9 +31,9 @@ const {
   hover = false,
   striped = false,
   sm = false,
-} = defineProps<TableProps>()
+} = defineProps<TableProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
@@ -41,7 +41,7 @@ const computedClass = computed(() =>
     dark && 'bg-dark text-white dark:bg-black/30',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
 provide<ProvideTable>('table', {
   dark: dark,
@@ -49,7 +49,7 @@ provide<ProvideTable>('table', {
   hover: hover,
   striped: striped,
   sm: sm,
-})
+});
 </script>
 
 <template>

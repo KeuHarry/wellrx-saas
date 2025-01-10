@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class Patient extends BaseModel
@@ -16,6 +17,7 @@ class Patient extends BaseModel
      * @var string
      */
     protected $table = 'patients';
+
     /**
      * The model's default values for attributes.
      *
@@ -31,7 +33,7 @@ class Patient extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'patient_code', 
+        'patient_code',
         'first_name',
         'last_name',
         'dob',
@@ -42,8 +44,9 @@ class Patient extends BaseModel
         'company',
         'insurer_id',
         'caretaker_id',
+        'intermediary_id',
         'allergies',
-        'medecine_history'
+        'medecine_history',
     ];
 
     protected static function boot()
@@ -58,9 +61,10 @@ class Patient extends BaseModel
 
         static::saving(
             function ($item) {
-                if(empty($item->patient_code)) {
-                    $item->patient_code = 'PAT'.str_pad(strval(self::getNextId()), 4, "0", STR_PAD_LEFT);
+                if (empty($item->patient_code)) {
+                    $item->patient_code = 'PAT'.str_pad(strval(self::getNextId()), 4, '0', STR_PAD_LEFT);
                 }
+
                 return self::beforeSave($item);
             }
         );
@@ -69,14 +73,15 @@ class Patient extends BaseModel
     /**
      * Function to do smth before save
      */
-    static public function beforeSave(Patient $item): bool
+    public static function beforeSave(Patient $item): bool
     {
         return true;
     }
 
-    static public function getNextId(): mixed
+    public static function getNextId(): mixed
     {
         $lastPatient = Patient::orderBy('id', 'desc')->first();
+
         return $lastPatient ? $lastPatient->id + 1 : 1;
     }
 
@@ -96,6 +101,14 @@ class Patient extends BaseModel
         return $this->belongsTo(Patient::class, 'caretaker_id');
     }
 
+    /**
+     * Get the intermediary.
+     */
+    public function intermediary(): BelongsTo
+    {
+        return $this->belongsTo(Intermediary::class, 'intermediary_id');
+    }
+
     public function jsonSerialize(): mixed
     {
         $json = [];
@@ -112,7 +125,7 @@ class Patient extends BaseModel
         $json['insurerId'] = $this->insurer_id;
         $json['insurer'] = $this->insurer ? $this->insurer->name : $this->insurer;
         $json['caretakerId'] = $this->caretaker_id;
-        $json['caretaker'] = $this->caretaker ? ($this->caretaker->firstName. " " .$this->caretaker->lastName) : $this->caretaker;
+        $json['caretaker'] = $this->caretaker ? ($this->caretaker->firstName.' '.$this->caretaker->lastName) : $this->caretaker;
         $json['allergies'] = $this->allergies;
         $json['medecineHistory'] = $this->medecine_history;
 

@@ -15,6 +15,7 @@ class Prescriber extends BaseModel
      * @var string
      */
     protected $table = 'prescribers';
+
     /**
      * The model's default values for attributes.
      *
@@ -29,14 +30,13 @@ class Prescriber extends BaseModel
      *
      * @var array
      */
-    protected $fillable = [ 
+    protected $fillable = [
         'first_name',
         'last_name',
         'registration_number',
         'phone',
         'address'
     ];
-
 
     public function jsonSerialize(): mixed
     {

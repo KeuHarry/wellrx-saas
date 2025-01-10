@@ -10,7 +10,7 @@ class ObjectNotFoundException extends Exception
 {
     public function __construct(int $entityId, string $model)
     {
-        parent::__construct($model. ' not found with the following {' . $entityId . '}', Response::HTTP_NOT_FOUND);
+        parent::__construct($model.' not found with the following {'.$entityId.'}', Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -18,15 +18,13 @@ class ObjectNotFoundException extends Exception
      *
      * @return void
      */
-    public function report()
-    {
-    }
-  
+    public function report() {}
+
     public function render()
     {
         return new JsonResponse([
             'code' => $this->getCode(),
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ], Response::HTTP_NOT_FOUND);
     }
 }

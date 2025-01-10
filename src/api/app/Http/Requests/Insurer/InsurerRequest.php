@@ -29,7 +29,7 @@ class InsurerRequest extends FormRequest
             'registrationNumber' => 'required|string',
             'creditLimit' => 'numeric|min:0',
             'balance' => 'numeric|min:0',
-            'deposit' => 'numeric|min:0'
+            'deposit' => 'numeric|min:0',
         ];
     }
 }

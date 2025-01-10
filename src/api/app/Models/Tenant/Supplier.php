@@ -9,16 +9,13 @@ class Supplier extends BaseModel
 {
     use Notifiable;
 
-    public $validation_rules = [
-        'name' => 'required|unique:App\Models\Tenant\Supplier,name'
-    ];
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'suppliers';
+
     /**
      * The model's default values for attributes.
      *
@@ -34,15 +31,17 @@ class Supplier extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'code', 
+        'supplier_code',
         'name',
+        'email',
         'address',
         'contact',
-        'email',
         'postal_code',
         'phone',
         'fax',
-        'city'
+        'city',
+        'e_order_number',
+        'last_date',
     ];
 
     protected static function boot()
@@ -51,51 +50,56 @@ class Supplier extends BaseModel
 
         static::creating(function ($item) {
             self::beforeSave($item);
+
             return true;
         });
 
         static::updating(function ($item) {
             self::beforeSave($item);
+
             return true;
         });
 
         static::saving(function ($item) {
             //$item->modifying_user_id = Product::getCurrentUserId();
-            if(empty($item->code)) {
-                $item->code = 'SUP'.str_pad(self::getNextId(), 4, 0, STR_PAD_LEFT);
+            if (empty($item->supplier_code)) {
+                $item->supplier_code = 'SUP'.str_pad(self::getNextId(), 4, 0, STR_PAD_LEFT);
             }
-            return self::beforeSave($item);
+
+            // return self::beforeSave($item);
         });
     }
 
     /**
      * Function to do smth before save
      */
-    static public function beforeSave($item)
+    public static function beforeSave($item)
     {
-        if (!isset($item->id) || (isset($item->id) && empty($item->id))) {
-            $lastItem = self::orderBy('id','desc')->take(1)->get()->first();
+        if (! isset($item->id) || (isset($item->id) && empty($item->id))) {
+            $lastItem = self::orderBy('id', 'desc')->take(1)->get()->first();
             if ($lastItem) {
-                $item->id = $lastItem->id+1;
+                $item->id = $lastItem->id + 1;
             } else {
                 $item->id = 1;
             }
         }
+
         //$item->modifying_user_id = Product::getCurrentUserId();
         return true;
     }
 
-    static public function getNextId()
+    public static function getNextId()
     {
-        $last = Supplier::orderBy('id','desc')->take(1)->get()->first();
+        $last = Supplier::orderBy('id', 'desc')->take(1)->get()->first();
+
         return $last ? $last->id + 1 : 1;
     }
-
 
     public function jsonSerialize(): mixed
     {
         $json = [];
         $json['id'] = $this->id;
+        $json['supplierCode'] = $this->supplier_code;
         $json['name'] = $this->name;
         $json['email'] = $this->email;
         $json['address'] = $this->address;

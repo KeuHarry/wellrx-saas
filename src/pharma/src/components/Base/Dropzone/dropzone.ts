@@ -1,17 +1,17 @@
-import Dropzone, { type DropzoneOptions } from 'dropzone'
-import { type DropzoneElement } from './Dropzone.vue'
+import Dropzone, { type DropzoneOptions } from 'dropzone';
+import { type DropzoneElement } from './Dropzone.vue';
 
 const init = (
   el: DropzoneElement,
   props: {
-    options: DropzoneOptions
-    refKey?: string
+    options: DropzoneOptions;
+    refKey?: string;
   },
 ) => {
-  Dropzone.autoDiscover = false
+  Dropzone.autoDiscover = false;
   if (!el.dropzone) {
-    el.dropzone = new Dropzone(el, props.options)
+    el.dropzone = new Dropzone(el, props.options);
   }
-}
+};
 
-export { init }
+export { init };

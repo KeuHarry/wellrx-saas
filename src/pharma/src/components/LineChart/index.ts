@@ -1,3 +1,3 @@
-import LineChart from './LineChart.vue'
+import LineChart from './LineChart.vue';
 
-export default LineChart
+export default LineChart;

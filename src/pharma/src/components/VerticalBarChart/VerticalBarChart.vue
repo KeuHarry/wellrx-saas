@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { type ChartData, type ChartOptions } from 'chart.js/auto'
-import { useColorSchemeStore } from '@/stores/color-scheme'
-import { useDarkModeStore } from '@/stores/dark-mode'
-import Chart from '@/components/Base/Chart'
-import { getColor } from '@/utils/colors'
+import { computed } from 'vue';
+import { type ChartData, type ChartOptions } from 'chart.js/auto';
+import { useColorSchemeStore } from '@/stores/color-scheme';
+import { useDarkModeStore } from '@/stores/dark-mode';
+import Chart from '@/components/Base/Chart';
+import { getColor } from '@/utils/colors';
 
 const props = defineProps<{
-  width?: number
-  height?: number
-}>()
+  width?: number;
+  height?: number;
+}>();
 
-const colorScheme = computed(() => useColorSchemeStore().colorScheme)
-const darkMode = computed(() => useDarkModeStore().darkMode)
+const colorScheme = computed(() => useColorSchemeStore().colorScheme);
+const darkMode = computed(() => useDarkModeStore().darkMode);
 
 const data = computed<ChartData>(() => {
   return {
@@ -37,8 +37,8 @@ const data = computed<ChartData>(() => {
         backgroundColor: darkMode.value ? getColor('darkmode.200') : getColor('slate.300'),
       },
     ],
-  }
-})
+  };
+});
 
 const options = computed<ChartOptions>(() => {
   return {
@@ -72,7 +72,7 @@ const options = computed<ChartOptions>(() => {
           },
           color: getColor('slate.500', 0.8),
           callback: function (value) {
-            return '$' + value
+            return '$' + value;
           },
         },
         grid: {
@@ -84,8 +84,8 @@ const options = computed<ChartOptions>(() => {
         },
       },
     },
-  }
-})
+  };
+});
 </script>
 
 <template>

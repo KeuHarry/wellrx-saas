@@ -2,115 +2,59 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\InvalidInputTypeException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\LabelCode\LabelCodeRequest;
+use App\Http\Requests\LabelRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\LabelCode;
 use App\Services\LabelCodeService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class LabelCodeController extends ApiController
 {
     private LabelCodeService $labelCodeService;
+
     public function __construct(LabelCodeService $labelCodeService)
     {
         $this->labelCodeService = $labelCodeService;
         $this->model = new LabelCode();
-        parent::__construct();
-    }
-
-    public function createLabelCode(LabelCodeRequest $request) 
-    {
-        $content = $request->all();
-
-        $labelCode = $this->labelCodeService->createLabelCode($content);
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'labelCode' => $labelCode
-        ]);
-    }
-
-    public function getLabelCode(int $labelCodeId)
-    {
-        $labelCode = $this->labelCodeService->getLabelCode($labelCodeId);
-
-        if(! isset($labelCode)){
-            throw new ObjectNotFountException($labelCodeId, 'LabelCode');
-        }
-        return $this->successResponse($labelCode);
+        parent::__construct($labelCodeService);
     }
 
     public function getLabelCodes(SearchRequest $request)
     {
-        $search = $request->query->get('search');
-        $sortBy = $request->query->get('sortBy');
-        $sortOrder = $request->query->get('sortOrder');
-        $offset = $request->query->get('offset');
-        $limit = $request->query->get('limit');
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        $labelCodes = $this->labelCodeService->search(
-            $search,
-            $sortBy,
-            $sortOrder,
-            $offset,
-            $limit
-        );
+            $users = $this->labelCodeService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
 
-        if (! assert($labelCodes instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'success' => true,
-            'total' => empty($search) ? count($this->model->all()) : count($labelCodes),
-            'data' => $labelCodes
-        ]);
-    }
-
-    public function deleteLabelCode(int $labelCodeId)
-    {
-        $labelCode = $this->labelCodeService->getLabelCode($labelCodeId);
-
-        if(! isset($labelCode)){
-            throw new ObjectNotFountException($labelCodeId, 'LabelCode');
-        }
-
-        if($this->labelCodeService->deleteLabelCode($labelCode->id)){
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'labelCode' => $labelCodeId,
-                'message' => 'LabelCode successfully deleted.'
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
 
-    public function updateLabelCode(LabelCodeRequest $request, int $labelCodeId)
+    public function createLabelCode(LabelRequest $request): JsonResponse
     {
-        $labelCode = $this->labelCodeService->getLabelCode($labelCodeId);
+        return $this->store($request);
+    }
 
-        if(! isset($labelCode)){
-            throw new ObjectNotFountException($labelCodeId, 'LabelCode');
-        }
-
-        $content = $request->all();
-
-        $updatedLabelCode = $this->labelCodeService->updateLabelCode($labelCodeId, $content);
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'labelCode' => $updatedLabelCode,
-            'message' => 'Insurer successfully updated.'
-        ]);
+    public function updateLabelCode(LabelRequest $request, int $labelCodeId): JsonResponse
+    {
+        return $this->update($labelCodeId, $request);
     }
 }

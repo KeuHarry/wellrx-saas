@@ -1,5 +1,5 @@
 export interface CategoryRequest {
-  name: string
-  markup: number
-  description: string
+  name: string;
+  markup: number;
+  description: string;
 }

@@ -2,134 +2,71 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\InvalidInputTypeException;
-use App\Exceptions\UserNotFountException;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\SearchRequest;
+use App\Http\Requests\User\UserRequest;
 use App\Models\Tenant\User;
 use App\Services\UserService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends ApiController
 {
     private UserService $userService;
+
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
         $this->model = new User();
-        parent::__construct();
+        parent::__construct($userService);
     }
 
-    public function createUser(Request $request) 
+    public function createUser(UserRequest $request)
     {
-        $content = $request->all();
+        try {
+            $content = $request->safe();
+            $content = $content->toArray();
+            $content['password'] = $content['username'].'@123';
+            $result = $this->userService->create($content);
 
-        $validator = Validator::make($content, [
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
-            'username' => 'string',
-            'email' => 'required|email|unique:users',
-            'roleId' => 'nullable|integer'
-        ]);
-
-        if($validator->fails()){
-            throw new InvalidInputTypeException($validator);
+            return $this->successResponse($result, class_basename($this->model).' successfully created');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to create '.class_basename($this->model));
         }
-
-        $user = $this->userService->createUser(
-            $content['firstName'],
-            $content['lastName'],
-            $content['username'],
-            $content['email'],
-            $content['roleId']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'user' => $user
-        ]);
     }
 
-    public function getUser(int $userId)
+    public function updateUser(UserRequest $request, string $userId): JsonResponse
     {
-        $user = $this->userService->getUser($userId);
-
-        if(! isset($user)){
-            throw new UserNotFountException($userId);
-        }
-        return $this->successResponse($user);
+        return $this->update($userId, $request);
     }
 
-    public function getUsers()
+    public function getUsers(SearchRequest $request): JsonResponse
     {
-        $users = $this->userService->getUsers();
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        if (! assert($users instanceof Collection)) {
-            throw new InternalServerErrorException;
+            $users = $this->userService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
+
+            return $this->successResponse($users, class_basename($this->model).' successfully retrieved!');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
-        return $this->successResponse($users);
-    }
-
-    public function deleteUser(int $userId)
-    {
-        $user = $this->userService->getUser($userId);
-
-        if(! isset($user)){
-            throw new UserNotFountException($userId);
-        }
-
-        if($this->userService->deleteUser($user->id)){
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'user' => $userId,
-                'message' => 'User successfully deleted.'
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public function updateUser(Request $request, string $userId)
-    {
-        $user = $this->userService->getUser($userId);
-
-        if(! isset($user)){
-            throw new UserNotFountException($userId);
-        }
-
-        $content = $request->all();
-
-        $validator = Validator::make($content, [
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
-            'username' => 'string',
-            'email' => 'required|email',
-            'roleId' => 'nullable|integer'
-        ]);
-
-        if($validator->fails()){
-            throw new InvalidInputTypeException($validator);
-        }
-
-        $updatedUser = $this->userService->updateUser(
-            $user,
-            $content['firstName'],
-            $content['lastName'],
-            $content['username'],
-            $content['email'],
-            $content['roleId']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'user' => $updatedUser->id
-        ]);
-    }
+    }  
 }

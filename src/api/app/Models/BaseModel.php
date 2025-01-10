@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class BaseModel extends Model
 {
-
-
     //default model values
     public $defaults = [];
 
     //load all relations
     public $relations_data = [];
+
     public $return_all_relations_data = false;
 
     //validation
     protected $validation_rules = [];
+
     protected $errors;
 
     // Disables the log record in this model.
@@ -32,11 +32,12 @@ class BaseModel extends Model
     // Tell what actions you want to audit.
     //protected $auditableTypes = ['created', 'saved', 'deleted'];
 
-    public function getItemLabel() {
+    public function getItemLabel()
+    {
         return 'Item Label';
     }
 
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->setRawAttributes($this->defaults, true);
         parent::__construct($attributes);
@@ -52,6 +53,7 @@ class BaseModel extends Model
         if ($return_all_relations_data) {
             $this->return_all_relations_data = true;
         }
+
         return [];
     }
 
@@ -60,12 +62,13 @@ class BaseModel extends Model
         // make a new validator object
         $validator = Validator::make($data, $this->validation_rules);
         // check for failure
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             // set errors and return false
             $this->errors = $validator->errors()->all(['field' => ':key', 'message' => ':message']);
+
             return false;
         }
+
         // validation pass
         return true;
     }

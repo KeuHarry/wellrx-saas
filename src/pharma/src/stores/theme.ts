@@ -1,16 +1,16 @@
-import { defineStore } from 'pinia'
-import RubickSideMenu from '@/themes/Rubick/SideMenu'
-import RubickSimpleMenu from '@/themes/Rubick/SimpleMenu'
-import RubickTopMenu from '@/themes/Rubick/TopMenu'
-import IcewallSideMenu from '@/themes/Icewall/SideMenu'
-import IcewallSimpleMenu from '@/themes/Icewall/SimpleMenu'
-import IcewallTopMenu from '@/themes/Icewall/TopMenu'
-import TinkerSideMenu from '@/themes/Tinker/SideMenu'
-import TinkerSimpleMenu from '@/themes/Tinker/SimpleMenu'
-import TinkerTopMenu from '@/themes/Tinker/TopMenu'
-import EnigmaSideMenu from '@/themes/Enigma/SideMenu'
-import EnigmaSimpleMenu from '@/themes/Enigma/SimpleMenu'
-import EnigmaTopMenu from '@/themes/Enigma/TopMenu'
+import { defineStore } from 'pinia';
+import RubickSideMenu from '@/themes/Rubick/SideMenu';
+import RubickSimpleMenu from '@/themes/Rubick/SimpleMenu';
+import RubickTopMenu from '@/themes/Rubick/TopMenu';
+import IcewallSideMenu from '@/themes/Icewall/SideMenu';
+import IcewallSimpleMenu from '@/themes/Icewall/SimpleMenu';
+import IcewallTopMenu from '@/themes/Icewall/TopMenu';
+import TinkerSideMenu from '@/themes/Tinker/SideMenu';
+import TinkerSimpleMenu from '@/themes/Tinker/SimpleMenu';
+import TinkerTopMenu from '@/themes/Tinker/TopMenu';
+import EnigmaSideMenu from '@/themes/Enigma/SideMenu';
+import EnigmaSimpleMenu from '@/themes/Enigma/SimpleMenu';
+import EnigmaTopMenu from '@/themes/Enigma/TopMenu';
 
 export const themes = [
   {
@@ -73,15 +73,15 @@ export const themes = [
     layout: 'top-menu',
     component: EnigmaTopMenu,
   },
-] as const
+] as const;
 
-export type Themes = (typeof themes)[number]
+export type Themes = (typeof themes)[number];
 
 interface ThemeState {
   themeValue: {
-    name: Themes['name']
-    layout: Themes['layout']
-  }
+    name: Themes['name'];
+    layout: Themes['layout'];
+  };
 }
 
 export const getTheme = (search?: { name: Themes['name']; layout: Themes['layout'] }) => {
@@ -91,13 +91,13 @@ export const getTheme = (search?: { name: Themes['name']; layout: Themes['layout
           name: localStorage.getItem('theme'),
           layout: localStorage.getItem('layout'),
         }
-      : search
+      : search;
   return (
     themes.filter((item, key) => {
-      return item.name === searchValues.name && item.layout === searchValues.layout
+      return item.name === searchValues.name && item.layout === searchValues.layout;
     })[0] || themes[0]
-  )
-}
+  );
+};
 
 export const useThemeStore = defineStore('theme', {
   state: (): ThemeState => ({
@@ -109,14 +109,14 @@ export const useThemeStore = defineStore('theme', {
   getters: {
     theme(state) {
       if (localStorage.getItem('theme') === null) {
-        localStorage.setItem('theme', 'rubick')
+        localStorage.setItem('theme', 'rubick');
       }
 
       if (localStorage.getItem('layout') === null) {
-        localStorage.setItem('layout', 'side-menu')
+        localStorage.setItem('layout', 'side-menu');
       }
 
-      return state.themeValue
+      return state.themeValue;
     },
   },
   actions: {
@@ -124,17 +124,17 @@ export const useThemeStore = defineStore('theme', {
       this.themeValue = {
         name: theme,
         layout: this.themeValue.layout,
-      }
+      };
 
-      localStorage.setItem('theme', theme)
+      localStorage.setItem('theme', theme);
     },
     setLayout(layout: Themes['layout']) {
       this.themeValue = {
         name: this.themeValue.name,
         layout: layout,
-      }
+      };
 
-      localStorage.setItem('layout', layout)
+      localStorage.setItem('layout', layout);
     },
   },
-})
+});

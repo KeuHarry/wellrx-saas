@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import '@/assets/css/vendors/full-calendar.css'
-import FullCalendar from '@fullcalendar/vue3'
-import interactionPlugin from '@fullcalendar/interaction'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import listPlugin from '@fullcalendar/list'
-import { type CalendarOptions } from '@fullcalendar/core'
+import '@/assets/css/vendors/full-calendar.css';
+import FullCalendar from '@fullcalendar/vue3';
+import interactionPlugin from '@fullcalendar/interaction';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import { type CalendarOptions } from '@fullcalendar/core';
 
 const options: CalendarOptions = {
   plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -51,13 +51,13 @@ const options: CalendarOptions = {
       document.querySelectorAll('#checkbox-events').length &&
       (document.querySelectorAll('#checkbox-events')[0] as HTMLInputElement)?.checked
     ) {
-      ;(info.draggedEl.parentNode as HTMLElement).remove()
+      (info.draggedEl.parentNode as HTMLElement).remove();
       if (document.querySelectorAll('#calendar-events')[0].children.length == 1) {
-        document.querySelectorAll('#calendar-no-events')[0].classList.remove('hidden')
+        document.querySelectorAll('#calendar-no-events')[0].classList.remove('hidden');
       }
     }
   },
-}
+};
 </script>
 
 <template>

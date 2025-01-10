@@ -1,28 +1,28 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosurePanel> {
-  as?: string | object
+  as?: string | object;
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { DisclosurePanel as HeadlessDisclosurePanel, TransitionRoot } from '@headlessui/vue'
-import { useAttrs, computed } from 'vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { DisclosurePanel as HeadlessDisclosurePanel, TransitionRoot } from '@headlessui/vue';
+import { useAttrs, computed } from 'vue';
 
-const { as = 'div' } = defineProps<PanelProps>()
+const { as = 'div' } = defineProps<PanelProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 const computedClass = computed(() =>
   twMerge([
     'mt-3 text-slate-700 leading-relaxed dark:text-slate-400',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

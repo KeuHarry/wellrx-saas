@@ -18,20 +18,21 @@ class Product extends BaseModel
         static::creating(function (Product $item) {
             self::beforeCreating($item);
             self::beforeSave($item);
+
             return true;
         });
         static::updating(function (Product $item) {
             self::beforeSave($item);
+
             return true;
         });
     }
 
-
     public $validation_rules = [
         'label' => 'required|max:255|unique:product,label',
         'ndc' => 'max:255',
-        'product_category_id' =>'required',
-        'shelf_id' => 'required'
+        'product_category_id' => 'required',
+        'shelf_id' => 'required',
     ];
 
     /**
@@ -67,7 +68,7 @@ class Product extends BaseModel
         'retail_cost',
         'acq_cost',
         'shelf_id',
-        'product_category_id'
+        'product_category_id',
     ];
 
     /**
@@ -81,7 +82,6 @@ class Product extends BaseModel
 
     /**
      * Mutator for nullable foreign keys
-     *
      */
     /*public function setTaxIdAttribute($value) {
         $this->attributes['tax_id'] = $value ?: null;
@@ -142,7 +142,6 @@ class Product extends BaseModel
         }
         return $cip_codes;
     }*/
-    
 
     /**
      * Get the label codes data.
@@ -173,7 +172,7 @@ class Product extends BaseModel
     /**
      * Function to do smth before save
      */
-    static public function beforeCreating($item)
+    public static function beforeCreating($item)
     {
         return true;
     }
@@ -181,11 +180,11 @@ class Product extends BaseModel
     /**
      * Function to update some fields before save
      */
-    static public function beforeSave($item)
+    public static function beforeSave($item)
     {
         //$item->created_by = self::getCurrentUserId();
-        if(empty($item->code)) {
-            $item->code = 'PD'.str_pad(self::getNextId(), 5, 0, STR_PAD_LEFT);
+        if (empty($item->product_code)) {
+            $item->product_code = 'PD'.str_pad(self::getNextId(), 5, 0, STR_PAD_LEFT);
         }
         /*if(empty($item->stock_number)) {
             $item->stock_number = self::getNextStockNumber();
@@ -210,20 +209,24 @@ class Product extends BaseModel
         return Inventory::where('product_id', $this->id)->where('updated_at', '<=', $end_date)->sum('quantity_on');
     }*/
 
-    static public function getCurrentUserId(){
+    public static function getCurrentUserId()
+    {
         $currentUser = Auth::user();
-        return $currentUser? $currentUser->id : 0;
+
+        return $currentUser ? $currentUser->id : 0;
     }
 
-    static public function getNextId()
+    public static function getNextId()
     {
-        $lastProd = Product::orderBy('id','desc')->take(1)->get()->first();
+        $lastProd = Product::orderBy('id', 'desc')->take(1)->get()->first();
+
         return $lastProd ? $lastProd->id + 1 : 1;
     }
 
-    static public function getNextStockNumber()
+    public static function getNextStockNumber()
     {
-        $lastItem = Product::orderBy('id','desc')->take(1)->get()->first();
+        $lastItem = Product::orderBy('id', 'desc')->take(1)->get()->first();
+
         return $lastItem ? $lastItem->stock_number + 1 : 1;
     }
 
@@ -231,7 +234,7 @@ class Product extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['code'] = $this->code;
+        $json['productCode'] = $this->product_code;
         $json['stockNumber'] = $this->stock_number;
         $json['label'] = $this->label;
         $json['pkgSize'] = $this->pkg_size;

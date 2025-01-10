@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('shelves', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20)->unique();
+            $table->string('shelf_code', 20)->unique();
             $table->string('name', 50);
             $table->string('description')->nullable();
             $table->timestamps();

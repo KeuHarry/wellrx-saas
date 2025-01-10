@@ -24,7 +24,7 @@ class CloseCashRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'required|integer'
+            'status' => 'required|integer',
         ];
     }
 }

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import '@/assets/css/themes/enigma/side-nav.css'
-import { useRoute, useRouter } from 'vue-router'
-import Tippy from '@/components/Base/Tippy'
-import Lucide from '@/components/Base/Lucide'
-import TopBar from '@/components/Themes/Enigma/TopBar'
-import MobileMenu from '@/components/MobileMenu'
-import { useMenuStore } from '@/stores/menu'
+import '@/assets/css/themes/enigma/side-nav.css';
+import { useRoute, useRouter } from 'vue-router';
+import Tippy from '@/components/Base/Tippy';
+import Lucide from '@/components/Base/Lucide';
+import TopBar from '@/components/Themes/Enigma/TopBar';
+import MobileMenu from '@/components/MobileMenu';
+import { useMenuStore } from '@/stores/menu';
 import {
   type ProvideForceActiveMenu,
   forceActiveMenu,
@@ -15,37 +15,37 @@ import {
   linkTo,
   enter,
   leave,
-} from './simple-menu'
-import { watch, reactive, computed, onMounted, provide } from 'vue'
+} from './simple-menu';
+import { watch, reactive, computed, onMounted, provide } from 'vue';
 
-const route: Route = useRoute()
-const router = useRouter()
-const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([])
+const route: Route = useRoute();
+const router = useRouter();
+const formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
 const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
-  Object.assign(formattedMenu, computedFormattedMenu)
-}
-const menuStore = useMenuStore()
-const menu = computed(() => nestedMenu(menuStore.menu('simple-menu'), route))
+  Object.assign(formattedMenu, computedFormattedMenu);
+};
+const menuStore = useMenuStore();
+const menu = computed(() => nestedMenu(menuStore.menu('simple-menu'), route));
 
 provide<ProvideForceActiveMenu>('forceActiveMenu', (pageName: string) => {
-  forceActiveMenu(route, pageName)
-  setFormattedMenu(menu.value)
-})
+  forceActiveMenu(route, pageName);
+  setFormattedMenu(menu.value);
+});
 
 watch(menu, () => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 
 watch(
   computed(() => route.path),
   () => {
-    delete route.forceActiveMenu
+    delete route.forceActiveMenu;
   },
-)
+);
 
 onMounted(() => {
-  setFormattedMenu(menu.value)
-})
+  setFormattedMenu(menu.value);
+});
 </script>
 
 <template>
@@ -92,17 +92,17 @@ onMounted(() => {
                         try {
                           return router.resolve({
                             name: pageName,
-                          }).fullPath
+                          }).fullPath;
                         } catch (err) {
-                          return ''
+                          return '';
                         }
                       })(menu.pageName)
                 "
                 @click="
                   (event: MouseEvent) => {
-                    event.preventDefault()
-                    linkTo(menu, router)
-                    setFormattedMenu([...formattedMenu])
+                    event.preventDefault();
+                    linkTo(menu, router);
+                    setFormattedMenu([...formattedMenu]);
                   }
                 "
                 :class="[
@@ -151,9 +151,9 @@ onMounted(() => {
                               try {
                                 return router.resolve({
                                   name: pageName,
-                                }).fullPath
+                                }).fullPath;
                               } catch (err) {
-                                return ''
+                                return '';
                               }
                             })(subMenu.pageName)
                       "
@@ -169,9 +169,9 @@ onMounted(() => {
                       ]"
                       @click="
                         (event: MouseEvent) => {
-                          event.preventDefault()
-                          linkTo(subMenu, router)
-                          setFormattedMenu([...formattedMenu])
+                          event.preventDefault();
+                          linkTo(subMenu, router);
+                          setFormattedMenu([...formattedMenu]);
                         }
                       "
                     >
@@ -217,9 +217,9 @@ onMounted(() => {
                                     try {
                                       return router.resolve({
                                         name: pageName,
-                                      }).fullPath
+                                      }).fullPath;
                                     } catch (err) {
-                                      return ''
+                                      return '';
                                     }
                                   })(lastSubMenu.pageName)
                             "
@@ -235,9 +235,9 @@ onMounted(() => {
                             ]"
                             @click="
                               (event: MouseEvent) => {
-                                event.preventDefault()
-                                linkTo(lastSubMenu, router)
-                                setFormattedMenu([...formattedMenu])
+                                event.preventDefault();
+                                linkTo(lastSubMenu, router);
+                                setFormattedMenu([...formattedMenu]);
                               }
                             "
                           >

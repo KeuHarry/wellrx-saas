@@ -2,4 +2,4 @@ enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC',
 }
-export default SortOrder
+export default SortOrder;

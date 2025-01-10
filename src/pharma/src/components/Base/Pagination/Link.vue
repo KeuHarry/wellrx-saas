@@ -1,23 +1,23 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 
 export interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
-  as?: string | object
-  active?: boolean
+  as?: string | object;
+  active?: boolean;
 }
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type LiHTMLAttributes, useAttrs } from 'vue'
-import Button from '../Button'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type LiHTMLAttributes, useAttrs } from 'vue';
+import Button from '../Button';
 
-const { as = 'a', active = false } = defineProps<LinkProps>()
+const { as = 'a', active = false } = defineProps<LinkProps>();
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
@@ -25,7 +25,7 @@ const computedClass = computed(() =>
     active && '!box font-medium dark:bg-darkmode-400',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 </script>
 
 <template>

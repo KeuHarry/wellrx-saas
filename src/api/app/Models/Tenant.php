@@ -11,7 +11,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains, SoftDeletes, Billable;
+    use Billable, HasDatabase, HasDomains, SoftDeletes;
 
     /**
      * The database table used by the model.

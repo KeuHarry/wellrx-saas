@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import _ from 'lodash'
-import { ref, provide } from 'vue'
-import fakerData from '@/utils/faker'
-import Button from '@/components/Base/Button'
-import Pagination from '@/components/Base/Pagination'
-import { FormInput, FormSelect } from '@/components/Base/Form'
-import TinySlider, { type TinySliderElement } from '@/components/Base/TinySlider'
-import Lucide from '@/components/Base/Lucide'
-import Tippy from '@/components/Base/Tippy'
-import Litepicker from '@/components/Base/Litepicker'
-import ReportDonutChart from '@/components/ReportDonutChart'
-import ReportLineChart from '@/components/ReportLineChart'
-import ReportPieChart from '@/components/ReportPieChart'
-import ReportDonutChart1 from '@/components/ReportDonutChart1'
-import SimpleLineChart1 from '@/components/SimpleLineChart1'
-import LeafletMap from '@/components/LeafletMap'
-import { Menu } from '@/components/Base/Headless'
-import Table from '@/components/Base/Table'
+import _ from 'lodash';
+import { ref, provide } from 'vue';
+import fakerData from '@/utils/faker';
+import Button from '@/components/Base/Button';
+import Pagination from '@/components/Base/Pagination';
+import { FormInput, FormSelect } from '@/components/Base/Form';
+import TinySlider, { type TinySliderElement } from '@/components/Base/TinySlider';
+import Lucide from '@/components/Base/Lucide';
+import Tippy from '@/components/Base/Tippy';
+import Litepicker from '@/components/Base/Litepicker';
+import ReportDonutChart from '@/components/ReportDonutChart';
+import ReportLineChart from '@/components/ReportLineChart';
+import ReportPieChart from '@/components/ReportPieChart';
+import ReportDonutChart1 from '@/components/ReportDonutChart1';
+import SimpleLineChart1 from '@/components/SimpleLineChart1';
+import LeafletMap from '@/components/LeafletMap';
+import { Menu } from '@/components/Base/Headless';
+import Table from '@/components/Base/Table';
 
-const salesReportFilter = ref<string>('')
-const importantNotesRef = ref<TinySliderElement>()
+const salesReportFilter = ref<string>('');
+const importantNotesRef = ref<TinySliderElement>();
 
 provide('bind[importantNotesRef]', (el: TinySliderElement) => {
-  importantNotesRef.value = el
-})
+  importantNotesRef.value = el;
+});
 
 const prevImportantNotes = () => {
-  importantNotesRef.value?.tns.goTo('prev')
-}
+  importantNotesRef.value?.tns.goTo('prev');
+};
 const nextImportantNotes = () => {
-  importantNotesRef.value?.tns.goTo('next')
-}
+  importantNotesRef.value?.tns.goTo('next');
+};
 </script>
 
 <template>

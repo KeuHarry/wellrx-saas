@@ -1,30 +1,30 @@
 <script lang="ts">
-type Variant = 'default' | 'boxed'
+type Variant = 'default' | 'boxed';
 
 export interface GroupProps {
-  as?: string | object
-  selectedIndex?: number
-  variant?: Variant
+  as?: string | object;
+  selectedIndex?: number;
+  variant?: Variant;
 }
 </script>
 
 <script setup lang="ts">
-import { ref, provide, useSlots, type ComputedRef, computed } from 'vue'
+import { ref, provide, useSlots, type ComputedRef, computed } from 'vue';
 
 export type ProvideGroup = ComputedRef<{
-  selectedIndex?: number
-  setSelectedIndex: (value: number) => void
-  variant?: Variant
-}>
+  selectedIndex?: number;
+  setSelectedIndex: (value: number) => void;
+  variant?: Variant;
+}>;
 
-const slots = useSlots()
+const slots = useSlots();
 
-const { as = 'div', selectedIndex = 0, variant = 'default' } = defineProps<GroupProps>()
+const { as = 'div', selectedIndex = 0, variant = 'default' } = defineProps<GroupProps>();
 
-const active = ref(selectedIndex)
+const active = ref(selectedIndex);
 const setActive = (value: number) => {
-  active.value = value
-}
+  active.value = value;
+};
 
 provide<ProvideGroup>(
   'group',
@@ -33,9 +33,9 @@ provide<ProvideGroup>(
       selectedIndex: active.value,
       setSelectedIndex: setActive,
       variant: variant,
-    }
+    };
   }),
-)
+);
 </script>
 
 <template>

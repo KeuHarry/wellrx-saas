@@ -1,10 +1,10 @@
-import useCreateSession from '@/composables/api/subscriptions/useCreateSession'
-import { defineStore } from 'pinia'
+import useCreateSession from '@/composables/api/subscriptions/useCreateSession';
+import { defineStore } from 'pinia';
 
 type SubscriptionState = {
-  sessionId: string
-  isPending: boolean
-}
+  sessionId: string;
+  isPending: boolean;
+};
 
 export const useSubscriptionStore = defineStore('subscription-store', {
   state: (): SubscriptionState => ({
@@ -18,19 +18,18 @@ export const useSubscriptionStore = defineStore('subscription-store', {
 
   actions: {
     async createSessionApi(priceId: string) {
-      const createSession = useCreateSession()
+      const createSession = useCreateSession();
       try {
-        this.isPending = true
-        const stripeSession = await createSession(priceId)
-        this.sessionId = stripeSession.sessionId
-        console.log(stripeSession)
-        return stripeSession
+        this.isPending = true;
+        const stripeSession = await createSession(priceId);
+        this.sessionId = stripeSession.sessionId;
+        return stripeSession;
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
       }
     },
   },
-})
+});
 
-export default useSubscriptionStore
+export default useSubscriptionStore;

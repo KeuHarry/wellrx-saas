@@ -1,8 +1,8 @@
 export interface RegistrationResponse {
-  success: string
+  success: string;
   tenant: {
-    id: String
-    identifier: string
-    account: string
-  }
+    id: string;
+    identifier: string;
+    account: string;
+  };
 }

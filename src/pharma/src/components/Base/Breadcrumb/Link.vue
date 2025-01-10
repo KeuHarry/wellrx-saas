@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { type RouterLinkProps } from 'vue-router'
-import { computed, type LiHTMLAttributes, inject } from 'vue'
-import { type ProvideBeradcrumb } from './Breadcrumb.vue'
+import { type RouterLinkProps } from 'vue-router';
+import { computed, type LiHTMLAttributes, inject } from 'vue';
+import { type ProvideBeradcrumb } from './Breadcrumb.vue';
 
 export interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
-  to?: RouterLinkProps['to']
-  active?: boolean
-  index?: number
+  to?: RouterLinkProps['to'];
+  active?: boolean;
+  index?: number;
 }
 
-const { to = '', active = false, index = 0 } = defineProps<LinkProps>()
+const { to = '', active = false, index = 0 } = defineProps<LinkProps>();
 
-const breadcrumb = inject<ProvideBeradcrumb>('breadcrumb')
+const breadcrumb = inject<ProvideBeradcrumb>('breadcrumb');
 
 const computedClass = computed(() => [
   index > 0 && 'relative ml-5 pl-0.5',
@@ -26,7 +26,7 @@ const computedClass = computed(() => [
   index > 0 && 'dark:before:bg-chevron-white',
   breadcrumb && !breadcrumb.light && active && 'text-slate-800 cursor-text dark:text-slate-400',
   breadcrumb && breadcrumb.light && active && 'text-white/70',
-])
+]);
 </script>
 
 <template>

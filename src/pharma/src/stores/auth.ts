@@ -1,13 +1,13 @@
-import useCsrfCookie from '@/composables/api/authentication/useCsrfCookie'
-import useLogin from '@/composables/api/authentication/useLogin'
-import { AuthUser } from '@/composables/models/AuthUser'
-import { Credentials } from '@/types/credentials'
-import { defineStore } from 'pinia'
+import useCsrfCookie from '@/composables/api/authentication/useCsrfCookie';
+import useLogin from '@/composables/api/authentication/useLogin';
+import { AuthUser } from '@/composables/models/AuthUser';
+import { Credentials } from '@/types/credentials';
+import { defineStore } from 'pinia';
 
 type TenantState = {
-  authUser: AuthUser | null
-  isPending: boolean
-}
+  authUser: AuthUser | null;
+  isPending: boolean;
+};
 
 export const useAuthStore = defineStore('auth-store', {
   state: (): TenantState => ({
@@ -21,31 +21,31 @@ export const useAuthStore = defineStore('auth-store', {
 
   actions: {
     async loginApi(credentials: Credentials) {
-      const login = useLogin()
+      const login = useLogin();
       try {
-        this.isPending = true
-        const response = await login(credentials)
-        this.authUser = response.user
-        sessionStorage.setItem('user', JSON.stringify(this.authUser))
-        sessionStorage.setItem('authToken', response.token)
-        return response
+        this.isPending = true;
+        const response = await login(credentials);
+        this.authUser = response.user;
+        sessionStorage.setItem('user', JSON.stringify(this.authUser));
+        sessionStorage.setItem('authToken', response.token);
+        return response;
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
       }
     },
 
     async csrfCookieApi() {
-      const csrfCookie = useCsrfCookie()
+      const csrfCookie = useCsrfCookie();
       try {
-        this.isPending = true
-        await csrfCookie()
+        this.isPending = true;
+        await csrfCookie();
       } catch (error) {
-        this.isPending = false
-        throw error
+        this.isPending = false;
+        throw error;
       }
     },
   },
-})
+});
 
-export default useAuthStore
+export default useAuthStore;

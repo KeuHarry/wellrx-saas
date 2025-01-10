@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { provide, ref, computed, type ComputedRef } from 'vue'
+import { provide, ref, computed, type ComputedRef } from 'vue';
 
-export type ProvidePreview = ComputedRef<boolean>
+export type ProvidePreview = ComputedRef<boolean>;
 
-const previewCode = ref(true)
+const previewCode = ref(true);
 
 provide<ProvidePreview>(
   'preview',
   computed(() => previewCode.value),
-)
+);
 </script>
 
 <template>
@@ -16,7 +16,7 @@ provide<ProvidePreview>(
     <slot
       :toggle="
         () => {
-          previewCode = !previewCode
+          previewCode = !previewCode;
         }
       "
     ></slot>

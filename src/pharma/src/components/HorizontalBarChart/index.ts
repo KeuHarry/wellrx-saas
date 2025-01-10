@@ -1,3 +1,3 @@
-import HorizontalBarChart from './HorizontalBarChart.vue'
+import HorizontalBarChart from './HorizontalBarChart.vue';
 
-export default HorizontalBarChart
+export default HorizontalBarChart;

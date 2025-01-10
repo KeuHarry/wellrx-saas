@@ -38,11 +38,12 @@ class Tax extends BaseModel
      */
     protected $fillable = [
         'label',
-        'cost', 
-        'description'
+        'cost',
+        'description',
     ];
 
-    public function getItemLabel() {
+    public function getItemLabel()
+    {
         return 'Tax';
     }
 

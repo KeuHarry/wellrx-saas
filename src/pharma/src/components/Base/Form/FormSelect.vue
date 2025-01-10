@@ -1,29 +1,29 @@
 <script lang="ts">
 export default {
   inheritAttrs: false,
-}
+};
 </script>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { twMerge } from 'tailwind-merge'
-import { computed, type SelectHTMLAttributes, useAttrs, inject, ref } from 'vue'
-import { type ProvideFormInline } from './FormInline.vue'
+import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
+import { computed, type SelectHTMLAttributes, useAttrs, inject, ref } from 'vue';
+import { type ProvideFormInline } from './FormInline.vue';
 
 export interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
-  value?: SelectHTMLAttributes['value']
-  modelValue?: SelectHTMLAttributes['value']
-  formSelectSize?: 'sm' | 'lg'
+  value?: SelectHTMLAttributes['value'];
+  modelValue?: SelectHTMLAttributes['value'];
+  formSelectSize?: 'sm' | 'lg';
 }
 
 interface FormSelectEmit {
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void;
 }
 
-const selectRef = ref<HTMLSelectElement>()
-const props = defineProps<FormSelectProps>()
-const attrs = useAttrs()
-const formInline = inject<ProvideFormInline>('formInline', false)
+const selectRef = ref<HTMLSelectElement>();
+const props = defineProps<FormSelectProps>();
+const attrs = useAttrs();
+const formInline = inject<ProvideFormInline>('formInline', false);
 
 const computedClass = computed(() =>
   twMerge([
@@ -35,28 +35,28 @@ const computedClass = computed(() =>
     formInline && 'flex-1',
     typeof attrs.class === 'string' && attrs.class,
   ]),
-)
+);
 
-const emit = defineEmits<FormSelectEmit>()
+const emit = defineEmits<FormSelectEmit>();
 
 const localValue = computed({
   get() {
     if (props.modelValue === undefined && props.value === undefined) {
-      const firstOption = selectRef.value?.querySelectorAll('option')[0]
+      const firstOption = selectRef.value?.querySelectorAll('option')[0];
       return (
         firstOption !== undefined &&
         (firstOption.getAttribute('value') !== null
           ? firstOption.getAttribute('value')
           : firstOption.text)
-      )
+      );
     }
 
-    return props.modelValue === undefined ? props.value : props.modelValue
+    return props.modelValue === undefined ? props.value : props.modelValue;
   },
   set(newValue) {
-    emit('update:modelValue', newValue)
+    emit('update:modelValue', newValue);
   },
-})
+});
 </script>
 
 <template>

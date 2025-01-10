@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import Tippy from '@/components/Base/Tippy'
+import Tippy from '@/components/Base/Tippy';
 </script>
 
 <style lang="scss">

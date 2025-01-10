@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-import { Tab as HeadlessTab } from '@headlessui/vue'
-import Provider from './Provider.vue'
-import { type ProvideList } from '../List.vue'
+import { inject } from 'vue';
+import { Tab as HeadlessTab } from '@headlessui/vue';
+import Provider from './Provider.vue';
+import { type ProvideList } from '../List.vue';
 
 export interface TabProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessTab> {
-  fullWidth?: boolean
+  fullWidth?: boolean;
 }
 
-const { fullWidth = true } = defineProps<TabProps>()
+const { fullWidth = true } = defineProps<TabProps>();
 
-const list = inject<ProvideList>('list')
+const list = inject<ProvideList>('list');
 </script>
 
 <template>

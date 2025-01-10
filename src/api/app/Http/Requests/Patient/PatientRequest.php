@@ -35,7 +35,7 @@ class PatientRequest extends FormRequest
             'insurerId' => 'integer|nullable',
             'caretakerId' => 'integer|nullable',
             'allergies' => 'string|nullable',
-            'medecineHistory' => 'string|nullable'
+            'medecineHistory' => 'string|nullable',
         ];
     }
 }

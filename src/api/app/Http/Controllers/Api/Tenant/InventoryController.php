@@ -15,14 +15,15 @@ use Illuminate\Http\Response;
 class InventoryController extends ApiController
 {
     private InventoryService $inventoryService;
+
     public function __construct(InventoryService $inventoryService)
     {
         $this->inventoryService = $inventoryService;
-        $this->model = new Inventory();
+        $this->model = new Inventory;
         parent::__construct();
     }
 
-    public function createInventory(InventoryRequest $request) 
+    public function createInventory(InventoryRequest $request)
     {
         $content = $request->all();
         $content['createdBy'] = $request->user()->id;
@@ -31,7 +32,7 @@ class InventoryController extends ApiController
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'inventory' => $inventory
+            'inventory' => $inventory,
         ]);
     }
 
@@ -39,9 +40,10 @@ class InventoryController extends ApiController
     {
         $inventory = $this->inventoryService->getInventory($inventoryId);
 
-        if(! isset($inventory)){
+        if (! isset($inventory)) {
             throw new ObjectNotFountException($inventoryId, 'Inventory');
         }
+
         return $this->successResponse($inventory);
     }
 
@@ -52,6 +54,7 @@ class InventoryController extends ApiController
         if (! assert($inventories instanceof Collection)) {
             throw new InternalServerErrorException;
         }
+
         return $this->successResponse($inventories);
     }
 
@@ -59,20 +62,20 @@ class InventoryController extends ApiController
     {
         $inventory = $this->inventoryService->getInventory($inventoryId);
 
-        if(! isset($inventory)){
+        if (! isset($inventory)) {
             throw new ObjectNotFountException($inventoryId, 'Inventory');
         }
 
-        if($this->inventoryService->deleteInventory($inventory->id)){
+        if ($this->inventoryService->deleteInventory($inventory->id)) {
             return new JsonResponse([
                 'code' => Response::HTTP_OK,
                 'inventory' => $inventoryId,
-                'message' => 'Inventory successfully deleted.'
+                'message' => 'Inventory successfully deleted.',
             ]);
         } else {
             return new JsonResponse([
                 'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support'
+                'message' => 'Internal Server Error. Try again or contact support',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
