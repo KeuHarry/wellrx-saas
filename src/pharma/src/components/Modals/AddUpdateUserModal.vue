@@ -117,6 +117,8 @@ import { UserRequest } from '@/composables/models/UserRequest';
 import Language from '@/enums/language';
 import { languageList } from '@/constants/languageList';
 import useRoleStore from '@/stores/role';
+import useTenantStore from '@/stores/tenant';
+import { useRoute } from 'vue-router';
 
 const emit = defineEmits(['submit']);
 
@@ -132,13 +134,19 @@ const formData = ref<UserRequest>({
   roleId: null,
 });
 const languages = ref(languageList);
+const route = useRoute();
 
+const tenantStore = useTenantStore();
 const roleStore = useRoleStore();
 
 // COMPUTED
 const roles = computed(() => roleStore.getRoles);
 
 // METHODS
+const accountVerification = async () => {
+  await tenantStore.accountVerificationApi(route.params.identifier as string);
+};
+
 const openUserModal = (userRequest: UserRequest, id: number | null) => {
   show.value = true;
   userId.value = id;
@@ -175,6 +183,7 @@ defineExpose({
 });
 
 onMounted(async () => {
+  await accountVerification();
   await getRolesData();
 });
 </script>

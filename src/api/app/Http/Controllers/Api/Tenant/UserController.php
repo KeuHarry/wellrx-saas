@@ -9,7 +9,6 @@ use App\Models\Tenant\User;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
@@ -62,7 +61,7 @@ class UserController extends ApiController
                 $sortBy
             );
 
-            return $this->successResponse($users, class_basename($this->model).' successfully retrieved!');
+            return $this->successResponse($users, class_basename($this->model).' successfully retrieved!', total: $this->userService->getModelCount());
         } catch (ValidationException $e) {
             return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {

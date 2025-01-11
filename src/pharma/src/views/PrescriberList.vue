@@ -19,14 +19,14 @@
       <div class="hidden mx-auto md:block text-slate-500">Showing {{ startPrescriberCount }} to {{ paginate }} of {{ prescriberTotal }} entries</div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-72 text-slate-500">
-          <FormInput type="text" class="w-72 pr-10 !box" placeholder="Search..." />
+          <FormInput v-model="search" @input="searchPrescriber" type="text" class="w-72 pr-10 !box" placeholder="Search..." />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
       </div>
     </div>
     <!-- BEGIN: Data List -->
     <div class="col-span-12 overflow-auto intro-y lg:overflow-visible">
-      <Table class="border-spacing-y-[5px] border-separate -mt-2">
+      <Table class="border-spacing-y-[4px] border-separate -mt-2">
         <Table.Thead>
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">NAME</Table.Th>
@@ -87,6 +87,18 @@
               </div>
             </Table.Td>
           </Table.Tr>
+          <Table.Tr
+            v-if="!hasPrescriber"
+          >
+            <Table.Td
+            :colspan="colspan"
+            class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              <div class="grid grid-cols-1 p-5 text-center">
+                <span class="text-slate-400">No Records</span>
+              </div>
+            </Table.Td>
+          </Table.Tr>
         </Table.Tbody>
       </Table>
     </div>
@@ -134,6 +146,8 @@ import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
 import { PrescriberRequest } from '@/composables/models/PrescriberRequest';
 import PaginationComponent from "@/components/PaginationComponent.vue";
+import { FIRSTNAME } from '@/constants/properties';
+import SortOrder from '@/enums/sortOrder';
 
 const prescriberModal = ref<InstanceType<typeof AddUpdatePrescriberModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
@@ -197,8 +211,20 @@ const handleItemsPerPageChange = (itemsPerPage: number) => {
 };
 
 const getPrescribersData = async () => {
-  await prescriberStore.getPrescribersApi();
+  await prescriberStore.getPrescribersApi({
+    search: search.value,
+    sortBy: FIRSTNAME,
+    sortOrder: SortOrder.ASC,
+    offset: (currentPage.value - 1) * paginate.value,
+    limit: paginate.value
+  });
 };
+
+const searchPrescriber = async () => {
+  if (search.value.length === 0 || search.value.length >= 3) {
+    await getPrescribersData();
+  }
+}
 
 const openPrescriberModal = (prescriber: Prescriber | null = null) => {
   prescriberModal.value?.openPrescriberModal(
@@ -239,6 +265,7 @@ const deletePrescriber = async (id: number) => {
 
 onMounted(async () => {
   await accountVerification();
+  getColspan();
   await getPrescribersData();
 });
 </script>

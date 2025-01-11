@@ -17,7 +17,7 @@ class LabelRepository extends BaseRepository
     {
         return LabelCode::when($search, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('code', 'LIKE', "%{$search}%")
+                $query->where('label_code', 'LIKE', "%{$search}%")
                     ->orWhere('label', 'LIKE', "%{$search}%");
             });
         })

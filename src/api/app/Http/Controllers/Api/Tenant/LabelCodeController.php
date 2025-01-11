@@ -32,7 +32,7 @@ class LabelCodeController extends ApiController
             $offset = $request->query->get('offset');
             $limit = $request->query->get('limit');
 
-            $users = $this->labelCodeService->search(
+            $labelCodes = $this->labelCodeService->search(
                 $offset,
                 $limit,
                 $sortOrder,
@@ -40,7 +40,12 @@ class LabelCodeController extends ApiController
                 $sortBy
             );
 
-            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!');
+            return $this->successResponse(
+                $labelCodes, 
+                class_basename($this->model).'s successfully retrieved!', 
+                Response::HTTP_OK, 
+                $this->labelCodeService->getModelCount()
+            );
         } catch (ValidationException $e) {
             return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {

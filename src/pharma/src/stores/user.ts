@@ -38,11 +38,12 @@ export const useUserStore = defineStore('user-store', {
   getters: {
     getUsers: (state) => state.users,
     getUser: (state) => state.user,
+    getUserTotal: (state) => state.userTotal,
   },
 
   actions: {
-    async getUsersApi() {
-      const getUsers = useGetUsers(this.searchParams);
+    async getUsersApi(searchParams : SearchParams | null = null) {
+      const getUsers = useGetUsers(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getUsers();

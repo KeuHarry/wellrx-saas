@@ -42,8 +42,8 @@ export const usePrescriberStore = defineStore('prescriber-store', {
   },
 
   actions: {
-    async getPrescribersApi() {
-      const getPrescribers = useGetPrescribers(this.searchParams);
+    async getPrescribersApi(searchParams: SearchParams | null = null) {
+      const getPrescribers = useGetPrescribers(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getPrescribers();
