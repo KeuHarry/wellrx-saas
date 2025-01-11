@@ -23,6 +23,7 @@ class ShelfService extends ApiService
     ): Collection {
 
         $shelves = Shelf::where('name', 'LIKE', '%'.$search.'%')
+            ->orWhere('shelf_code', 'LIKE', '%'.$search.'%')
             ->offset($offset)
             ->limit($limit)
             ->orderBy($sortBy, $sortOrder)

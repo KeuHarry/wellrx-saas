@@ -25,6 +25,7 @@ class FeeService extends ApiService
     ): Collection 
     {
         $fees = Fee::where('name', 'LIKE', '%'.$search.'%')
+                    ->orWhere('fee_code', 'LIKE', '%'.$search.'%')
                     ->orWhere('tag', $tag)
                     ->offset($offset)
                     ->limit($limit)

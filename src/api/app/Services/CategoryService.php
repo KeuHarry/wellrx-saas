@@ -23,6 +23,7 @@ class CategoryService extends ApiService
         int $limit = 10
     ): Collection {
         $categories = Category::where('name', 'LIKE', '%'.$search.'%')
+            ->orWhere('category_code', 'LIKE', '%'.$search.'%')
             ->offset($offset)
             ->limit($limit)
             ->orderBy($sortBy, $sortOrder)

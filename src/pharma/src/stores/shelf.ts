@@ -13,6 +13,7 @@ import useDeleteShelf from '@/composables/api/shelves/useDeleteShelf';
 type ShelfState = {
   shelves: Shelf[];
   shelf: Shelf | null;
+  shelfTotal: number;
   searchParams: SearchParams;
   isPending: boolean;
 };
@@ -23,6 +24,7 @@ export const useShelfStore = defineStore('shelf-store', {
   state: (): ShelfState => ({
     shelves: [],
     shelf: null,
+    shelfTotal: 0,
     searchParams: {
       search: '',
       sortBy: SHELF_CODE,
@@ -36,15 +38,17 @@ export const useShelfStore = defineStore('shelf-store', {
   getters: {
     getShelves: (state) => state.shelves,
     getShelf: (state) => state.shelf,
+    getShelfTotal: (state) => state.shelfTotal,
   },
 
   actions: {
-    async getShelvesApi() {
-      const getShelves = useGetShelves(this.searchParams);
+    async getShelvesApi(searchParams: SearchParams | null = null) {
+      const getShelves = useGetShelves(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getShelves();
         this.shelves = response.data ?? [];
+        this.shelfTotal = response.total ?? 0;
         return response;
       } catch (error) {
         this.isPending = false;

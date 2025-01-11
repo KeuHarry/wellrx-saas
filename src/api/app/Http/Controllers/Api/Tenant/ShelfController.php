@@ -47,6 +47,6 @@ class ShelfController extends ApiController
             $limit
         );
 
-        return $this->successResponse($shelves, 'Shelves successfully retrieved!');
+        return $this->successResponse($shelves, 'Shelves successfully retrieved!', total: $this->shelfService->getModelCount());
     }
 }

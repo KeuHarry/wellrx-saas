@@ -26,7 +26,7 @@
     </div>
     <!-- BEGIN: Data List -->
     <div class="col-span-12 overflow-auto intro-y lg:overflow-visible">
-      <Table class="border-spacing-y-[5px] border-separate -mt-2">
+      <Table class="border-spacing-y-[4px] border-separate -mt-2">
         <Table.Thead>
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">CODE</Table.Th>
