@@ -40,7 +40,7 @@ class SupplierController extends ApiController
                 $sortBy
             );
 
-            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!');
+            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!', total: $this->supplierService->getModelCount());
         } catch (ValidationException $e) {
             return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {

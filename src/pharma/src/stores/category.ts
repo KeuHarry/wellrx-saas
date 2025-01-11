@@ -13,6 +13,7 @@ import useDeleteCategory from '@/composables/api/categories/useDeleteCategory';
 type CategoryState = {
   categories: Category[];
   category: Category | null;
+  categoryTotal: number;
   searchParams: SearchParams;
   isPending: boolean;
 };
@@ -23,6 +24,7 @@ export const useCategoryStore = defineStore('category-store', {
   state: (): CategoryState => ({
     categories: [],
     category: null,
+    categoryTotal: 0,
     searchParams: {
       search: '',
       sortBy: CATEGORY_CODE,
@@ -36,15 +38,17 @@ export const useCategoryStore = defineStore('category-store', {
   getters: {
     getCategories: (state) => state.categories,
     getCategory: (state) => state.category,
+    getCategoryTotal: (state) => state.categoryTotal,
   },
 
   actions: {
-    async getCategoriesApi() {
-      const getCategories = useGetCategories(this.searchParams);
+    async getCategoriesApi(searchParams: SearchParams | null = null) {
+      const getCategories = useGetCategories(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getCategories();
         this.categories = response.data ?? [];
+        this.categoryTotal = response.total ?? 0;
         return response;
       } catch (error) {
         this.isPending = false;

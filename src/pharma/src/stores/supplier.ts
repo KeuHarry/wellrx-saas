@@ -42,8 +42,8 @@ export const useSupplierStore = defineStore('supplier-store', {
   },
 
   actions: {
-    async getSuppliersApi() {
-      const getSuppliers = useGetSuppliers(this.searchParams);
+    async getSuppliersApi(searchParams: SearchParams | null = null) {
+      const getSuppliers = useGetSuppliers(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getSuppliers();

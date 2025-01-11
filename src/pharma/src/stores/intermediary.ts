@@ -42,8 +42,8 @@ export const useIntermediaryStore = defineStore('intermediary-store', {
   },
 
   actions: {
-    async getIntermediariesApi() {
-      const getIntermediaries = useGetIntermediaries(this.searchParams);
+    async getIntermediariesApi(searchParams: SearchParams | null = null) {
+      const getIntermediaries = useGetIntermediaries(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getIntermediaries();

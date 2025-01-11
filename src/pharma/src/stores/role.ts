@@ -56,8 +56,8 @@ export const useRoleStore = defineStore('role-store', {
   },
 
   actions: {
-    async getRolesApi(searchParams: SearchParams | null) {
-      const getRoles = useGetRoles(searchParams ? searchParams :  this.searchParams);
+    async getRolesApi(searchParams: SearchParams | null = null) {
+      const getRoles = useGetRoles(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getRoles();

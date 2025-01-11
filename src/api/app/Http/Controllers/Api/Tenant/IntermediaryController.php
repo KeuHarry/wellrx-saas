@@ -36,7 +36,7 @@ class IntermediaryController extends ApiController
             $sortBy
         );
 
-        return $this->successResponse($intermediaries);
+        return $this->successResponse($intermediaries, total: $this->intermediaryService->getModelCount());
     }
 
     public function createIntermediary(IntermediaryRequest $request): JsonResponse

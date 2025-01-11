@@ -42,8 +42,8 @@ export const useCustomerStore = defineStore('customer-store', {
   },
 
   actions: {
-    async getCustomersApi() {
-      const getCustomers = useGetCustomers(this.searchParams);
+    async getCustomersApi(searchParams: SearchParams | null = null) {
+      const getCustomers = useGetCustomers(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getCustomers();

@@ -11,6 +11,7 @@ use App\Services\FeeService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class FeeController extends ApiController
 {
@@ -55,6 +56,6 @@ class FeeController extends ApiController
             throw new InternalServerErrorException;
         }
 
-        return $this->successResponse($fees, 'Fees successfully retrieved!');
+        return $this->successResponse($fees, 'Fees successfully retrieved!', Response::HTTP_OK, $this->feeService->getModelCount());
     }
 }

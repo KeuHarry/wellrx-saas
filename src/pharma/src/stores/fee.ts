@@ -13,6 +13,7 @@ import useDeleteFee from '@/composables/api/fees/useDeleteFee';
 type FeeState = {
   fees: Fee[];
   fee: Fee | null;
+  feeTotal: number;
   searchParams: SearchParams;
   isPending: boolean;
 };
@@ -23,6 +24,7 @@ export const useFeeStore = defineStore('fee-store', {
   state: (): FeeState => ({
     fees: [],
     fee: null,
+    feeTotal: 0,
     searchParams: {
       search: '',
       tag: null,
@@ -37,15 +39,17 @@ export const useFeeStore = defineStore('fee-store', {
   getters: {
     getFees: (state) => state.fees,
     getFee: (state) => state.fee,
+    getFeeTotal: (state) => state.feeTotal,
   },
 
   actions: {
-    async getFeesApi() {
-      const getFees = useGetFees(this.searchParams);
+    async getFeesApi(searchParams: SearchParams | null = null) {
+      const getFees = useGetFees(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getFees();
         this.fees = response.data ?? [];
+        this.feeTotal = response.total ?? 0;
         return response;
       } catch (error) {
         this.isPending = false;

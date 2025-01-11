@@ -42,8 +42,8 @@ export const useLabelCodeStore = defineStore('label-code-store', {
   },
 
   actions: {
-    async getLabelCodesApi() {
-      const getLabelCodes = useGetLabelCodes(this.searchParams);
+    async getLabelCodesApi(searchParams: SearchParams | null = null) {
+      const getLabelCodes = useGetLabelCodes(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
         const response = await getLabelCodes();

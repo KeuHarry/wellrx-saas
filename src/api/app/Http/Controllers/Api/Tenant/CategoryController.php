@@ -9,6 +9,7 @@ use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class CategoryController extends ApiController
 {
@@ -37,7 +38,7 @@ class CategoryController extends ApiController
             $limit
         );
 
-        return $this->successResponse($categories);
+        return $this->successResponse($categories, total: $this->categoryService->getModelCount());
     }
 
     public function createCategory(CategoryRequest $request): JsonResponse
