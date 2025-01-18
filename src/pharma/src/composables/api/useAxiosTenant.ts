@@ -32,4 +32,4 @@ export function useSetupAxios(): AxiosInstance {
   return axiosTenant;
 }
 
-export default useSetupAxios; // Export setup function
+export default useSetupAxios;

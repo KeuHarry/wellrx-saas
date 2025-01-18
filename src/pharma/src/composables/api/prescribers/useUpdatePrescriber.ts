@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { PrescriberRequest } from '@/composables/models/PrescriberRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdatePrescriber(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdatePrescriber(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/prescribers/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/prescribers, can't update prescriber`);
     }
 

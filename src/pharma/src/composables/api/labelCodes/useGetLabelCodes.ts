@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { LabelCode } from '@/composables/models/LabelCode';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetLabelCodes(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetLabelCodes(
     const response = await axiosTenant.get<ApiResponse<LabelCode[]>>(`/labels?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/labels, can't get labels list`);
     }
 

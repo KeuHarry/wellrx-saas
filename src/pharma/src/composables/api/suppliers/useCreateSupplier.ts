@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SupplierRequest } from '@/composables/models/SupplierRequest';
 import { Supplier } from '@/composables/models/Supplier';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useCreateSupplier(): (
   payload: SupplierRequest,
@@ -13,6 +13,7 @@ export default function useCreateSupplier(): (
     const response = await axiosTenant.post<ApiResponse<Supplier>>(`/suppliers`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/suppliers, can't create supplier`);
     }
 

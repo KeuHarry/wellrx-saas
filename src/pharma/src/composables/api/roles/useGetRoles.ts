@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Role } from '@/composables/models/Role';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetRoles(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetRoles(
     const response = await axiosTenant.get<ApiResponse<Role[]>>(`/roles?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/roles, can't get roles list`);
     }
 

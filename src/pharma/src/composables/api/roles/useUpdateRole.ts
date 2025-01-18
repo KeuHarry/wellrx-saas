@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { RoleRequest } from '@/composables/models/RoleRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateRole(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateRole(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/roles/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/roles, can't update role`);
     }
 

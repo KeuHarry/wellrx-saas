@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { FeeRequest } from '@/composables/models/FeeRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateFee(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateFee(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/fees/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/fees, can't update fee`);
     }
 
