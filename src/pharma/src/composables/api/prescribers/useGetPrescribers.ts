@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Prescriber } from '@/composables/models/Prescriber';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetPrescribers(
   searchParams: SearchParams,
@@ -33,6 +33,7 @@ export default function useGetPrescribers(
     );
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/prescribers, can't get prescribers list`);
     }
 

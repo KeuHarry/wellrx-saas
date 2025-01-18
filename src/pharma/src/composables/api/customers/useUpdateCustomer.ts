@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { CustomerRequest } from '@/composables/models/CustomerRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateCustomer(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateCustomer(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/customers/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/customers, can't update customer`);
     }
 

@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Patient } from '@/composables/models/Patient';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetPatients(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetPatients(
     const response = await axiosTenant.get<ApiResponse<Patient[]>>(`/patients?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/patients, can't get patients list`);
     }
 

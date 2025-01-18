@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Supplier } from '@/composables/models/Supplier';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetSuppliers(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetSuppliers(
     const response = await axiosTenant.get<ApiResponse<Supplier[]>>(`/suppliers?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/suppliers, can't get suppliers list`);
     }
 

@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { IntermediaryRequest } from '@/composables/models/IntermediaryRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateIntermediary(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateIntermediary(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/intermediaries/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/intermediaries, can't update intermediary`);
     }
 
