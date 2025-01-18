@@ -7,7 +7,7 @@ import { Role } from '@/composables/models/Role';
 const tenantStore = useTenantStore();
 
 export default function useGetRoles(
-  searchParams: SearchParams
+  searchParams: SearchParams,
 ): () => Promise<ApiResponse<Role[]>> {
   const urlSearchParams = new URLSearchParams();
   if (searchParams.search) {

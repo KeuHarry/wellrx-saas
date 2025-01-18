@@ -1,0 +1,11 @@
+export const PHARMA_ADDRESS = 'pharmacy_address';
+export const PROPRIETOR = 'proprietor';
+export const PHARMA_EMAIL = 'pharmacy_email';
+export const PHARMA_CITY = 'pharmacy_city';
+export const DECIMAL_SEPARATOR = 'decimal_separator';
+export const FOOTER_MESSAGE = 'footer_message';
+export const PHARMA_NAME = 'pharmacy_name';
+export const THOUSAND_SEPARATOR = 'thousand_separator';
+export const DECIMAL_DIGIT = 'decimal_digit';
+export const CURRENCY = 'currency';
+export const PHARMA_PHONE = 'pharmacy_phone';

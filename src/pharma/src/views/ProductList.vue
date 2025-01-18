@@ -2,7 +2,7 @@
   <h2 class="mt-10 text-lg font-medium intro-y">Products</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
-      <Button @click="openCategoryModal()" variant="primary" class="mr-2 shadow-md">
+      <Button @click="openAddProduct()" variant="primary" class="mr-2 shadow-md">
         Add Product
       </Button>
       <Menu>
@@ -160,6 +160,7 @@ import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import { Category } from '@/composables/models/Category';
 import { Ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const categoryModal = ref<InstanceType<typeof AddUpdateCategoryModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
@@ -171,6 +172,9 @@ const basicNonStickyNotificationToggle = () => {
 provide('bind[notificationRef]', (el: NotificationElement) => {
   notificationRef.value = el;
 });
+
+const router = useRouter();
+const route = useRoute();
 
 // STORE
 const categoryStore = useCategoryStore();
@@ -196,10 +200,11 @@ const getCategoriesData = async () => {
   await categoryStore.getCategoriesApi();
 };
 
-const openCategoryModal = (category: Category | null = null) => {
-  categoryModal.value?.openCategoryModal(
-    category ? category : { name: '', markup: 0, description: '' },
-  );
+const openAddProduct = () => {
+  router.push({
+    name: 'add-product',
+    params: { identifier: route.params.identifier },
+  });
 };
 
 const createUpdateCategory = async (

@@ -1,3 +1,4 @@
+import { Setting } from '@/composables/models/Setting';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -189,6 +190,11 @@ const slideDown = (el: HTMLElement, duration = 300, callback = (el: HTMLElement)
   }, duration);
 };
 
+const getValueByKey = (settings: Setting[], key: string): string | null => {
+  const entry = settings.find((setting) => setting.key === key);
+  return entry ? entry.value : null;
+};
+
 export {
   cutText,
   formatDate,
@@ -204,4 +210,5 @@ export {
   stringToHTML,
   slideUp,
   slideDown,
+  getValueByKey,
 };

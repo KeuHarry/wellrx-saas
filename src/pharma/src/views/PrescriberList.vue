@@ -16,10 +16,18 @@
           <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel </Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">Showing {{ startPrescriberCount }} to {{ paginate }} of {{ prescriberTotal }} entries</div>
+      <div class="hidden mx-auto md:block text-slate-500">
+        Showing {{ startPrescriberCount }} to {{ paginate }} of {{ prescriberTotal }} entries
+      </div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-72 text-slate-500">
-          <FormInput v-model="search" @input="searchPrescriber" type="text" class="w-72 pr-10 !box" placeholder="Search..." />
+          <FormInput
+            v-model="search"
+            @input="searchPrescriber"
+            type="text"
+            class="w-72 pr-10 !box"
+            placeholder="Search..."
+          />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
       </div>
@@ -87,12 +95,10 @@
               </div>
             </Table.Td>
           </Table.Tr>
-          <Table.Tr
-            v-if="!hasPrescriber"
-          >
+          <Table.Tr v-if="!hasPrescriber">
             <Table.Td
-            :colspan="colspan"
-            class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              :colspan="colspan"
+              class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               <div class="grid grid-cols-1 p-5 text-center">
                 <span class="text-slate-400">No Records</span>
@@ -103,11 +109,11 @@
       </Table>
     </div>
     <!-- END: Data List -->
-    <PaginationComponent 
+    <PaginationComponent
       :totalItems="prescriberTotal"
       :initialItemsPerPage="paginate"
       @page-change="handlePageChange"
-      @items-per-page-change="handleItemsPerPageChange" 
+      @items-per-page-change="handleItemsPerPageChange"
     />
   </div>
   <DeleteModal ref="deleteModalRef" @submit="deletePrescriber" />
@@ -145,7 +151,7 @@ import { Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
 import { PrescriberRequest } from '@/composables/models/PrescriberRequest';
-import PaginationComponent from "@/components/PaginationComponent.vue";
+import PaginationComponent from '@/components/PaginationComponent.vue';
 import { FIRSTNAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 
@@ -187,7 +193,7 @@ const iconType = computed(() => {
   return 'CheckCircle';
 });
 
-const startPrescriberCount = computed(() => prescribers.value.length > 0 ? 1 : 0);
+const startPrescriberCount = computed(() => (prescribers.value.length > 0 ? 1 : 0));
 const hasPrescriber = computed(() => prescribers.value.length > 0);
 
 //METHOD
@@ -216,7 +222,7 @@ const getPrescribersData = async () => {
     sortBy: FIRSTNAME,
     sortOrder: SortOrder.ASC,
     offset: (currentPage.value - 1) * paginate.value,
-    limit: paginate.value
+    limit: paginate.value,
   });
 };
 
@@ -224,7 +230,7 @@ const searchPrescriber = async () => {
   if (search.value.length === 0 || search.value.length >= 3) {
     await getPrescribersData();
   }
-}
+};
 
 const openPrescriberModal = (prescriber: Prescriber | null = null) => {
   prescriberModal.value?.openPrescriberModal(
