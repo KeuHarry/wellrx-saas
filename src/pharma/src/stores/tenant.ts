@@ -45,7 +45,6 @@ export const useTenantStore = defineStore('tenant-store', {
         const response = await verifyTenant(account);
         this.tenantIdentifier = response.tenant.identifier;
         this.tenantUrl = `${API_URL}/${response.tenant.id}/v1`;
-        console.log(this.tenantUrl);
         return response;
       } catch (error) {
         this.isPending = false;
