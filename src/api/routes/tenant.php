@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Tenant\PatientController;
 use App\Http\Controllers\Api\Tenant\PrescriberController;
 use App\Http\Controllers\Api\Tenant\ProductController;
 use App\Http\Controllers\Api\Tenant\RoleController;
+use App\Http\Controllers\Api\Tenant\SettingController;
 use App\Http\Controllers\Api\Tenant\ShelfController;
 use App\Http\Controllers\Api\Tenant\SupplierController;
 use App\Http\Controllers\Api\Tenant\TaxController;
@@ -174,5 +175,9 @@ Route::group([
         Route::post('orders', [OrderController::class, 'createOrder']);
         Route::put('orders/{orderId}', [OrderController::class, 'updateOrder']);
         Route::delete('orders/{orderId}', [OrderController::class, 'deleteOrder']);
+
+        // settings
+        Route::get('settings', [SettingController::class, 'getSettings']);
+        Route::put('settings', [SettingController::class, 'updateSetting']);
     });
 });

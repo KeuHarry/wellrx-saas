@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -26,14 +26,15 @@ class PatientRequest extends FormRequest
         return [
             'firstName' => 'required|string',
             'lastName' => 'required|string',
-            'dob' => 'required',
-            'address' => 'required|string',
+            'dob' => 'required|date',
+            'address' => 'string|nullable',
             'city' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'email:rfc,dns|nullable',
             'phone' => 'required|string',
-            'company' => 'required|string',
+            'company' => 'string|nullable',
             'insurerId' => 'integer|nullable',
             'caretakerId' => 'integer|nullable',
+            'intermediaryId' => 'integer|nullable',
             'allergies' => 'string|nullable',
             'medecineHistory' => 'string|nullable',
         ];
