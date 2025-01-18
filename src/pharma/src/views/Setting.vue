@@ -291,14 +291,9 @@ const setActiveSection = (sectionId: string) => {
   activeSection.value = sectionId;
 };
 
-const getSettingsData = async () => {
-  await settingStore.getSettingsApi();
-};
-
 const setSettingsData = async () => {
   const data = localStorage.getItem('settings');
   settings.value = data ? JSON.parse(data) : [];
-  console.log(settings.value);
   await setFormData();
 };
 

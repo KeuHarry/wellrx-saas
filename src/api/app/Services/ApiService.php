@@ -66,7 +66,8 @@ class ApiService
 
     public function update(string $id, array $content): int
     {
-        return $this->baseRepository->update($id, $content);
+        $inputs = $this->updateKey($content);
+        return $this->baseRepository->update($id, $inputs);
     }
 
     // public function search(
