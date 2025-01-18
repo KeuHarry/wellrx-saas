@@ -33,11 +33,7 @@
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          <Table.Tr
-            v-for="(role, rkey) in roles"
-            :key="rkey"
-            @click="openRoleModal(role)"
-          >
+          <Table.Tr v-for="(role, rkey) in roles" :key="rkey" @click="openRoleModal(role)">
             <Table.Td
               class="box w-80 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
@@ -84,12 +80,10 @@
               </div>
             </Table.Td>
           </Table.Tr>
-          <Table.Tr
-            v-if="!hasRole"
-          >
+          <Table.Tr v-if="!hasRole">
             <Table.Td
-            :colspan="colspan"
-            class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              :colspan="colspan"
+              class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               <div class="grid grid-cols-1 p-5 text-center">
                 <span class="text-slate-400">No Records</span>
@@ -100,11 +94,11 @@
       </Table>
     </div>
     <!-- END: Data List -->
-    <PaginationComponent 
+    <PaginationComponent
       :totalItems="roleTotal"
       :initialItemsPerPage="paginate"
       @page-change="handlePageChange"
-      @items-per-page-change="handleItemsPerPageChange" 
+      @items-per-page-change="handleItemsPerPageChange"
     />
   </div>
   <DeleteModal ref="deleteModalRef" @submit="deleteRole" />
@@ -137,7 +131,7 @@ import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import useRoleStore from '@/stores/role';
 import AddUpdateRoleModal from '@/components/Modals/AddUpdateRoleModal.vue';
-import PaginationComponent from "@/components/PaginationComponent.vue";
+import PaginationComponent from '@/components/PaginationComponent.vue';
 import { Role } from '@/composables/models/Role';
 import PermissionSlideover from '@/components/PermissionSlideover.vue';
 import useTenantStore from '@/stores/tenant';
@@ -185,7 +179,7 @@ const iconType = computed(() => {
   return 'CheckCircle';
 });
 
-const startRoleCount = computed(() => roles.value.length > 0 ? 1 : 0);
+const startRoleCount = computed(() => (roles.value.length > 0 ? 1 : 0));
 const hasRole = computed(() => roles.value.length > 0);
 
 //METHOD
@@ -214,7 +208,7 @@ const getRolesData = async () => {
     sortBy: LABEL,
     sortOrder: SortOrder.ASC,
     offset: (currentPage.value - 1) * paginate.value,
-    limit: paginate.value
+    limit: paginate.value,
   });
 };
 
@@ -222,7 +216,7 @@ const searchRole = async () => {
   if (search.value.length === 0 || search.value.length >= 3) {
     await getRolesData();
   }
-}
+};
 
 const openRoleModal = (role: Role | null = null) => {
   roleModal.value?.openRoleModal(role ? role : { label: '', description: '' });

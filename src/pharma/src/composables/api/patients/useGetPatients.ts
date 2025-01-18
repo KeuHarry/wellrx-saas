@@ -28,9 +28,7 @@ export default function useGetPatients(
 
   return async () => {
     const queryParams = urlSearchParams.toString();
-    const response = await axiosTenant.get<ApiResponse<Patient[]>>(
-      `/patients?${queryParams}`,
-    );
+    const response = await axiosTenant.get<ApiResponse<Patient[]>>(`/patients?${queryParams}`);
 
     if (!response) {
       throw new Error(`${tenantStore.getTenantUrl}/patients, can't get patients list`);

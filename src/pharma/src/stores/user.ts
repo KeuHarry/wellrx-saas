@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user-store', {
   },
 
   actions: {
-    async getUsersApi(searchParams : SearchParams | null = null) {
+    async getUsersApi(searchParams: SearchParams | null = null) {
       const getUsers = useGetUsers(searchParams ? searchParams : this.searchParams);
       try {
         this.isPending = true;
