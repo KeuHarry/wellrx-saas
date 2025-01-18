@@ -62,6 +62,12 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/settings',
+          name: 'setting',
+          component: () => import('../views/Setting.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/categories',
           name: 'category-list',
           component: () => import('../views/CategoryList.vue'),
@@ -83,6 +89,12 @@ const router = createRouter({
           path: '/:identifier/products',
           name: 'product-list',
           component: () => import('../views/ProductList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/products/add',
+          name: 'add-product',
+          component: () => import('../views/AddProduct.vue'),
           meta: { requiresAuth: true },
         },
         {

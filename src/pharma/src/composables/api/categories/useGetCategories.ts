@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import { Category } from '@/composables/models/Category';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetCategories(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetCategories(
     const response = await axiosTenant.get<ApiResponse<Category[]>>(`/categories?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/categories, can't get categories list`);
     }
 

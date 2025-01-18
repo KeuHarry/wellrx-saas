@@ -1,29 +1,35 @@
 import useTenantStore from '@/stores/tenant';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-const tenantStore = useTenantStore();
+export let axiosTenant: AxiosInstance | null = null;
 
-const axiosTenant = axios.create();
+export function useSetupAxios(): AxiosInstance {
+  if (!axiosTenant) {
+    axiosTenant = axios.create();
 
-axiosTenant.interceptors.request.use(
-  (config) => {
-    const tenantUrl = tenantStore.getTenantUrl;
-    if (tenantUrl.length > 0) {
-      config.baseURL = tenantUrl;
-    }
+    axiosTenant.interceptors.request.use(
+      (config) => {
+        const tenantStore = useTenantStore();
+        const tenantUrl = tenantStore.getTenantUrl;
 
-    const token = sessionStorage.getItem('authToken');
+        if (tenantUrl.length > 0) {
+          config.baseURL = tenantUrl;
+        }
 
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+        const token = sessionStorage.getItem('authToken');
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
 
-    return config;
-  },
-  (error) => {
-    // Handle request error
-    return Promise.reject(error);
-  },
-);
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
+  }
 
-export default axiosTenant;
+  return axiosTenant;
+}
+
+export default useSetupAxios; // Export setup function

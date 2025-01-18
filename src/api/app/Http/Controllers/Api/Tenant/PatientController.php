@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Patient\PatientRequest;
+use App\Http\Requests\PatientRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Patient;
 use App\Services\PatientService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class PatientController extends ApiController
 {
@@ -20,100 +19,43 @@ class PatientController extends ApiController
     public function __construct(PatientService $patientService)
     {
         $this->patientService = $patientService;
-        $this->model = new Patient;
-        parent::__construct();
+        $this->model = new Patient();
+        parent::__construct($patientService);
     }
 
-    public function createPatient(PatientRequest $request)
+    public function getPatients(SearchRequest $request): JsonResponse
     {
-        $content = $request->all();
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        $patient = $this->patientService->createPatient($content);
+            $users = $this->patientService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
 
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'patient' => $patient,
-        ]);
+            return $this->successResponse($users, class_basename($this->model).'s successfully retrieved!', Response::HTTP_OK, $this->patientService->getModelCount());
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
+        }
     }
 
-    public function getPatient(int $patientId)
+    public function createPatient(PatientRequest $request): JsonResponse
     {
-        $patient = $this->patientService->getPatient($patientId);
 
-        if (! isset($patient)) {
-            throw new ObjectNotFountException($patientId, 'Patient');
-        }
-
-        return $this->successResponse($patient);
+        return $this->store($request);
     }
 
-    public function getPatients(SearchRequest $request)
+    public function updatePatient(PatientRequest $request, int $patientId): JsonResponse
     {
-        $search = $request->query->get('search');
-        $sortBy = $request->query->get('sortBy');
-        $sortOrder = $request->query->get('sortOrder');
-        $offset = $request->query->get('offset');
-        $limit = $request->query->get('limit');
-
-        $patients = $this->patientService->search(
-            $search,
-            $sortBy,
-            $sortOrder,
-            $offset,
-            $limit
-        );
-
-        if (! assert($patients instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'success' => true,
-            'total' => empty($search) ? count($this->model->all()) : count($patients),
-            'data' => $patients,
-        ]);
-    }
-
-    public function deletePatient(int $patientId)
-    {
-        $patient = $this->patientService->getPatient($patientId);
-
-        if (! isset($patient)) {
-            throw new ObjectNotFountException($patientId, 'Patient');
-        }
-
-        $result = $this->patientService->deletePatient($patient->id);
-        if (! $result) {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'patient' => $patientId,
-            'message' => 'Patient successfully deleted.',
-        ]);
-    }
-
-    public function updatePatient(PatientRequest $request, int $patientId)
-    {
-        $patient = $this->patientService->getPatient($patientId);
-
-        if (! isset($patient)) {
-            throw new ObjectNotFountException($patientId, 'Patient');
-        }
-
-        $content = $request->all();
-
-        $updatedPatient = $this->patientService->updatePatient($patientId, $content);
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'patient' => $updatedPatient,
-            'message' => 'Insurer successfully updated.',
-        ]);
+        return $this->update($patientId, $request);
     }
 }

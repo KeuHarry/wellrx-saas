@@ -3,6 +3,7 @@ import useLogin from '@/composables/api/authentication/useLogin';
 import { AuthUser } from '@/composables/models/AuthUser';
 import { Credentials } from '@/types/credentials';
 import { defineStore } from 'pinia';
+import useSettingStore from './setting';
 
 type TenantState = {
   authUser: AuthUser | null;
@@ -28,6 +29,9 @@ export const useAuthStore = defineStore('auth-store', {
         this.authUser = response.user;
         sessionStorage.setItem('user', JSON.stringify(this.authUser));
         sessionStorage.setItem('authToken', response.token);
+
+        const settingStore = useSettingStore();
+        await settingStore.getSettingsApi();
         return response;
       } catch (error) {
         this.isPending = false;

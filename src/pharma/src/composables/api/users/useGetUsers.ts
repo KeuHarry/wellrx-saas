@@ -1,9 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { User } from '@/composables/models/User';
 
+const axiosTenant = useSetupAxios();
 const tenantStore = useTenantStore();
 
 export default function useGetUsers(

@@ -65,7 +65,7 @@ class Patient extends BaseModel
                     $item->patient_code = 'PAT'.str_pad(strval(self::getNextId()), 4, '0', STR_PAD_LEFT);
                 }
 
-                return self::beforeSave($item);
+                return true;
             }
         );
     }

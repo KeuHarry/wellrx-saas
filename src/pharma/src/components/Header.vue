@@ -25,9 +25,9 @@
         <a href="#" class="text-sm/6 font-normal hover:font-bold">Contact</a>
       </PopoverGroup>
       <div class="items-center hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-8">
-        <RouterLink :to="{ name: 'verification' }" class="text-sm/6 font-bold text-gray-900"
+        <!-- <RouterLink :to="{ name: 'verification' }" class="text-sm/6 font-bold text-gray-900"
           >Sign In</RouterLink
-        >
+        > -->
         <button
           type="button"
           @click="goToSignUp"

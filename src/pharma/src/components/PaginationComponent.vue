@@ -1,37 +1,38 @@
 <template>
-    <!-- BEGIN: Pagination -->
-    <div class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap">
-      <Pagination class="w-full sm:w-auto sm:mr-auto">
-        <Pagination.Link @click="goToFirstPage">
-          <Lucide icon="ChevronsLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link @click="goToPreviousPage">
-          <Lucide icon="ChevronLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link v-if="showDotsBefore">...</Pagination.Link>
-        <Pagination.Link
+  <div
+    v-if="showPagination"
+    class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap"
+  >
+    <Pagination class="w-full sm:w-auto sm:mr-auto">
+      <Pagination.Link @click="goToFirstPage">
+        <Lucide icon="ChevronsLeft" class="w-4 h-4" />
+      </Pagination.Link>
+      <Pagination.Link @click="goToPreviousPage">
+        <Lucide icon="ChevronLeft" class="w-4 h-4" />
+      </Pagination.Link>
+      <Pagination.Link v-if="showDotsBefore">...</Pagination.Link>
+      <Pagination.Link
         v-for="page in visiblePages"
         :key="page"
         :active="page === currentPage"
         @click="changePage(page)"
-        >
-            {{ page }}
-        </Pagination.Link>
-        <Pagination.Link v-if="showDotsAfter">...</Pagination.Link>
-        <Pagination.Link @click="goToNextPage">
-          <Lucide icon="ChevronRight" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link @click="goToLastPage">
-          <Lucide icon="ChevronsRight" class="w-4 h-4" />
-        </Pagination.Link>
-      </Pagination>
-      <FormSelect v-model="itemsPerPage" class="w-20 mt-3 !box sm:mt-0">
-        <option v-for="(limit, lkey) in pageLimits" :key="lkey" :value="limit">
-          {{ limit }}
-        </option>
-      </FormSelect>
-    </div>
-    <!-- END: Pagination -->
+      >
+        {{ page }}
+      </Pagination.Link>
+      <Pagination.Link v-if="showDotsAfter">...</Pagination.Link>
+      <Pagination.Link @click="goToNextPage">
+        <Lucide icon="ChevronRight" class="w-4 h-4" />
+      </Pagination.Link>
+      <Pagination.Link @click="goToLastPage">
+        <Lucide icon="ChevronsRight" class="w-4 h-4" />
+      </Pagination.Link>
+    </Pagination>
+    <FormSelect v-model="itemsPerPage" class="w-20 mt-3 !box sm:mt-0">
+      <option v-for="(limit, lkey) in pageLimits" :key="lkey" :value="limit">
+        {{ limit }}
+      </option>
+    </FormSelect>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
@@ -64,6 +65,7 @@ const emit = defineEmits(['page-change', 'items-per-page-change']);
 const currentPage = ref(props.initialPage);
 const itemsPerPage = ref(props.initialItemsPerPage);
 const totalPages = computed(() => Math.ceil(props.totalItems / itemsPerPage.value));
+const showPagination = computed(() => props.totalItems > 10);
 
 const visiblePages = computed(() => {
   const pages = [];
@@ -105,6 +107,6 @@ const goToLastPage = () => changePage(totalPages.value);
 
 watch(itemsPerPage, (newLimit) => {
   emit('items-per-page-change', newLimit);
-  changePage(1); // Reset to the first page when items per page changes
+  changePage(1);
 });
 </script>
