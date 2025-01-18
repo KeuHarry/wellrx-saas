@@ -23,7 +23,7 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'SettingsIcon',
-        pageName: 'settings',
+        pageName: 'setting',
         title: 'Settings',
       },
     ],
