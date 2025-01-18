@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Shelf } from '@/composables/models/Shelf';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetShelves(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetShelves(
     const response = await axiosTenant.get<ApiResponse<Shelf[]>>(`/shelves?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/shelves, can't get shelves list`);
     }
 

@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { LabelCodeRequest } from '@/composables/models/LabelCodeRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateLabelCode(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateLabelCode(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/labels/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/labels, can't update label code`);
     }
 

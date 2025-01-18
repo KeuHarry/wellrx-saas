@@ -5,7 +5,6 @@ import { SearchParams } from '@/composables/models/SearchParams';
 import { User } from '@/composables/models/User';
 
 const axiosTenant = useSetupAxios();
-const tenantStore = useTenantStore();
 
 export default function useGetUsers(
   searchParams: SearchParams,
@@ -32,6 +31,7 @@ export default function useGetUsers(
     const response = await axiosTenant.get<ApiResponse<User[]>>(`/users?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/users, can't get users list`);
     }
 

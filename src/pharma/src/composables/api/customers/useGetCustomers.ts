@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Customer } from '@/composables/models/Customer';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetCustomers(
   searchParams: SearchParams,
@@ -31,6 +31,7 @@ export default function useGetCustomers(
     const response = await axiosTenant.get<ApiResponse<Customer[]>>(`/customers?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/customers, can't get customers list`);
     }
 

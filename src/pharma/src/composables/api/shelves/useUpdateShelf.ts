@@ -1,9 +1,9 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { ShelfRequest } from '@/composables/models/ShelfRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useUpdateShelf(): (
   id: number,
@@ -13,6 +13,7 @@ export default function useUpdateShelf(): (
     const response = await axiosTenant.put<ApiResponse<number>>(`/shelves/${id}`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/shelves, can't update shelf`);
     }
 

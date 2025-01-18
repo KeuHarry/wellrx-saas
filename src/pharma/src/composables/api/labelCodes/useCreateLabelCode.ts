@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { LabelCode } from '@/composables/models/LabelCode';
 import { LabelCodeRequest } from '@/composables/models/LabelCodeRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useCreateLabelCode(): (
   payload: LabelCodeRequest,
@@ -13,6 +13,7 @@ export default function useCreateLabelCode(): (
     const response = await axiosTenant.post<ApiResponse<LabelCode>>(`/labels`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/labels, can't create label code`);
     }
 

@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { Intermediary } from '@/composables/models/Intermediary';
 import { IntermediaryRequest } from '@/composables/models/IntermediaryRequest';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useCreateIntermediary(): (
   payload: IntermediaryRequest,
@@ -13,6 +13,7 @@ export default function useCreateIntermediary(): (
     const response = await axiosTenant.post<ApiResponse<Intermediary>>(`/intermediaries`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/intermediaries, can't create intermediary`);
     }
 

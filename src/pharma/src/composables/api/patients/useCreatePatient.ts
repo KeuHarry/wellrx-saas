@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
-import useTenantStore from '@/stores/tenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { Patient } from '@/composables/models/Patient';
 import { PatientRequest } from '@/composables/models/PatientRequest';
+import useTenantStore from '@/stores/tenant';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useCreatePatient(): (
   payload: PatientRequest,
@@ -13,6 +13,7 @@ export default function useCreatePatient(): (
     const response = await axiosTenant.post<ApiResponse<Patient>>(`/patients`, payload);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/patients, can't create patient`);
     }
 

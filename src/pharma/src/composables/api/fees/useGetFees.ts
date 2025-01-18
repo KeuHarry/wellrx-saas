@@ -1,10 +1,10 @@
-import axiosTenant from '../useAxiosTenant';
+import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Fee } from '@/composables/models/Fee';
 
-const tenantStore = useTenantStore();
+const axiosTenant = useSetupAxios();
 
 export default function useGetFees(searchParams: SearchParams): () => Promise<ApiResponse<Fee[]>> {
   const urlSearchParams = new URLSearchParams();
@@ -32,6 +32,7 @@ export default function useGetFees(searchParams: SearchParams): () => Promise<Ap
     const response = await axiosTenant.get<ApiResponse<Fee[]>>(`/fees?${queryParams}`);
 
     if (!response) {
+      const tenantStore = useTenantStore();
       throw new Error(`${tenantStore.getTenantUrl}/fees, can't get fees list`);
     }
 
