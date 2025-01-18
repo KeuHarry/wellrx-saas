@@ -208,10 +208,8 @@ const selectedPatientType = ref<string>(COUNTER_CUSTOMER);
 
 // COMPUTED
 const modalTitle = computed(() => {
-  console.log(formData.value);
   return `${patientId.value ? 'Update' : 'Add'} Patient`;
 });
-//console.log(dob);
 
 // METHODS
 const openPatientModal = (patientRequest: PatientRequest, id: number | null) => {
