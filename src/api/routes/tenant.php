@@ -123,12 +123,11 @@ Route::group([
         Route::delete('suppliers/{supplierId}', [SupplierController::class, 'delete']);
 
         //Product
-        Route::get('products/{productId}', [ProductController::class, 'getProduct']);
+        Route::get('products/{productId}', [ProductController::class, 'show']);
         Route::get('products', [ProductController::class, 'getProducts']);
         Route::post('products', [ProductController::class, 'createProduct']);
         Route::put('products/{productId}', [ProductController::class, 'updateProduct']);
-        Route::delete('products/{productId}', [ProductController::class, 'deleteProduct']);
-        Route::get('searchProduct', [ProductController::class, 'searchProduct']);
+        Route::delete('products/{productId}', [ProductController::class, 'delete']);
 
         //Inventory
         Route::get('inventories/{inventoryId}', [InventoryController::class, 'getInventory']);

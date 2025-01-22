@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\InvalidInputTypeException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Product;
 use App\Services\ProductService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ProductController extends ApiController
 {
@@ -22,187 +20,46 @@ class ProductController extends ApiController
     {
         $this->productService = $productService;
         $this->model = new Product;
-        parent::__construct();
+        parent::__construct($productService);
     }
 
-    public function createProduct(Request $request)
+    public function getProducts(SearchRequest $request)
     {
-        $content = $request->all();
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        $validator = Validator::make($content, [
-            'label' => 'required|string',
-            'barcode' => 'string',
-            /*'cipcode' => 'string',
-            'ndc' => 'string',
-            'cardNumber' => 'numeric',*/
-            'acqCost' => 'numeric',
-            'wholesaleCost' => 'numeric',
-            'retailCost' => 'numeric',
-            'unitCost' => 'numeric',
-            'description' => 'nullable|string',
-            'qoh' => 'numeric',
-            'minQuantity' => 'numeric',
-            'maxQuantity' => 'numeric',
-        ]);
+            $products = $this->productService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
 
-        if ($validator->fails()) {
-            throw new InvalidInputTypeException($validator);
-        }
-
-        $product = $this->productService->createProduct(
-            $content['label'],
-            $content['pkgSize'],
-            $content['barcode'],
-            /*$content['cipCode'],
-            $content['ndc'],
-            $content['cardNumber'],*/
-            $content['markup'],
-            $content['acqCost'],
-            $content['wholesaleCost'],
-            $content['retailCost'],
-            $content['unitCost'],
-            $content['description'],
-            $content['qoh'],
-            $content['minQuantity'],
-            $content['maxQuantity'],
-            $content['shelfId'],
-            $content['productCategoryId'],
-            $content['taxId'],
-            $content['isPrescription'],
-            //$content['isGeneric'],
-            $content['isActive']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'product' => $product,
-        ]);
-    }
-
-    public function getProduct(int $productId)
-    {
-        $product = $this->productService->getProduct($productId);
-
-        if (! isset($product)) {
-            throw new ObjectNotFountException($productId, 'Product');
-        }
-
-        return $this->successResponse($product);
-    }
-
-    public function getProducts()
-    {
-        $products = $this->productService->getProducts();
-
-        if (! assert($products instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return $this->successResponse($products);
-    }
-
-    public function deleteProduct(int $productId)
-    {
-        $product = $this->productService->getProduct($productId);
-
-        if (! isset($product)) {
-            throw new ObjectNotFountException($productId, 'Product');
-        }
-
-        if ($this->productService->deleteProduct($product->id)) {
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'product' => $productId,
-                'message' => 'Product successfully deleted.',
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->successResponse(
+                $products, 
+                class_basename($this->model).'s successfully retrieved!',
+                Response::HTTP_OK,
+                $this->productService->getModelCount()
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
 
-    public function updateProduct(Request $request, int $productId)
+    public function createProduct(ProductRequest $request): JsonResponse
     {
-        $product = $this->productService->getProduct($productId);
-
-        if (! isset($product)) {
-            throw new ObjectNotFountException($productId, 'Product');
-        }
-
-        $content = $request->all();
-
-        $validator = Validator::make($content, [
-            'label' => 'required|string',
-            'barcode' => 'string',
-            /*'cipcode' => 'string',
-            'ndc' => 'string',
-            'cardNumber' => 'numeric',*/
-            'acqCost' => 'numeric',
-            'wholesaleCost' => 'numeric',
-            'retailCost' => 'numeric',
-            'unitCost' => 'numeric',
-            'description' => 'nullable|string',
-            'qoh' => 'numeric',
-            'minQuantity' => 'numeric',
-            'maxQuantity' => 'numeric',
-        ]);
-
-        if ($validator->fails()) {
-            throw new InvalidInputTypeException($validator);
-        }
-
-        $updatedProduct = $this->productService->updateProduct(
-            $product,
-            $content['label'],
-            $content['pkgSize'],
-            $content['barcode'],
-            /*$content['cipCode'],
-            $content['ndc'],
-            $content['cardNumber'],*/
-            $content['markup'],
-            $content['acqCost'],
-            $content['wholesaleCost'],
-            $content['retailCost'],
-            $content['unitCost'],
-            $content['description'],
-            $content['qoh'],
-            $content['minQuantity'],
-            $content['maxQuantity'],
-            $content['shelfId'],
-            $content['productCategoryId'],
-            $content['taxId'],
-            $content['isPrescription'],
-            //$content['isGeneric'],
-            $content['isActive']
-        );
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'product' => $updatedProduct,
-        ]);
+        return $this->store($request);
     }
 
-    public function searchProduct(Request $request)
+    public function updateProduct(ProductRequest $request, int $productId)
     {
-        $search = $request->query->get('search');
-        $sortBy = $request->query->get('sortBy');
-        $sortOrder = $request->query->get('sortOrder');
-        $limit = $request->query->get('limit');
-
-        $products = $this->productService->search(
-            $search,
-            $sortBy,
-            $sortOrder,
-            $limit
-        );
-
-        if (! assert($products instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return $this->successResponse($products);
-
+        return $this->update($productId, $request);
     }
 }

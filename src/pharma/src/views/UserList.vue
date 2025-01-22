@@ -97,7 +97,12 @@
             <Table.Td
               class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ user.isActive }}
+              <span 
+              class="border rounded-full px-4 py-1  bg-opacity-20 border-opacity-5"
+              :class="[user.isActive ? 'bg-green-600 border-green-600 text-green-600' : 'bg-red-600 border-red-600 text-red-600']"
+              >
+                {{ user.isActive ? ACTIVE : INACTIVE }}
+              </span>
             </Table.Td>
             <Table.Td
               @click="
@@ -183,6 +188,7 @@ import { useRoute } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import { FIRSTNAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
+import { ACTIVE, INACTIVE } from '@/constants/status';
 
 const userModal = ref<InstanceType<typeof AddUpdateUserModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);

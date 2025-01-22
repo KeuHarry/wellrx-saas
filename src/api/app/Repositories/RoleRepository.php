@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Tenant\Permission;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\RolePermission;
 use Illuminate\Support\Facades\DB;
@@ -34,4 +35,9 @@ class RoleRepository extends BaseRepository
 
         return DB::table('role_permissions')->insert($insertData);
     }
+
+    public function permissionsCount(): int
+    {
+        return Permission::count();
+    } 
 }

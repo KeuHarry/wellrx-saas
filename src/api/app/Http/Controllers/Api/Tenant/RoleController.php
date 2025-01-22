@@ -7,6 +7,7 @@ use App\Http\Requests\AssignPermissionRequest;
 use App\Http\Requests\RoleRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Resources\RoleResource;
+use App\Models\Tenant\Permission;
 use App\Models\Tenant\Role;
 use App\Services\RoleService;
 use Illuminate\Http\JsonResponse;
@@ -60,7 +61,7 @@ class RoleController extends ApiController
     public function getPermissions(): JsonResponse
     {
         $permissions = $this->roleService->getAllPermissions();
-        return $this->successResponse($permissions);
+        return $this->successResponse($permissions, 'Permissions successfully retrieved!', Response::HTTP_OK, $this->roleService->getPermissionsCount());
     }
 
     public function assign(AssignPermissionRequest $request): JsonResponse
