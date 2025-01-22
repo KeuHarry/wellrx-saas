@@ -249,7 +249,7 @@ const openDeleteRoleModal = (role: Role) => {
 };
 
 const deleteRole = async (id: number) => {
-  await roleStore.deleteRoleApi(id);
+await roleStore.deleteRoleApi(id);
 };
 
 onMounted(async () => {

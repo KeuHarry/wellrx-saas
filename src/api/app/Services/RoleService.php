@@ -57,4 +57,9 @@ class RoleService extends ApiService
         $this->roleRepository->deletePermissions($roleId);
         return $this->roleRepository->assignPermissions($roleId, $permissionIds);
     }
+
+    public function getPermissionsCount(): int
+    {
+        return $this->roleRepository->permissionsCount();
+    }
 }

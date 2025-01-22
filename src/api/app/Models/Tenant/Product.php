@@ -54,21 +54,21 @@ class Product extends BaseModel
         'generic_product_id',
         'barcode',
         'cip_code',
-        'ndc',
-        'card_number',
         'markup',
-        'tax_id',
+        'fee_id',
+        'acq_cost',
         'wholesale_cost',
         'retail_cost',
+        'unit_cost',
         'description',
         'qoh',
         'min_quantity',
         'max_quantity',
         'is_active',
-        'retail_cost',
-        'acq_cost',
         'shelf_id',
         'product_category_id',
+        'is_decomposable',
+        'pkg_size'
     ];
 
     /**
@@ -77,6 +77,18 @@ class Product extends BaseModel
      * @var array
      */
     protected $hidden = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_prescription' => 'boolean',
+        'is_generic' => 'boolean',
+        'is_active' => 'boolean',
+        'is_decomposable' => 'boolean',
+    ];
 
     public $relations_data = ['cip_codes'];
 
@@ -158,9 +170,9 @@ class Product extends BaseModel
     /**
      * Get the tax.
      */
-    public function tax()
+    public function fee()
     {
-        return $this->belongsTo('App\Models\Tax', 'tax_id');
+        return $this->belongsTo(Fee::class, 'tax_id');
     }
 
     /* Get all inventory records related to product */
@@ -235,15 +247,12 @@ class Product extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['productCode'] = $this->product_code;
-        $json['stockNumber'] = $this->stock_number;
         $json['label'] = $this->label;
         $json['pkgSize'] = $this->pkg_size;
         $json['isPrescription'] = $this->is_prescription;
         $json['isGeneric'] = $this->is_generic;
         $json['barcode'] = $this->barcode;
         $json['cipCode'] = $this->cip_code;
-        $json['ndc'] = $this->ndc;
-        $json['cardNumber'] = $this->card_number;
         $json['markup'] = $this->markup;
         $json['acqCost'] = $this->acq_cost;
         $json['wholesaleCost'] = $this->wholesale_cost;
@@ -254,9 +263,19 @@ class Product extends BaseModel
         $json['minQuantity'] = $this->min_quantity;
         $json['maxQuantity'] = $this->max_quantity;
         $json['isActive'] = $this->is_active;
-        $json['shelfId'] = $this->shelf_id;
-        $json['productCategoryId'] = $this->product_category_id;
-        $json['taxId'] = $this->tax_id;
+        $json['shelf'] = [
+            'id' => $this->shelf->id,
+            'name' => $this->shelf->name
+        ];
+        $json['category'] = [
+            'id' => $this->category->id,
+            'name' => $this->category->name
+
+        ];
+        $json['fee'] = $this->fee ? [
+            'id' => $this->fee->id,
+            'name' => $this->fee->name
+        ] : null;
 
         return $json;
     }

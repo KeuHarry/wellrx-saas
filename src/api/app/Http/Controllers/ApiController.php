@@ -150,7 +150,7 @@ class ApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'total' => $total,
+            'total' => $total ? $total : ($data instanceof Countable ? $this->model::count() : 1),
             'data' => $data,
         ], $statusCode);
     }
