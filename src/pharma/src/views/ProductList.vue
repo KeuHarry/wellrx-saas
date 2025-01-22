@@ -2,7 +2,7 @@
   <h2 class="mt-10 text-lg font-medium intro-y">Products</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
-      <Button @click="openAddProduct()" variant="primary" class="mr-2 shadow-md">
+      <Button @click="openAddEditProduct()" variant="primary" class="mr-2 shadow-md">
         Add Product
       </Button>
       <Menu>
@@ -16,10 +16,16 @@
           <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel </Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">Showing 1 to 10 of 150 entries</div>
+      <div class="hidden mx-auto md:block text-slate-500">Showing {{ startProductCount }} to {{ paginate }} of {{ productTotal }} entries</div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-72 text-slate-500">
-          <FormInput type="text" class="w-72 pr-10 !box" placeholder="Search..." />
+          <FormInput 
+            v-model="search"
+            @input="searchProduct"
+            type="text" 
+            class="w-72 pr-10 !box" 
+            placeholder="Search by code, name or barcode..." 
+          />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
       </div>
@@ -31,43 +37,60 @@
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">CODE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">NAME</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">MARKUP </Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">DESCRIPTION</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">PRODUCT COUNT</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">TYPE</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">RETAIL PRICE</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">QOH</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">SHELF</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">STATUS</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
           <Table.Tr
-            v-for="(category, ckey) in categories"
+            v-for="(product, ckey) in products"
             :key="ckey"
             class="intro-x"
-            @click="openCategoryModal(category)"
+            @click="openAddEditProduct(product.id)"
           >
             <Table.Td
-              class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ category.code }}
+              {{ product.productCode }}
             </Table.Td>
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ category.name }}
+              {{ product.label }}
             </Table.Td>
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ category.markup }}
+              {{ product.isPrescription ? RX : OTC }}
             </Table.Td>
             <Table.Td
-              class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ category.description }}
+              {{ product.retailCost }}
             </Table.Td>
             <Table.Td
-              class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ category.productCount }}
+              {{ product.qoh }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              {{ product.shelf?.name }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              <span 
+              class="border rounded-full px-4 py-1  bg-opacity-20 border-opacity-5"
+              :class="[product.isActive ? 'bg-green-600 border-green-600 text-green-600' : 'bg-red-600 border-red-600 text-red-600']"
+              >
+                {{ product.isActive ? ACTIVE : INACTIVE }}
+              </span>
             </Table.Td>
             <Table.Td
               @click="
@@ -85,7 +108,7 @@
                   <a
                     class="flex items-center text-danger"
                     href="#"
-                    @click="openDeleteCategoryModal(category)"
+                    @click="openDeleteProductModal(product)"
                   >
                     <Lucide icon="Trash2" class="w-4 h-4 mr-1" />
                   </a>
@@ -93,41 +116,28 @@
               </div>
             </Table.Td>
           </Table.Tr>
+          <Table.Tr v-if="!hasProduct">
+            <Table.Td
+              :colspan="colspan"
+              class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              <div class="grid grid-cols-1 p-5 text-center">
+                <span class="text-slate-400">No Records</span>
+              </div>
+            </Table.Td>
+          </Table.Tr>
         </Table.Tbody>
       </Table>
     </div>
     <!-- END: Data List -->
-    <!-- BEGIN: Pagination -->
-    <div class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap">
-      <Pagination class="w-full sm:w-auto sm:mr-auto">
-        <Pagination.Link>
-          <Lucide icon="ChevronsLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link>
-          <Lucide icon="ChevronLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link>...</Pagination.Link>
-        <Pagination.Link active>1</Pagination.Link>
-        <Pagination.Link>2</Pagination.Link>
-        <Pagination.Link>3</Pagination.Link>
-        <Pagination.Link>...</Pagination.Link>
-        <Pagination.Link>
-          <Lucide icon="ChevronRight" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link>
-          <Lucide icon="ChevronsRight" class="w-4 h-4" />
-        </Pagination.Link>
-      </Pagination>
-      <FormSelect class="w-20 mt-3 !box sm:mt-0">
-        <option>10</option>
-        <option>25</option>
-        <option>35</option>
-        <option>50</option>
-      </FormSelect>
-    </div>
-    <!-- END: Pagination -->
+    <PaginationComponent
+      :totalItems="productTotal"
+      :initialItemsPerPage="paginate"
+      @page-change="handlePageChange"
+      @items-per-page-change="handleItemsPerPageChange"
+    />
   </div>
-  <DeleteModal ref="deleteModalRef" @submit="deleteCategory" />
+  <DeleteModal ref="deleteModalRef" @submit="deleteProduct" />
   <Notification
     refKey="notificationRef"
     :options="{
@@ -138,31 +148,33 @@
     <Lucide :icon="iconType" class="text-success" />
     <div class="font-medium ml-4 mr-4">{{ message.content }}</div>
   </Notification>
-  <AddUpdateCategoryModal ref="categoryModal" @submit="createUpdateCategory" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash';
 import { computed, onMounted, provide, ref } from 'vue';
 import Button from '@/components/Base/Button';
-import Pagination from '@/components/Base/Pagination';
-import { FormInput, FormSelect } from '@/components/Base/Form';
+import { FormInput } from '@/components/Base/Form';
 import Notification from '@/components/Base/Notification';
 import { type NotificationElement } from '@/components/Base/Notification';
 import Lucide from '@/components/Base/Lucide';
 import Tippy from '@/components/Base/Tippy';
 import { Menu } from '@/components/Base/Headless';
 import Table from '@/components/Base/Table';
-import useCategoryStore from '@/stores/category';
-import AddUpdateCategoryModal from '@/components/Modals/AddUpdateCategoryModal.vue';
 import DeleteModal from '@/components/Modals/DeleteModal.vue';
 import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
-import { Category } from '@/composables/models/Category';
 import { Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import useProductStore from '@/stores/product';
+import { OTC, RX } from '@/constants/productType';
+import { Product } from '@/composables/models/Product';
+import useTenantStore from '@/stores/tenant';
+import PaginationComponent from '@/components/PaginationComponent.vue';
+import { ACTIVE, INACTIVE } from '@/constants/status';
+import SortOrder from '@/enums/sortOrder';
+import { LABEL } from '@/constants/properties';
 
-const categoryModal = ref<InstanceType<typeof AddUpdateCategoryModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 
 const notificationRef = ref<NotificationElement>();
@@ -175,13 +187,19 @@ provide('bind[notificationRef]', (el: NotificationElement) => {
 
 const router = useRouter();
 const route = useRoute();
+const search = ref('');
+const currentPage = ref(1);
+const paginate = ref(10);
+const colspan = ref(0);
 
 // STORE
-const categoryStore = useCategoryStore();
+const tenantStore = useTenantStore();
+const productStore = useProductStore();
 const toastStore = useToastStore();
 
 // COMPUTED
-const categories = computed(() => categoryStore.getCategories);
+const products = computed(() => productStore.getProducts);
+const productTotal = computed(() => productStore.getProductTotal);
 const message = computed(() => toastStore.getMessage);
 const iconType = computed(() => {
   if (message.value.type === NotificationType.WARNING) {
@@ -195,47 +213,75 @@ const iconType = computed(() => {
   return 'CheckCircle';
 });
 
+const startProductCount = computed(() => (products.value.length > 0 ? 1 : 0));
+const hasProduct = computed(() => products.value.length > 0);
+
 //METHOD
-const getCategoriesData = async () => {
-  await categoryStore.getCategoriesApi();
+const accountVerification = async () => {
+  await tenantStore.accountVerificationApi(route.params.identifier as string);
 };
 
-const openAddProduct = () => {
-  router.push({
-    name: 'add-product',
-    params: { identifier: route.params.identifier },
+const getColspan = () => {
+  const thElements = document.querySelectorAll('thead th');
+  colspan.value = thElements.length;
+};
+
+
+
+const handleItemsPerPageChange = (itemsPerPage: number) => {
+  paginate.value = itemsPerPage;
+  currentPage.value = 1;
+};
+
+const getProductsData = async () => {
+  await productStore.getProductsApi({
+    search: search.value,
+    sortBy: LABEL,
+    sortOrder: SortOrder.ASC,
+    offset: (currentPage.value - 1) * paginate.value,
+    limit: paginate.value,
   });
 };
 
-const createUpdateCategory = async (
-  formData: Ref<{ id: number | null; name: string; markup: number; description: string }>,
-) => {
-  if (formData.value.id) {
-    await categoryStore.updateCategoryApi(formData.value.id, {
-      name: formData.value.name,
-      markup: formData.value.markup,
-      description: formData.value.description,
+const searchProduct = async () => {
+  if (search.value.length === 0 || search.value.length >= 3) {
+    await getProductsData();
+  }
+};
+
+const handlePageChange = async (page: number) => {
+  currentPage.value = page;
+  await getProductsData();
+};
+
+const openAddEditProduct = (productId: number|null = null) => {
+  if (productId) {
+    router.push({
+      name: 'edit-product',
+      params: { identifier: route.params.identifier, id: productId},
     });
   } else {
-    await categoryStore.createCategoryApi({
-      name: formData.value.name,
-      markup: formData.value.markup,
-      description: formData.value.description,
+    router.push({
+      name: 'add-product',
+      params: { identifier: route.params.identifier },
     });
   }
-  basicNonStickyNotificationToggle();
-  await getCategoriesData();
 };
 
-const openDeleteCategoryModal = (category: Category) => {
-  deleteModalRef.value?.open(category);
+const openDeleteProductModal = (product: Product) => {
+  deleteModalRef.value?.open(
+    {id: product.id, reference: product.productCode},
+    'Do you really want to delete the product'
+  );
 };
 
-const deleteCategory = async (id: number) => {
-  await categoryStore.deleteCategoryApi(id);
+const deleteProduct = async (id: number) => {
+  await productStore.deleteProductApi(id);
 };
 
 onMounted(async () => {
-  await getCategoriesData();
+  await accountVerification();
+  getColspan();
+  await getProductsData();
 });
 </script>
