@@ -65,17 +65,17 @@
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ customer.creditLimit }}
+              {{ formatCurrency(customer.creditLimit) }}
             </Table.Td>
             <Table.Td
               class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ customer.balance }}
+              {{ formatCurrency(customer.balance) }}
             </Table.Td>
             <Table.Td
               class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ customer.deposit }}
+              {{ formatCurrency(customer.deposit) }}
             </Table.Td>
             <Table.Td
               @click="
@@ -160,6 +160,7 @@ import { CustomerRequest } from '@/composables/models/CustomerRequest';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { NAME } from '@/constants/properties';
+import { formatCurrency } from '@/utils/helper';
 
 const route = useRoute();
 const customerModal = ref<InstanceType<typeof AddUpdateCustomerModal> | null>(null);

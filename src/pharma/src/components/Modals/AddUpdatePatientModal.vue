@@ -216,6 +216,9 @@ const openPatientModal = (patientRequest: PatientRequest, id: number | null) => 
   patientId.value = id;
   show.value = true;
   formData.value = patientRequest;
+  if (patientId.value) {
+    dob.value = patientRequest.dob;
+  }
 };
 
 const closeModal = () => {
@@ -227,6 +230,7 @@ const resetForm = () => {
   formData.value.firstName = '';
   formData.value.lastName = '';
   formData.value.dob = '';
+  dob.value = '';
   formData.value.email = '';
   formData.value.phone = '';
   formData.value.company = '';

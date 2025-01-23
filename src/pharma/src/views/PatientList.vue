@@ -26,7 +26,7 @@
             @input="searchPatient"
             type="text"
             class="w-72 pr-10 !box"
-            placeholder="Search..."
+            placeholder="Search by name, code or email..."
           />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
