@@ -1,4 +1,5 @@
 import { Setting } from '@/composables/models/Setting';
+import { CURRENCY, DECIMAL_SEPARATOR, THOUSAND_SEPARATOR } from '@/constants/settings';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -36,23 +37,31 @@ const onlyNumber = (string: string) => {
   }
 };
 
-const formatCurrency = (number: number) => {
-  if (number) {
-    const formattedNumber = number.toString().replace(/\D/g, '');
-    const rest = formattedNumber.length % 3;
-    let currency = formattedNumber.substr(0, rest);
-    const thousand = formattedNumber.substr(rest).match(/\d{3}/g);
-    let separator;
+const formatCurrency = (number: number|null): string => {
+  if (number !== null && number !== undefined) {
+    // Convert the number to a string and split into integer and decimal parts
+    const [integerPart, decimalPart] = number.toString().split('.');
+    const data = localStorage.getItem('settings');
+    const settings = data ? JSON.parse(data) : [];
+    const currency = getValueByKey(settings, CURRENCY) ?? '$';
 
-    if (thousand) {
-      separator = rest ? '.' : '';
-      currency += separator + thousand.join('.');
-    }
+    // Remove non-digit characters from the integer part
+    const formattedInteger = integerPart.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, () => {
+      // Get the thousand separator from settings
+      return getValueByKey(settings, THOUSAND_SEPARATOR) ?? ',';
+    });
 
-    return currency;
-  } else {
-    return '';
+    // Append the decimal part (if it exists) with the decimal separator
+    const decimalSeparator = (() => {
+      return getValueByKey(settings, DECIMAL_SEPARATOR) ?? '.';
+    })();
+
+    return `${decimalPart
+      ? `${formattedInteger}${decimalSeparator}${decimalPart}`
+      : formattedInteger} ${currency}`;
   }
+
+  return '';
 };
 
 const timeAgo = (time: string) => {

@@ -374,7 +374,6 @@ import { type NotificationElement } from '@/components/Base/Notification';
 import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import useProductStore from '@/stores/product';
-import '@vueform/multiselect/themes/default.css';
 import useTenantStore from '@/stores/tenant';
 import useShelfStore from '@/stores/shelf';
 import { NAME } from '@/constants/properties';
