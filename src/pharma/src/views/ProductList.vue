@@ -16,15 +16,17 @@
           <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel </Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">Showing {{ startProductCount }} to {{ paginate }} of {{ productTotal }} entries</div>
+      <div class="hidden mx-auto md:block text-slate-500">
+        Showing {{ startProductCount }} to {{ paginate }} of {{ productTotal }} entries
+      </div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-72 text-slate-500">
-          <FormInput 
+          <FormInput
             v-model="search"
             @input="searchProduct"
-            type="text" 
-            class="w-72 pr-10 !box" 
-            placeholder="Search by code, name or barcode..." 
+            type="text"
+            class="w-72 pr-10 !box"
+            placeholder="Search by code, name or barcode..."
           />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
@@ -85,9 +87,13 @@
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              <span 
-              class="border rounded-full px-4 py-1  bg-opacity-20 border-opacity-5"
-              :class="[product.isActive ? 'bg-green-600 border-green-600 text-green-600' : 'bg-red-600 border-red-600 text-red-600']"
+              <span
+                class="border rounded-full px-4 py-1 bg-opacity-20 border-opacity-5"
+                :class="[
+                  product.isActive
+                    ? 'bg-green-600 border-green-600 text-green-600'
+                    : 'bg-red-600 border-red-600 text-red-600',
+                ]"
               >
                 {{ product.isActive ? ACTIVE : INACTIVE }}
               </span>
@@ -226,8 +232,6 @@ const getColspan = () => {
   colspan.value = thElements.length;
 };
 
-
-
 const handleItemsPerPageChange = (itemsPerPage: number) => {
   paginate.value = itemsPerPage;
   currentPage.value = 1;
@@ -254,11 +258,11 @@ const handlePageChange = async (page: number) => {
   await getProductsData();
 };
 
-const openAddEditProduct = (productId: number|null = null) => {
+const openAddEditProduct = (productId: number | null = null) => {
   if (productId) {
     router.push({
       name: 'edit-product',
-      params: { identifier: route.params.identifier, id: productId},
+      params: { identifier: route.params.identifier, id: productId },
     });
   } else {
     router.push({
@@ -270,8 +274,8 @@ const openAddEditProduct = (productId: number|null = null) => {
 
 const openDeleteProductModal = (product: Product) => {
   deleteModalRef.value?.open(
-    {id: product.id, reference: product.productCode},
-    'Do you really want to delete the product'
+    { id: product.id, reference: product.productCode },
+    'Do you really want to delete the product',
   );
 };
 

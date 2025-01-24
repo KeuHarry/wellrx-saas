@@ -95,11 +95,11 @@ Route::group([
         Route::delete('taxes/{taxId}', [TaxController::class, 'deleteTax']);
 
         //Insurance rest crud
-        Route::get('insurers/{insurerId}', [InsurerController::class, 'getInsurer']);
+        Route::get('insurers/{insurerId}', [InsurerController::class, 'show']);
         Route::get('insurers', [InsurerController::class, 'getInsurers']);
         Route::post('insurers', [InsurerController::class, 'createInsurer']);
         Route::put('insurers/{insurerId}', [InsurerController::class, 'updateInsurer']);
-        Route::delete('insurers/{insurerId}', [InsurerController::class, 'deleteInsurer']);
+        Route::delete('insurers/{insurerId}', [InsurerController::class, 'delete']);
 
         //Customers rest crud
         Route::get('customers/{customerId}', [CustomerController::class, 'show']);
