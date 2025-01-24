@@ -38,7 +38,7 @@ const onlyNumber = (string: string) => {
   }
 };
 
-const formatCurrency = (number: number | null): string => {
+const formatPrice = (number: number | null): string => {
   if (number !== null && number !== undefined) {
     // Convert the number to a string and split into integer and decimal parts
     const [integerPart, decimalPart] = number.toString().split('.');
@@ -223,7 +223,7 @@ export {
   formatDate,
   capitalizeFirstLetter,
   onlyNumber,
-  formatCurrency,
+  formatPrice,
   timeAgo,
   diffTimeByNow,
   isset,

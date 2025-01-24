@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\Tenant\Customer;
 use App\Models\Tenant\Product;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,7 +13,14 @@ class ProductRepository extends BaseRepository
         parent::__construct();
     }
 
-    public function search(int $offset = 0, int $limit = 10, string $sortOrder = 'ASC', ?string $search = null, ?string $sortBy = null): Collection
+    public function search(
+        int $offset = 0, 
+        int $limit = 10, 
+        string $sortOrder = 'ASC', 
+        ?string $search = null, 
+        ?string $sortBy = null,
+        ?int $shelfId = null
+    ): Collection
     {
         return Product::when($search, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -22,6 +28,9 @@ class ProductRepository extends BaseRepository
                     ->orWhere('label', 'LIKE', "%{$search}%")
                     ->orWhere('barcode', 'LIKE', "%{$search}%");
             });
+        })
+        ->when($shelfId, function ($query, $shelfId) {
+            $query->where('shelf_id', $shelfId);
         })
         ->offset($offset)
         ->limit($limit)

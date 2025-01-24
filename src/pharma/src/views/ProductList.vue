@@ -20,12 +20,12 @@
         Showing {{ startProductCount }} to {{ paginate }} of {{ productTotal }} entries
       </div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-        <div class="relative w-72 text-slate-500">
+        <div class="relative w-80 text-slate-500">
           <FormInput
             v-model="search"
             @input="searchProduct"
             type="text"
-            class="w-72 pr-10 !box"
+            class="w-80 pr-10 !box"
             placeholder="Search by code, name or barcode..."
           />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />

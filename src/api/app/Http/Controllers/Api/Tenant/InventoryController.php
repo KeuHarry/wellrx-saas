@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Inventory\InventoryRequest;
+use App\Http\Requests\InventoryRequest;
+use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Inventory;
 use App\Services\InventoryService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class InventoryController extends ApiController
 {
@@ -19,64 +19,50 @@ class InventoryController extends ApiController
     public function __construct(InventoryService $inventoryService)
     {
         $this->inventoryService = $inventoryService;
-        $this->model = new Inventory;
-        parent::__construct();
+        $this->model = new Inventory();
+        parent::__construct($inventoryService);
     }
 
-    public function createInventory(InventoryRequest $request)
+    public function getInventories(SearchRequest $request): JsonResponse
     {
-        $content = $request->all();
-        $content['createdBy'] = $request->user()->id;
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
+            $type = intval($request->query->get('type'));
 
-        $inventory = $this->inventoryService->createInventory($content);
+            $inventories = $this->inventoryService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy,
+                $type
+            );
 
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'inventory' => $inventory,
-        ]);
+            return $this->successResponse(
+                $inventories, 
+                class_basename($this->model).'s successfully retrieved!',
+                Response::HTTP_OK,
+                $this->inventoryService->getModelCount()
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
+        }
     }
 
-    public function getInventory(int $inventoryId)
+
+    public function createInventory(InventoryRequest $request): JsonResponse
     {
-        $inventory = $this->inventoryService->getInventory($inventoryId);
-
-        if (! isset($inventory)) {
-            throw new ObjectNotFountException($inventoryId, 'Inventory');
-        }
-
-        return $this->successResponse($inventory);
+        return $this->store($request);
     }
 
-    public function getInventories()
+    public function updateInventory(InventoryRequest $request, int $inventoryId)
     {
-        $inventories = $this->inventoryService->getInventories();
-
-        if (! assert($inventories instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return $this->successResponse($inventories);
-    }
-
-    public function deleteInventory(int $inventoryId)
-    {
-        $inventory = $this->inventoryService->getInventory($inventoryId);
-
-        if (! isset($inventory)) {
-            throw new ObjectNotFountException($inventoryId, 'Inventory');
-        }
-
-        if ($this->inventoryService->deleteInventory($inventory->id)) {
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'inventory' => $inventoryId,
-                'message' => 'Inventory successfully deleted.',
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return $this->update($inventoryId, $request);
     }
 }

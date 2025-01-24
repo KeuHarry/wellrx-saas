@@ -1,8 +1,10 @@
 export interface SearchParams {
+  offset: number;
+  limit: number;
   search?: string | null;
   tag?: number | null;
   sortBy?: string;
   sortOrder?: string;
-  offset: number;
-  limit: number;
+  shelfId?: number | null;
+  type?: number | null;
 }
