@@ -4,7 +4,7 @@ export interface Inventory {
     id: number;
     label: string;
     shelf: string;
-  } | null;
+  };
   quantity: number;
   type: number;
   expiryDate: string;
@@ -13,7 +13,10 @@ export interface Inventory {
   wholesaleCost: number;
   retailCost: number;
   unitCost: number;
-  supplierId: number;
-  reason: string|null;
+  supplier: {
+    id: number;
+    name: string;
+  };
+  reason: string | null;
   createdAt: string;
 }
