@@ -36,6 +36,7 @@
           </div>
           <div class="mt-2">
             <input
+              @keyup.enter="login"
               v-model="password"
               type="password"
               name="password"
