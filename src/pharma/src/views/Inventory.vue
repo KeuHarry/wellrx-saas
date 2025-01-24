@@ -50,11 +50,11 @@
         <Table.Thead>
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">PRODUCT</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">EXPIRY DATE</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">SHELF</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">BATCH</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">QTY</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">TYPE</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">EXPIRY DATE</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">REASON</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">DATE</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
           </Table.Tr>
@@ -64,12 +64,22 @@
             v-for="(inventory, ckey) in inventories"
             :key="ckey"
             class="intro-x"
-            @click="openInventoryModal(inventory)"
+            @click="openViewInventoryModal(inventory)"
           >
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               {{ inventory.product?.label }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              {{ inventory.expiryDate }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              {{ inventory.product?.shelf }}
             </Table.Td>
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
@@ -84,17 +94,7 @@
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ inventory.type }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ inventory.expiryDate }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ inventory.reason ?? '-' }}
+              {{ getNameByValue(inventory.type) }}
             </Table.Td>
             <Table.Td
               class="box w-44 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
@@ -157,6 +157,7 @@
     <Lucide :icon="iconType" class="text-success" />
     <div class="font-medium ml-4 mr-4">{{ message.content }}</div>
   </Notification>
+  <ViewInventoryModal ref="viewInventoryModal" />
 </template>
 
 <script setup lang="ts">
@@ -181,8 +182,11 @@ import { CREATED_AT } from '@/constants/properties';
 import { inventoryTypeList } from '@/constants/inventoryTypeList';
 import useInventoryStore from '@/stores/inventory';
 import { Inventory } from '@/composables/models/Inventory';
+import InventoryType from '@/enums/inventoryType';
+import ViewInventoryModal from '@/components/Modals/ViewInventoryModal.vue';
 
 const route = useRoute();
+const viewInventoryModal = ref<InstanceType<typeof ViewInventoryModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 
 const notificationRef = ref<NotificationElement>();
@@ -258,6 +262,15 @@ const searchInventory = async () => {
   if (search.value.length === 0 || search.value.length >= 3) {
     await getInventoriesData();
   }
+};
+
+const getNameByValue = (value: InventoryType | null): string => {
+  const entry = inventoryTypeList.find((inventoryType) => inventoryType.value === value);
+  return entry ? entry.name : '-';
+};
+
+const openViewInventoryModal = (inventory: Inventory) => {
+  viewInventoryModal.value?.openViewInventoryModal(inventory);
 };
 
 const openDeleteInventoryModal = (inventory: Inventory) => {
