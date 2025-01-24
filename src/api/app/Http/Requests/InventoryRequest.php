@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Inventory;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,10 +24,17 @@ class InventoryRequest extends FormRequest
     public function rules()
     {
         return [
+            'productId' => 'integer|required',
             'quantity' => 'numeric|min:1',
-            'type' => 'required',
-            'expiryDate' => 'required',
+            'type' => 'integer|required',
+            'expiryDate' => 'date|required',
             'batchId' => 'required|string',
+            'acqCost' => 'numeric|min:0',
+            'wholesaleCost' => 'numeric|min:0',
+            'retailCost' => 'numeric|min:0',
+            'unitCost' => 'numeric|min:0',
+            'supplierId' => 'integer|required',
+            'reason' => 'required|string',
         ];
     }
 }

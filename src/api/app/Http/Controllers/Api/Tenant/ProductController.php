@@ -19,11 +19,11 @@ class ProductController extends ApiController
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
-        $this->model = new Product;
+        $this->model = new Product();
         parent::__construct($productService);
     }
 
-    public function getProducts(SearchRequest $request)
+    public function getProducts(SearchRequest $request): JsonResponse
     {
         try {
             $search = $request->query->get('search');
@@ -31,13 +31,15 @@ class ProductController extends ApiController
             $sortOrder = $request->query->get('sortOrder');
             $offset = $request->query->get('offset');
             $limit = $request->query->get('limit');
+            $shelfId = intval($request->query->get('shelfId'));
 
             $products = $this->productService->search(
                 $offset,
                 $limit,
                 $sortOrder,
                 $search,
-                $sortBy
+                $sortBy,
+                $shelfId
             );
 
             return $this->successResponse(
@@ -58,7 +60,7 @@ class ProductController extends ApiController
         return $this->store($request);
     }
 
-    public function updateProduct(ProductRequest $request, int $productId)
+    public function updateProduct(ProductRequest $request, int $productId): JsonResponse
     {
         return $this->update($productId, $request);
     }

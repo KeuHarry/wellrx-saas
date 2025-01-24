@@ -130,10 +130,10 @@ Route::group([
         Route::delete('products/{productId}', [ProductController::class, 'delete']);
 
         //Inventory
-        Route::get('inventories/{inventoryId}', [InventoryController::class, 'getInventory']);
+        Route::get('inventories/{inventoryId}', [InventoryController::class, 'show']);
         Route::get('inventories', [InventoryController::class, 'getInventories']);
         Route::post('inventories', [InventoryController::class, 'createInventory']);
-        Route::delete('inventories/{inventoryId}', [InventoryController::class, 'deleteInventory']);
+        Route::delete('inventories/{inventoryId}', [InventoryController::class, 'delete']);
 
         //Cash register
         Route::get('cashregisters', [CashRegisterController::class, 'getCashRegisters']);

@@ -32,6 +32,7 @@ export const useProductStore = defineStore('product-store', {
       sortOrder: SortOrder.ASC,
       offset: 0,
       limit: 10,
+      shelfId: null,
     },
     isPending: false,
   }),

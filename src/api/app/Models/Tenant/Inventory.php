@@ -3,12 +3,13 @@
 namespace App\Models\Tenant;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
 class Inventory extends BaseModel
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     const OUT = 0;
 
@@ -21,7 +22,7 @@ class Inventory extends BaseModel
      *
      * @var string
      */
-    protected $table = 'inventory';
+    protected $table = 'inventories';
 
     /**
      * The model's default values for attributes.
@@ -92,14 +93,14 @@ class Inventory extends BaseModel
      */
     public static function beforeCreate($item)
     {
-        $current_user = Auth::user();
-        $item->created_by = $current_user->id;
+        $currentUser = Auth::user();
+        $item->created_by = $currentUser->id;
     }
 
     public static function beforeSave($item)
     {
         if ($item->type == self::IN) {
-            $item->batch_id = self::getNextBatchId($item->product_id);
+            $item->batch_id = '#'.self::getNextBatchId($item->product_id);
         }
     }
 
@@ -112,6 +113,11 @@ class Inventory extends BaseModel
 
     public static function afterSave($item)
     {
+        self::updateProductQoh($item);
+    }
+
+    public static function updateProductQoh($item): void
+    {
         $sum = self::where('product_id', $item->product_id)->sum('quantity');
         Product::where('id', $item->product_id)->first()->update(['qoh' => $sum]);
     }
@@ -120,18 +126,23 @@ class Inventory extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['productId'] = $this->product_id;
-        $json['productCode'] = $this->product->product_code;
-        $json['productLabel'] = $this->product->label;
-        $json['wholesaleCost'] = $this->product->wholesale_cost;
-        $json['retailCost'] = $this->product->retail_cost;
-        $json['shelf'] = $this->product->shelf->title;
+        $json['product'] = [
+            'id' =>  $this->product->id,
+            'label' => $this->product->label,
+            'shelf' => $this->product->shelf->name
+        ];
+        $json['acqCost'] = $this->acq_cost;
+        $json['wholesaleCost'] = $this->wholesale_cost;
+        $json['retailCost'] = $this->retail_cost;
+        $json['unitCost'] = $this->unit_cost;
         $json['quantity'] = $this->quantity;
         $json['type'] = $this->type;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['batchId'] = $this->batch_id;
-        $json['supplierId'] = $this->supplier_id;
-        $json['supplierName'] = $this->supplier->name;
+        $json['supplier'] = [
+            'id' =>  $this->supplier->id,
+            'name' => $this->supplier->name
+        ];
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
         $json['reason'] = $this->reason;
 

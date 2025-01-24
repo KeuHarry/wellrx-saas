@@ -25,6 +25,7 @@ return new class extends Migration
             $table->float('charges', 25, 2);
             $table->text('comment')->nullable();
             $table->foreignId('created_by')->constrained('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

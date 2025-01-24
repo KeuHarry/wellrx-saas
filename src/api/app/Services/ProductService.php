@@ -19,14 +19,22 @@ class ProductService extends ApiService
         return Product::all();
     }
 
-    public function search(int $offset = 0, int $limit = 10, string $sortOrder = 'ASC', ?string $search = null, ?string $sortBy = null): Collection
+    public function search(
+        int $offset = 0, 
+        int $limit = 10, 
+        string $sortOrder = 'ASC',
+        ?string $search = null, 
+        ?string $sortBy = null,
+        ?int $shelfId = null
+    ): Collection
     {
         return $this->productRepository->search(
             $offset,
             $limit,
             $sortOrder,
             $search,
-            $sortBy
+            $sortBy,
+            $shelfId
         );
     }
 }
