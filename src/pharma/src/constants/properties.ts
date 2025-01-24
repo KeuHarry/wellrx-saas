@@ -5,3 +5,4 @@ export const NAME = 'name';
 export const CATEGORY_CODE = 'category_code';
 export const SHELF_CODE = 'shelf_code';
 export const FEE_CODE = 'fee_code';
+export const CREATED_AT = 'created_at';

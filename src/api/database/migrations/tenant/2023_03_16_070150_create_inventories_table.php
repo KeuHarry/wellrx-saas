@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity');
             $table->tinyInteger('type');
-            $table->timestamp('expiry_date');
+            $table->date('expiry_date');
             $table->string('batch_id');
             $table->float('acq_cost', 20, 2);
             $table->float('wholesale_cost', 20, 2);
@@ -27,6 +27,8 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->text('reason')->nullable();
             $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('order_item_id')->nullable()->constrained('order_items');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

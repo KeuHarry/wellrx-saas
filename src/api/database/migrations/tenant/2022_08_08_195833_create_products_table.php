@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_code')->unique();
             $table->float('stock_number', 20, 2)->nullable();
-            $table->string('label')->unique();
+            $table->string('label');
             $table->boolean('is_prescription')->default(0);
             $table->boolean('is_generic')->default(0);
             $table->foreignId('generic_product_id')->nullable()->constrained('products');
@@ -42,6 +42,7 @@ return new class extends Migration
             $table->foreignId('shelf_id')->constrained('shelves');
             $table->foreignId('product_category_id')->constrained('categories');
             $table->foreignId('fee_id')->nullable()->constrained('fees');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
