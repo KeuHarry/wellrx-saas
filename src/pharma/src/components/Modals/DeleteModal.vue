@@ -9,8 +9,7 @@
         <Lucide icon="XCircle" class="w-12 h-12 mx-auto mt-3 text-danger" />
         <div class="mt-5 text-3xl">Are you sure ?</div>
         <div class="mt-2 text-slate-500">
-          {{ content }} <span class="font-semibold">{{ reference }}</span
-          >? <br />
+          {{ content }} <span class="font-semibold">{{ reference }}</span> ? <br />
         </div>
       </div>
       <div class="px-5 pb-8 text-center">

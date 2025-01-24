@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Insurer;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,9 +27,8 @@ class InsurerRequest extends FormRequest
             'name' => 'required|string',
             'taxPayerNumber' => 'required|string',
             'registrationNumber' => 'required|string',
-            'creditLimit' => 'numeric|min:0',
-            'balance' => 'numeric|min:0',
-            'deposit' => 'numeric|min:0',
+            'address' => 'string|nullable',
+            'neighborhood' => 'string|nullable',
         ];
     }
 }
