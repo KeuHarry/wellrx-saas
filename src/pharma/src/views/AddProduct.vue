@@ -64,7 +64,7 @@
               placeholder="Enter stock ID"
               name="stock-id"
               id="stock-id"
-              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-50 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
             />
           </div>
           <div class="col-span-4">
@@ -199,7 +199,7 @@
                 placeholder="Last supplier info."
                 name="last-supplier"
                 id="last-supplier"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-50 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="mt-2">
@@ -210,7 +210,7 @@
                 placeholder="Last sale info."
                 name="last-sale"
                 id="last-sale"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-50 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="mt-2">
@@ -223,7 +223,7 @@
                 placeholder="Closest exp. date"
                 name="expiry-date"
                 id="expiry-date"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:cursor-not-allowed disabled:bg-blue-50 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
           </div>

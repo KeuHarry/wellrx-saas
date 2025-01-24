@@ -44,7 +44,7 @@ class InventoryController extends ApiController
 
             return $this->successResponse(
                 $inventories, 
-                class_basename($this->model).'s successfully retrieved!',
+                'Inventories successfully retrieved!',
                 Response::HTTP_OK,
                 $this->inventoryService->getModelCount()
             );
