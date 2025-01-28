@@ -157,6 +157,12 @@ const router = createRouter({
           component: () => import('../views/LabelCodeList.vue'),
           meta: { requiresAuth: true },
         },
+        {
+          path: '/:identifier/cash-register',
+          name: 'cash-register',
+          component: () => import('../views/CashRegister.vue'),
+          meta: { requiresAuth: true },
+        },
       ],
     },
   ],

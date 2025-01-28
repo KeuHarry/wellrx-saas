@@ -23,7 +23,7 @@ class InventoryRepository extends BaseRepository
     ): Collection
     {
         return Inventory::when($search, function ($query, $search) {
-            $query->WhereHas('product', function ($q) use ($search) {
+            $query->whereHas('product', function ($q) use ($search) {
                 $q->where('label', 'LIKE', "%{$search}%")
                 ->orWhere('barcode', 'LIKE', "%{$search}%");
             });

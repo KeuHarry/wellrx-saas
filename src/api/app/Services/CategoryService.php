@@ -16,11 +16,11 @@ class CategoryService extends ApiService
     }
 
     public function search(
+        int $offset = 0,
+        int $limit = 10,
         ?string $search = null,
         ?string $sortBy = null,
-        ?string $sortOrder = null,
-        int $offset = 0,
-        int $limit = 10
+        ?string $sortOrder = null
     ): Collection {
         $categories = Category::where('name', 'LIKE', '%'.$search.'%')
             ->orWhere('category_code', 'LIKE', '%'.$search.'%')
