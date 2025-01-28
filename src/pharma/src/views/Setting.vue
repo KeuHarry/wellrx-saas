@@ -33,7 +33,7 @@
           </div>
           <div class="grid grid-cols-9 gap-2 p-5">
             <div class="col-span-4">
-              <label for="pharmacy-name" class="block text-sm/6 text-gray-900">
+              <label for="pharmacy-name" class="block text-sm/6 text-gray-600">
                 Pharmacy Name
               </label>
               <input
@@ -42,76 +42,76 @@
                 placeholder="Enter pharmacy name"
                 name="pharmacy-name"
                 id="pharmacy-name"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="address" class="block text-sm/6 text-gray-900">Address</label>
+              <label for="address" class="block text-sm/6 text-gray-600">Address</label>
               <input
                 v-model="formData.pharmacyAddress"
                 type="text"
                 placeholder="Enter pharmacy address"
                 name="address"
                 id="address"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-2">
-              <label for="city" class="block text-sm/6 text-gray-900">City</label>
+              <label for="city" class="block text-sm/6 text-gray-600">City</label>
               <input
                 v-model="formData.pharmacyCity"
                 type="text"
                 placeholder="Ex. Tema"
                 name="city"
                 id="city"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
           </div>
           <div class="grid grid-cols-9 gap-2 px-5 mb-5">
             <div class="col-span-3">
-              <label for="phone" class="block text-sm/6 text-gray-900"> Phone Number </label>
+              <label for="phone" class="block text-sm/6 text-gray-600"> Phone Number </label>
               <input
                 v-model="formData.pharmacyPhone"
                 type="text"
                 placeholder="Enter pharmacy phone number"
                 name="phone"
                 id="phone"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="email" class="block text-sm/6 text-gray-900">Email</label>
+              <label for="email" class="block text-sm/6 text-gray-600">Email</label>
               <input
                 v-model="formData.pharmacyEmail"
                 type="email"
                 placeholder="pharma@example.com"
                 name="email"
                 id="email"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="proprio" class="block text-sm/6 text-gray-900">Proprietor</label>
+              <label for="proprio" class="block text-sm/6 text-gray-600">Proprietor</label>
               <input
                 v-model="formData.proprietor"
                 type="text"
                 placeholder="Ex. Dr. John Doe"
                 name="proprio"
                 id="proprio"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
           </div>
           <div class="px-5 mb-5">
-            <label for="footer" class="block text-sm/6 text-gray-900">Footer Message</label>
+            <label for="footer" class="block text-sm/6 text-gray-600">Footer Message</label>
             <input
               v-model="formData.footerMessage"
               type="text"
               placeholder="Ex. Your wellness..."
               name="footer"
               id="footer"
-              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
             />
           </div>
           <div
@@ -121,18 +121,18 @@
           </div>
           <div class="grid grid-cols-12 gap-2 p-5 mb-5">
             <div class="col-span-3">
-              <label for="currency" class="block text-sm/6 text-gray-900"> Currency </label>
+              <label for="currency" class="block text-sm/6 text-gray-600"> Currency </label>
               <input
                 v-model="formData.currency"
                 type="text"
                 placeholder="Ex. $"
                 name="currency"
                 id="curency"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="place" class="block text-sm/6 text-gray-900"
+              <label for="place" class="block text-sm/6 text-gray-600"
                 >Number Of Decimal Places</label
               >
               <input
@@ -141,11 +141,11 @@
                 placeholder="Ex. 2"
                 name="place"
                 id="place"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="decimal-separator" class="block text-sm/6 text-gray-900"
+              <label for="decimal-separator" class="block text-sm/6 text-gray-600"
                 >Decimal Separator</label
               >
               <input
@@ -154,11 +154,11 @@
                 placeholder="Ex. ."
                 name="decimal-separator"
                 id="decimal-separator"
-                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-700 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+                class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
               />
             </div>
             <div class="col-span-3">
-              <label for="thousand-separator" class="block text-sm/6 text-gray-900"
+              <label for="thousand-separator" class="block text-sm/6 text-gray-600"
                 >Per Thousand Separator</label
               >
               <input

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BaseRepository
 {
@@ -30,6 +31,20 @@ class BaseRepository
 
         return $resource;
     }
+
+    public function bulkCreate(array $contents): bool
+    {
+        $result = DB::transaction(function () use ($contents) {
+            foreach ($contents as $content) {
+                $this->create($content);
+            }
+
+            return true;
+        });
+
+        return boolval($result);
+    }
+
 
     public function update(int $id, array $content): int
     {

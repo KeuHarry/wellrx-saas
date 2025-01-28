@@ -140,6 +140,12 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/inventory/:type',
+          name: 'add-remove-inventory',
+          component: () => import('../views/AddRemoveInventory.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/suppliers',
           name: 'supplier-list',
           component: () => import('../views/SupplierList.vue'),

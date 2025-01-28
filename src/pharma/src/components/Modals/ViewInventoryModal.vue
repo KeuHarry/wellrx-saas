@@ -166,7 +166,7 @@
 <script setup lang="ts">
 import { Dialog } from '@/components/Base/Headless';
 import Lucide from '@/components/Base/Lucide';
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import { Inventory } from '@/composables/models/Inventory';
 import InventoryType from '@/enums/inventoryType';
 
@@ -201,7 +201,8 @@ const modalTitle = 'View inventory details';
 // METHODS
 const openViewInventoryModal = (inventory: Inventory) => {
   show.value = true;
-  formData.value = inventory;
+  const rawInventory = toRaw(inventory);
+  formData.value = { ...rawInventory };
   reason.value = inventory.reason;
 };
 
@@ -211,25 +212,25 @@ const closeModal = () => {
 };
 
 const resetForm = () => {
-  (formData.value.product = {
+  formData.value.product = {
     id: 0,
     label: '',
     shelf: '',
-  }),
-    (formData.value.quantity = 0),
-    (formData.value.type = InventoryType.IN),
-    (formData.value.expiryDate = ''),
-    (formData.value.batchId = ''),
-    (formData.value.acqCost = 0),
-    (formData.value.wholesaleCost = 0),
-    (formData.value.retailCost = 0),
-    (formData.value.unitCost = 0),
-    (formData.value.supplier = {
-      id: 0,
-      name: '',
-    }),
-    (formData.value.reason = ''),
-    (formData.value.createdAt = '');
+  };
+  formData.value.quantity = 0;
+  formData.value.type = InventoryType.IN;
+  formData.value.expiryDate = '';
+  formData.value.batchId = '';
+  formData.value.acqCost = 0;
+  formData.value.wholesaleCost = 0;
+  formData.value.retailCost = 0;
+  formData.value.unitCost = 0;
+  formData.value.supplier = {
+    id: 0,
+    name: '',
+  };
+  formData.value.reason = '';
+  formData.value.createdAt = '';
 };
 
 defineExpose({
