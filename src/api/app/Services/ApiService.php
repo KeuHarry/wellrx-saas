@@ -49,6 +49,19 @@ class ApiService
         return $this->baseRepository->create($inputs);
     }
 
+    /**
+     * @param mixed[][] $contents
+     */
+    public function bulkCreate(array $contents): bool
+    {
+        $inputs = []; 
+        foreach ($contents as $content) {
+            $input = $this->updateKey($content);
+            $inputs[] = $input;
+        }
+        return $this->baseRepository->bulkCreate($inputs);
+    }
+
     public function getById(int $id): Model
     {
         return $this->baseRepository->findById($id);

@@ -4,10 +4,10 @@ import SortOrder from '@/enums/sortOrder';
 import { defineStore } from 'pinia';
 import useToastStore from './toast';
 import { Inventory } from '@/composables/models/Inventory';
-import { InventoryRequest } from '@/composables/models/InventoryRequest';
 import useGetInventoryList from '@/composables/api/inventory/useGetInventoryList';
 import useCreateInventory from '@/composables/api/inventory/useCreateInventory';
 import useDeleteInventory from '@/composables/api/inventory/useDeleteInventory';
+import { InRequest } from '@/composables/models/InRequest';
 
 type InventoryState = {
   inventoryList: Inventory[];
@@ -55,13 +55,15 @@ export const useInventoryStore = defineStore('inventory-store', {
         throw error;
       }
     },
-    async createInventoryApi(inventoryRequest: InventoryRequest) {
+    async createInventoryApi(inRequest: InRequest) {
       const createInventory = useCreateInventory();
       try {
         this.isPending = true;
-        const response = await createInventory(inventoryRequest);
-        this.inventory = response.data;
-        toastStore.setMessage('Inventory entry successfully added!');
+        const response = await createInventory(inRequest);
+        // this.inventory = response.data;
+        if (response.data) {
+          toastStore.setMessage('Inventory entry successfully added!');
+        }
         return response;
       } catch (error) {
         this.isPending = false;

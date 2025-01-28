@@ -2,12 +2,12 @@
   <h2 class="mt-10 text-lg font-medium intro-y">Inventory</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
-      <Button @click="openInventoryModal()" variant="primary" class="mr-2 shadow-md">
+      <Button @click="openAddRemoveInventoryPage('in')" variant="primary" class="mr-2 shadow-md">
         <Lucide icon="Plus" class="w-4 h-4" />
         <span>Inventory In</span>
       </Button>
 
-      <Button @click="openInventoryModal()" variant="primary" class="mr-2 shadow-md">
+      <Button @click="openAddRemoveInventoryPage('out')" variant="primary" class="mr-2 shadow-md">
         <Lucide icon="Minus" class="w-4 h-4" />
         <span>Inventory Out</span>
       </Button>
@@ -50,10 +50,10 @@
         <Table.Thead>
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">PRODUCT</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">QTY</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">EXPIRY DATE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">SHELF</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">BATCH</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">QTY</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">TYPE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">DATE</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
@@ -74,6 +74,11 @@
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
+              {{ inventory.quantity }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
               {{ inventory.expiryDate }}
             </Table.Td>
             <Table.Td
@@ -85,11 +90,6 @@
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               {{ inventory.batchId }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ inventory.quantity }}
             </Table.Td>
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
@@ -175,7 +175,7 @@ import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import { Ref } from 'vue';
 import useTenantStore from '@/stores/tenant';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { CREATED_AT } from '@/constants/properties';
@@ -186,6 +186,7 @@ import InventoryType from '@/enums/inventoryType';
 import ViewInventoryModal from '@/components/Modals/ViewInventoryModal.vue';
 
 const route = useRoute();
+const router = useRouter();
 const viewInventoryModal = ref<InstanceType<typeof ViewInventoryModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 
@@ -275,13 +276,20 @@ const openViewInventoryModal = (inventory: Inventory) => {
 
 const openDeleteInventoryModal = (inventory: Inventory) => {
   deleteModalRef.value?.open(
-    { id: inventory.id, reference: `${inventory.batchId} - ${inventory.product?.label}` },
+    { id: inventory.id, reference: `#${inventory.batchId} - ${inventory.product?.label}` },
     'Do you really want to delete the inventory',
   );
 };
 
 const deleteInventory = async (id: number) => {
   await inventoryStore.deleteInventoryApi(id);
+};
+
+const openAddRemoveInventoryPage = (type: string) => {
+  router.push({
+    name: 'add-remove-inventory',
+    params: { identifier: route.params.identifier, type: type },
+  });
 };
 
 watch(inventoryType, async () => {

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\InventoryType;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -48,9 +49,10 @@ class Inventory extends BaseModel
         'wholesale_cost',
         'retail_cost',
         'unit_cost',
+        'sub_total',
         'supplier_id',
         'created_by',
-        'reason',
+        'reason'
     ];
 
     /**
@@ -88,25 +90,17 @@ class Inventory extends BaseModel
         });
     }
 
-    /**
-     * Function to update smth before create item
-     */
-    public static function beforeCreate($item)
-    {
-        $currentUser = Auth::user();
-        $item->created_by = $currentUser->id;
-    }
-
     public static function beforeSave($item)
     {
+        $item->created_by = Auth::user()->id;
         if ($item->type == self::IN) {
-            $item->batch_id = '#'.self::getNextBatchId($item->product_id);
+            $item->batch_id = self::getNextBatchId($item->product_id);
         }
     }
 
     public static function getNextBatchId($productId)
     {
-        $last = self::where('type', self::IN)->where('product_id', $productId)->orderBy('batch_id', 'desc')->take(1)->get()->first();
+        $last = self::where('type', InventoryType::IN)->where('product_id', $productId)->orderBy('batch_id', 'desc')->take(1)->get()->first();
 
         return $last ? $last->batch_id + 1 : 1;
     }

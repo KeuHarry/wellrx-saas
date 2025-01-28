@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\InventoryType;
 use App\Models\Tenant\Inventory;
 use App\Repositories\InventoryRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryService extends ApiService
 {

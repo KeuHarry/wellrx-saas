@@ -1,16 +1,15 @@
 import { useSetupAxios } from '../useAxiosTenant';
 import useTenantStore from '@/stores/tenant';
 import { ApiResponse } from '@/composables/models/ApiResponse';
-import { InventoryRequest } from '@/composables/models/InventoryRequest';
-import { Inventory } from '@/composables/models/Inventory';
+import { InRequest } from '@/composables/models/InRequest';
 
 const axiosTenant = useSetupAxios();
 
 export default function useCreateInventory(): (
-  payload: InventoryRequest,
-) => Promise<ApiResponse<Inventory>> {
-  return async (payload: InventoryRequest) => {
-    const response = await axiosTenant.post<ApiResponse<Inventory>>(`/inventories`, payload);
+  payload: InRequest,
+) => Promise<ApiResponse<boolean>> {
+  return async (payload: InRequest) => {
+    const response = await axiosTenant.post<ApiResponse<boolean>>(`/inventories`, payload);
 
     if (!response) {
       const tenantStore = useTenantStore();
