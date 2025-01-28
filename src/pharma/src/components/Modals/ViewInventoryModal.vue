@@ -63,8 +63,8 @@
           <div class="col-span-2">
             <label for="type" class="block text-sm/6 text-gray-600">Type</label>
             <input
-              v-model="formData.type"
-              type="number"
+              v-model="inventoryType"
+              type="text"
               placeholder="Enter type"
               name="type"
               id="type"
@@ -166,9 +166,10 @@
 <script setup lang="ts">
 import { Dialog } from '@/components/Base/Headless';
 import Lucide from '@/components/Base/Lucide';
-import { ref, toRaw } from 'vue';
+import { computed, ref, toRaw } from 'vue';
 import { Inventory } from '@/composables/models/Inventory';
 import InventoryType from '@/enums/inventoryType';
+import { getInventoryTypeNameByValue } from '@/utils/helper';
 
 const emit = defineEmits(['submit']);
 
@@ -197,6 +198,9 @@ const formData = ref<Inventory>({
   createdAt: '',
 });
 const modalTitle = 'View inventory details';
+
+// COMPUTED
+const inventoryType = computed(() => getInventoryTypeNameByValue(formData.value.type));
 
 // METHODS
 const openViewInventoryModal = (inventory: Inventory) => {

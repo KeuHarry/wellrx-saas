@@ -94,7 +94,7 @@
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
-              {{ getNameByValue(inventory.type) }}
+              {{ getInventoryTypeNameByValue(inventory.type) }}
             </Table.Td>
             <Table.Td
               class="box w-44 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
@@ -173,7 +173,6 @@ import Table from '@/components/Base/Table';
 import DeleteModal from '@/components/Modals/DeleteModal.vue';
 import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
-import { Ref } from 'vue';
 import useTenantStore from '@/stores/tenant';
 import { useRoute, useRouter } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
@@ -182,8 +181,8 @@ import { CREATED_AT } from '@/constants/properties';
 import { inventoryTypeList } from '@/constants/inventoryTypeList';
 import useInventoryStore from '@/stores/inventory';
 import { Inventory } from '@/composables/models/Inventory';
-import InventoryType from '@/enums/inventoryType';
 import ViewInventoryModal from '@/components/Modals/ViewInventoryModal.vue';
+import { getInventoryTypeNameByValue } from '@/utils/helper';
 
 const route = useRoute();
 const router = useRouter();
@@ -263,11 +262,6 @@ const searchInventory = async () => {
   if (search.value.length === 0 || search.value.length >= 3) {
     await getInventoriesData();
   }
-};
-
-const getNameByValue = (value: InventoryType | null): string => {
-  const entry = inventoryTypeList.find((inventoryType) => inventoryType.value === value);
-  return entry ? entry.name : '-';
 };
 
 const openViewInventoryModal = (inventory: Inventory) => {

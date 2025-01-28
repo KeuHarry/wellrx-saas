@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\CashRegister\CloseCashRegisterRequest;
 use App\Http\Requests\CashRegister\OpenCashRegisterRequest;
+use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\CashRegister;
 use App\Services\CashRegisterService;
 use DateTime;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class CashRegisterController extends ApiController
 {
@@ -21,53 +20,58 @@ class CashRegisterController extends ApiController
     public function __construct(CashRegisterService $cashRegisterService)
     {
         $this->cashRegisterService = $cashRegisterService;
-        $this->model = new CashRegister;
-        parent::__construct();
+        $this->model = new CashRegister();
+        parent::__construct($cashRegisterService);
     }
 
-    public function getCashRegisters()
+    public function getCashRegisters(SearchRequest $request)
     {
-        $cashRegisters = $this->cashRegisterService->getCashRegisters();
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
 
-        if (! assert($cashRegisters instanceof Collection)) {
-            throw new InternalServerErrorException;
+            $cashRegisters = $this->cashRegisterService->search(
+                $offset,
+                $limit,
+                $search,
+                $sortBy,
+                $sortOrder
+            );
+
+            return $this->successResponse(
+                $cashRegisters, 
+                class_basename($this->model).'s successfully retrieved!',
+                Response::HTTP_OK,
+                $this->cashRegisterService->getModelCount()
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
-
-        return $this->successResponse($cashRegisters);
     }
 
-    public function openCashRegister(OpenCashRegisterRequest $request)
+    public function openCashRegister(OpenCashRegisterRequest $request): JsonResponse
     {
-        $content = $request->all();
+        $content = $request->safe()->toArray();
         $content['openedBy'] = $request->user()->id;
-        $content['openingTime'] = (new DateTime('now'))->format('Y-m-d H:i:s');
 
-        $cashRegister = $this->cashRegisterService->openCashRegister($content);
+        $cashRegister = $this->cashRegisterService->create($content);
 
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'cashRegister' => $cashRegister,
-        ]);
+        return $this->successResponse($cashRegister, 'Cash register successfully opened!');
     }
 
-    public function closeCashRegister(CloseCashRegisterRequest $request, int $cashRegisterId)
+    public function closeCashRegister(OpenCashRegisterRequest $request, int $cashRegisterId)
     {
-        $cashRegister = $this->cashRegisterService->getCashRegister($cashRegisterId);
-
-        if (! isset($cashRegister)) {
-            throw new ObjectNotFountException($cashRegisterId, 'CashRegister');
-        }
-
-        $content = $request->all();
+        $content = $request->safe()->toArray();
         $content['closedBy'] = $request->user()->id;
         $content['closingTime'] = (new DateTime('now'))->format('Y-m-d H:i:s');
 
-        $updatedCashRegister = $this->cashRegisterService->closeCashRegister($cashRegisterId, $content);
+        $updatedCashRegister = $this->cashRegisterService->update($cashRegisterId, $content);
 
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'cashRegister' => $updatedCashRegister,
-            'message' => 'CashRegister successfully updated.',
-        ]);
+        return $this->successResponse($updatedCashRegister, 'Cash register successfully closed!');
     }
 }

@@ -136,9 +136,9 @@ Route::group([
         Route::delete('inventories/{inventoryId}', [InventoryController::class, 'delete']);
 
         //Cash register
-        Route::get('cashregisters', [CashRegisterController::class, 'getCashRegisters']);
-        Route::post('cashregisters', [CashRegisterController::class, 'openCashRegister']);
-        Route::put('cashregisters/{cashregisterId}', [CashRegisterController::class, 'closeCashRegister']);
+        Route::get('cash-registers', [CashRegisterController::class, 'getCashRegisters']);
+        Route::post('cash-registers', [CashRegisterController::class, 'openCashRegister']);
+        Route::patch('cash-registers/{cashRegisterId}', [CashRegisterController::class, 'closeCashRegister']);
 
         //Prescriber
         Route::get('prescribers/{prescriberId}', [PrescriberController::class, 'show']);

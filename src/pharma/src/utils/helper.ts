@@ -1,6 +1,8 @@
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Setting } from '@/composables/models/Setting';
+import { inventoryTypeList } from '@/constants/inventoryTypeList';
 import { CURRENCY, DECIMAL_SEPARATOR, THOUSAND_SEPARATOR } from '@/constants/settings';
+import InventoryType from '@/enums/inventoryType';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -218,6 +220,11 @@ const buildQueryParams = (params: SearchParams): string => {
   return query.toString();
 };
 
+const getInventoryTypeNameByValue = (value: InventoryType | null): string => {
+  const entry = inventoryTypeList.find((inventoryType) => inventoryType.value === value);
+  return entry ? entry.name : '-';
+};
+
 export {
   cutText,
   formatDate,
@@ -235,4 +242,5 @@ export {
   slideDown,
   getValueByKey,
   buildQueryParams,
+  getInventoryTypeNameByValue,
 };
