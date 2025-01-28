@@ -58,7 +58,7 @@ class InventoryController extends ApiController
 
     public function createInventory(InventoryRequest $request): JsonResponse
     {
-        return $this->store($request);
+        return $this->bulkStore($request);
     }
 
     public function updateInventory(InventoryRequest $request, int $inventoryId)

@@ -24,17 +24,18 @@ class InventoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'productId' => 'integer|required',
-            'quantity' => 'numeric|min:1',
-            'type' => 'integer|required',
-            'expiryDate' => 'date|required',
-            'batchId' => 'required|string',
-            'acqCost' => 'numeric|min:0',
-            'wholesaleCost' => 'numeric|min:0',
-            'retailCost' => 'numeric|min:0',
-            'unitCost' => 'numeric|min:0',
-            'supplierId' => 'integer|required',
-            'reason' => 'required|string',
+            'inventories' => 'required|array',
+            'inventories.*.productId' => 'integer|required',
+            'inventories.*.quantity' => 'numeric|min:1',
+            'inventories.*.type' => 'integer|required',
+            'inventories.*.expiryDate' => 'date|required',
+            'inventories.*.acqCost' => 'numeric|min:0',
+            'inventories.*.wholesaleCost' => 'numeric|min:0',
+            'inventories.*.retailCost' => 'numeric|min:0',
+            'inventories.*.unitCost' => 'numeric|min:0',
+            'inventories.*.subTotal' => 'numeric|min:0',
+            'inventories.*.supplierId' => 'integer|required',
+            'inventories.*.reason' => 'nullable|string',
         ];
     }
 }

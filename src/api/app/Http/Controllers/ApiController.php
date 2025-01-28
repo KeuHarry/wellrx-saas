@@ -82,6 +82,24 @@ class ApiController extends Controller
     }
 
     /**
+     * Create bulk resources.
+     */
+    public function bulkStore(FormRequest $request): JsonResponse
+    {
+        try {
+            $content = $request->safe();
+            $firstkey = array_key_first($content->toArray());
+            $result = $this->apiService->bulkCreate($content[$firstkey]);
+
+            return $this->successResponse($result, class_basename($this->model).' successfully created');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to create '.class_basename($this->model));
+        }
+    }
+
+    /**
      * Get a resource.
      */
     public function show(int $id): JsonResponse

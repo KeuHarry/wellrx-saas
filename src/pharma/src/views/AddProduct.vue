@@ -402,6 +402,7 @@ import { Shelf } from '@/composables/models/Shelf';
 import ComboBox from '@/components/ComboBox.vue';
 import useCategoryStore from '@/stores/category';
 import { Option } from '@/composables/models/Option';
+import { defaultItemsPerPage, defaultOffset } from '@/constants/pagination';
 
 const router = useRouter();
 const route = useRoute();
@@ -524,6 +525,7 @@ const setProductForm = async () => {
   formData.value.isActive = product.value?.isActive ?? true;
   formData.value.minQuantity = product.value?.minQuantity ?? null;
   formData.value.maxQuantity = product.value?.maxQuantity ?? null;
+  formData.value.qoh = product.value?.qoh ?? 0;
 
   selectedShelf.value = product.value?.shelf ?? { id: 0, name: '' };
   selectedCategory.value = product.value?.category ?? { id: 0, name: '' };
@@ -534,8 +536,8 @@ const getShelvesData = async (query: string = '') => {
     search: query,
     sortBy: NAME,
     sortOrder: SortOrder.ASC,
-    offset: 0,
-    limit: 10,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage,
   });
 };
 
@@ -544,8 +546,8 @@ const getCategoriesData = async (query: string = '') => {
     search: query,
     sortBy: NAME,
     sortOrder: SortOrder.ASC,
-    offset: 0,
-    limit: 10,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage,
   });
 };
 

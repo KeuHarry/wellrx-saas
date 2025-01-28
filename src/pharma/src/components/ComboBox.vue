@@ -18,7 +18,7 @@
         fill="currentColor"
         aria-hidden="true"
         data-slot="icon"
-        class="om bar w-5 h-5 absolute sm:left-[77%] md:left-[94%]"
+        class="om bar w-5 h-5 absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none"
       >
         <path
           fill-rule="evenodd"
@@ -68,7 +68,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['selected']);
+const emit = defineEmits(['selected', 'search']);
 
 const searchFilter = ref<string>('');
 const filteredOptions = ref<Option[]>(props.options);
@@ -76,9 +76,9 @@ const showDropdown = ref<boolean>(false);
 
 // Function to filter the options based on user input
 const filterOptions = () => {
-  filteredOptions.value = props.options.filter((option) =>
-    option.name.toLowerCase().includes(searchFilter.value.toLowerCase()),
-  );
+  if (searchFilter.value.length === 0 || searchFilter.value.length >= 3) {
+    emit('search', searchFilter.value);
+  }
 };
 
 // Function to handle option selection

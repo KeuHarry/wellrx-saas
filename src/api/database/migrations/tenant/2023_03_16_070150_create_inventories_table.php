@@ -19,11 +19,12 @@ return new class extends Migration
             $table->integer('quantity');
             $table->tinyInteger('type');
             $table->date('expiry_date');
-            $table->string('batch_id');
+            $table->integer('batch_id');
             $table->float('acq_cost', 20, 2);
             $table->float('wholesale_cost', 20, 2);
             $table->float('retail_cost', 20, 2);
             $table->float('unit_cost', 20, 2);
+            $table->float('sub_total', 20, 2);
             $table->foreignId('supplier_id')->constrained('suppliers');
             $table->text('reason')->nullable();
             $table->foreignId('created_by')->constrained('users');
