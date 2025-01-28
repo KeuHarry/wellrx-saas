@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('cash_registers', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status');
-            $table->timestamp('opening_time');
-            $table->timestamp('closing_time')->nullable();
             $table->foreignId('opened_by')->constrained('users');
+            $table->boolean('status');
+            $table->float('amount')->default(0);
             $table->foreignId('closed_by')->nullable()->constrained('users');
+            $table->timestamp('closing_time')->nullable();
             $table->timestamps();
         });
     }
