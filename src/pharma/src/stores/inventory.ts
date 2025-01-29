@@ -8,6 +8,8 @@ import useGetInventoryList from '@/composables/api/inventory/useGetInventoryList
 import useCreateInventory from '@/composables/api/inventory/useCreateInventory';
 import useDeleteInventory from '@/composables/api/inventory/useDeleteInventory';
 import { InRequest } from '@/composables/models/InRequest';
+import useInventoryOut from '@/composables/api/inventory/useInventoryOut';
+import { InventoryOutRequest } from '@/composables/models/InventoryOutRequest';
 
 type InventoryState = {
   inventoryList: Inventory[];
@@ -60,8 +62,8 @@ export const useInventoryStore = defineStore('inventory-store', {
       try {
         this.isPending = true;
         const response = await createInventory(inRequest);
-        // this.inventory = response.data;
-        if (response.data) {
+        this.inventory = response.data;
+        if (this.inventory) {
           toastStore.setMessage('Inventory entry successfully added!');
         }
         return response;
@@ -79,6 +81,21 @@ export const useInventoryStore = defineStore('inventory-store', {
           this.inventoryList = this.inventoryList.filter((inventory) => inventory.id !== id);
         }
         toastStore.setMessage('Inventory entry successfully deleted!');
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async inventoryOutApi(outRequest: InventoryOutRequest) {
+      const inventoryOut = useInventoryOut();
+      try {
+        this.isPending = true;
+        const response = await inventoryOut(outRequest);
+        this.inventory = response.data;
+        if (this.inventory) {
+          toastStore.setMessage('Inventory batch reduced!');
+        }
         return response;
       } catch (error) {
         this.isPending = false;

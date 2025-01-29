@@ -36,4 +36,20 @@ class InventoryRepository extends BaseRepository
         ->orderBy($sortBy, $sortOrder)
         ->get();
     }
+
+    public function getBatchQoh(Inventory $inventory): int
+    {
+        return Inventory::where('product_id', $inventory->product_id)
+                        ->where('batch_id', $inventory->batch_id)
+                        ->sum('quantity');
+    }
+
+    public function updateBatchQoh(Inventory $inventory): void
+    {
+        $batchQoh = $this->getBatchQoh($inventory);
+
+        Inventory::where('product_id', $inventory->product_id)
+                ->where('batch_id', $inventory->batch_id)
+                ->update(['batch_qoh' => $batchQoh]);
+    }
 }

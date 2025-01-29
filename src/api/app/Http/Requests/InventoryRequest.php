@@ -26,7 +26,7 @@ class InventoryRequest extends FormRequest
         return [
             'inventories' => 'required|array',
             'inventories.*.productId' => 'integer|required',
-            'inventories.*.quantity' => 'numeric|min:1',
+            'inventories.*.quantity' => 'numeric',
             'inventories.*.type' => 'integer|required',
             'inventories.*.expiryDate' => 'date|required',
             'inventories.*.acqCost' => 'numeric|min:0',

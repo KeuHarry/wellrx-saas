@@ -133,6 +133,7 @@ Route::group([
         Route::get('inventories/{inventoryId}', [InventoryController::class, 'show']);
         Route::get('inventories', [InventoryController::class, 'getInventories']);
         Route::post('inventories', [InventoryController::class, 'createInventory']);
+        Route::post('inventories/out', [InventoryController::class, 'inventoryOut']);
         Route::delete('inventories/{inventoryId}', [InventoryController::class, 'delete']);
 
         //Cash register

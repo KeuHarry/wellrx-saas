@@ -6,9 +6,10 @@ export interface Inventory {
     shelf: string;
   };
   quantity: number;
+  batchQoh: number;
   type: number;
   expiryDate: string;
-  batchId: string;
+  batchId: number;
   acqCost: number;
   wholesaleCost: number;
   retailCost: number;

@@ -2,14 +2,8 @@
   <h2 class="mt-10 text-lg font-medium intro-y">Inventory</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
-      <Button @click="openAddRemoveInventoryPage('in')" variant="primary" class="mr-2 shadow-md">
-        <Lucide icon="Plus" class="w-4 h-4" />
-        <span>Inventory In</span>
-      </Button>
-
-      <Button @click="openAddRemoveInventoryPage('out')" variant="primary" class="mr-2 shadow-md">
-        <Lucide icon="Minus" class="w-4 h-4" />
-        <span>Inventory Out</span>
+      <Button @click="openAddInventory('in')" variant="primary" class="mr-2 shadow-md">
+        <span>Add Inventory</span>
       </Button>
       <div class="hidden mx-auto md:block text-slate-500">
         Showing {{ startInventoryCount }} to {{ paginate }} of {{ inventoryTotal }} entries
@@ -113,6 +107,16 @@
               ]"
             >
               <div class="flex items-center justify-center">
+                <Tippy content="inventory out">
+                  <a
+                    v-if="inventory.type === InventoryType.IN"
+                    class="flex items-center text-indigo-700"
+                    href="#"
+                    @click="openInventoryOutModal(inventory)"
+                  >
+                    <Lucide icon="MinusCircle" class="w-4 h-4 mr-1" />
+                  </a>
+                </Tippy>
                 <Tippy content="Delete">
                   <a
                     class="flex items-center text-danger"
@@ -158,11 +162,12 @@
     <div class="font-medium ml-4 mr-4">{{ message.content }}</div>
   </Notification>
   <ViewInventoryModal ref="viewInventoryModal" />
+  <InventoryOutModal ref="inventoryOutModal" @submit="saveInventoryOutEntry" />
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash';
-import { computed, onMounted, provide, ref, watch } from 'vue';
+import { computed, onMounted, provide, Ref, ref, watch } from 'vue';
 import Button from '@/components/Base/Button';
 import { FormInput } from '@/components/Base/Form';
 import Notification from '@/components/Base/Notification';
@@ -183,10 +188,14 @@ import useInventoryStore from '@/stores/inventory';
 import { Inventory } from '@/composables/models/Inventory';
 import ViewInventoryModal from '@/components/Modals/ViewInventoryModal.vue';
 import { getInventoryTypeNameByValue } from '@/utils/helper';
+import InventoryType from '@/enums/inventoryType';
+import InventoryOutModal from '@/components/Modals/InventoryOutModal.vue';
+import { InventoryOutRequest } from '@/composables/models/InventoryOutRequest';
 
 const route = useRoute();
 const router = useRouter();
 const viewInventoryModal = ref<InstanceType<typeof ViewInventoryModal> | null>(null);
+const inventoryOutModal = ref<InstanceType<typeof InventoryOutModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 
 const notificationRef = ref<NotificationElement>();
@@ -268,6 +277,10 @@ const openViewInventoryModal = (inventory: Inventory) => {
   viewInventoryModal.value?.openViewInventoryModal(inventory);
 };
 
+const openInventoryOutModal = (inventory: Inventory) => {
+  inventoryOutModal.value?.openInventoryOutModal(inventory);
+};
+
 const openDeleteInventoryModal = (inventory: Inventory) => {
   deleteModalRef.value?.open(
     { id: inventory.id, reference: `#${inventory.batchId} - ${inventory.product?.label}` },
@@ -279,11 +292,17 @@ const deleteInventory = async (id: number) => {
   await inventoryStore.deleteInventoryApi(id);
 };
 
-const openAddRemoveInventoryPage = (type: string) => {
+const openAddInventory = (type: string) => {
   router.push({
     name: 'add-remove-inventory',
     params: { identifier: route.params.identifier, type: type },
   });
+};
+
+const saveInventoryOutEntry = async (formData: Ref<InventoryOutRequest>) => {
+  await inventoryStore.inventoryOutApi(formData.value);
+  basicNonStickyNotificationToggle();
+  await getInventoriesData();
 };
 
 watch(inventoryType, async () => {
