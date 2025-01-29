@@ -31,11 +31,11 @@ class CategoryController extends ApiController
         $limit = $request->query->get('limit');
 
         $categories = $this->categoryService->search(
+            $offset,
+            $limit,
             $search,
             $sortBy,
-            $sortOrder,
-            $offset,
-            $limit
+            $sortOrder
         );
 
         return $this->successResponse($categories, total: $this->categoryService->getModelCount());

@@ -39,4 +39,14 @@ class InventoryService extends ApiService
             $type
         );
     }
+
+    public function getBatchQoh(Inventory $inventory): int
+    {
+        return $this->inventoryRepository->getBatchQoh($inventory);
+    }
+
+    public function updateBatchQoh(Inventory $inventory)
+    {
+        return $this->inventoryRepository->updateBatchQoh($inventory);
+    }
 }

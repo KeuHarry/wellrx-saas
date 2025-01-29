@@ -95,6 +95,7 @@ class Inventory extends BaseModel
         $item->created_by = Auth::user()->id;
         if ($item->type == self::IN) {
             $item->batch_id = self::getNextBatchId($item->product_id);
+            $item->batch_qoh = $item->quantity;
         }
     }
 
@@ -130,6 +131,7 @@ class Inventory extends BaseModel
         $json['retailCost'] = $this->retail_cost;
         $json['unitCost'] = $this->unit_cost;
         $json['quantity'] = $this->quantity;
+        $json['batchQoh'] = $this->batch_qoh;
         $json['type'] = $this->type;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['batchId'] = $this->batch_id;
