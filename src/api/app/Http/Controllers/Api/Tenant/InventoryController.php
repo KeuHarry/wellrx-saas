@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
+use App\Enums\InventoryType;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\InventoryOutRequest;
 use App\Http\Requests\InventoryRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Inventory;
@@ -59,6 +61,31 @@ class InventoryController extends ApiController
     public function createInventory(InventoryRequest $request): JsonResponse
     {
         return $this->bulkStore($request);
+    }
+
+    public function inventoryOut(InventoryOutRequest $request): JsonResponse
+    {
+        $content = $request->safe()->toArray();
+        $inventory = $this->inventoryService->getById(intval($content['inventoryId']));
+        assert($inventory instanceof Inventory);
+
+        if ($inventory->type !== InventoryType::IN->value) {
+            return $this->errorResponse([], 'inventory type must be in');
+        }
+
+        $content['productId'] = $inventory->product->id;
+        $content['expiryDate'] = $inventory->expiry_date;
+        $content['batchId'] = $inventory->batch_id;
+        $content['acqCost'] = $inventory->acq_cost;
+        $content['wholesaleCost'] = $inventory->wholesale_cost;
+        $content['retailCost'] = $inventory->retail_cost;
+        $content['unitCost'] = $inventory->unit_cost;
+        $content['subTotal'] = $content['quantity'] * $content['acqCost'];
+        $content['supplierId'] = $inventory->supplier_id;
+        $newInventoryEntry = $this->inventoryService->create($content);
+        $this->inventoryService->updateBatchQoh($inventory);
+
+        return $this->successResponse($newInventoryEntry, 'Inventory out completed!');
     }
 
     public function updateInventory(InventoryRequest $request, int $inventoryId)
