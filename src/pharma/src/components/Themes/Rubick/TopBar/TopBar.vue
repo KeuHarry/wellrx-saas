@@ -1,22 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue';
-import Lucide from '@/components/Base/Lucide';
-import Breadcrumb from '@/components/Base/Breadcrumb';
-import { FormInput } from '@/components/Base/Form';
-import { Menu, Popover } from '@/components/Base/Headless';
-import fakerData from '@/utils/faker';
-import _ from 'lodash';
-import { TransitionRoot } from '@headlessui/vue';
-
-const searchDropdown = ref(false);
-const showSearchDropdown = () => {
-  searchDropdown.value = true;
-};
-const hideSearchDropdown = () => {
-  searchDropdown.value = false;
-};
-</script>
-
 <template>
   <!-- BEGIN: Top Bar -->
   <div class="relative z-[51] flex h-[67px] items-center border-b border-slate-200">
@@ -86,12 +67,6 @@ const hideSearchDropdown = () => {
           <Lucide icon="User" class="w-4 h-4 mr-2" /> Profile
         </Menu.Item>
         <Menu.Item class="hover:bg-white/5">
-          <Lucide icon="Edit" class="w-4 h-4 mr-2" /> Add Account
-        </Menu.Item>
-        <Menu.Item class="hover:bg-white/5">
-          <Lucide icon="Lock" class="w-4 h-4 mr-2" /> Reset Password
-        </Menu.Item>
-        <Menu.Item class="hover:bg-white/5">
           <Lucide icon="HelpCircle" class="w-4 h-4 mr-2" /> Help
         </Menu.Item>
         <Menu.Divider class="bg-white/[0.08]" />
@@ -103,3 +78,21 @@ const hideSearchDropdown = () => {
   </div>
   <!-- END: Top Bar -->
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import Lucide from '@/components/Base/Lucide';
+import Breadcrumb from '@/components/Base/Breadcrumb';
+import { FormInput } from '@/components/Base/Form';
+import { Menu, Popover } from '@/components/Base/Headless';
+import fakerData from '@/utils/faker';
+import _ from 'lodash';
+
+const searchDropdown = ref(false);
+const showSearchDropdown = () => {
+  searchDropdown.value = true;
+};
+const hideSearchDropdown = () => {
+  searchDropdown.value = false;
+};
+</script>

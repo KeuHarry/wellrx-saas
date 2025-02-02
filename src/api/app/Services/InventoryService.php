@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-use App\Enums\InventoryType;
 use App\Models\Tenant\Inventory;
 use App\Repositories\InventoryRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
 
 class InventoryService extends ApiService
 {
@@ -43,10 +41,5 @@ class InventoryService extends ApiService
     public function getBatchQoh(Inventory $inventory): int
     {
         return $this->inventoryRepository->getBatchQoh($inventory);
-    }
-
-    public function updateBatchQoh(Inventory $inventory)
-    {
-        return $this->inventoryRepository->updateBatchQoh($inventory);
     }
 }

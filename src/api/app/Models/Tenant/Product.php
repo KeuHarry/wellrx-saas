@@ -29,13 +29,6 @@ class Product extends BaseModel
         });
     }
 
-    public $validation_rules = [
-        'label' => 'required|max:255|unique:product,label',
-        'ndc' => 'max:255',
-        'product_category_id' => 'required',
-        'shelf_id' => 'required',
-    ];
-
     /**
      * The database table used by the model.
      *

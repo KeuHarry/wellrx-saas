@@ -6,16 +6,11 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends BaseModel
 {
     use HasFactory, Notifiable;
-
-    const IN_PROGRESS = 0;
-
-    const COMPLETED = 1;
-
-    const RETURNED = 2;
 
     /**
      * The table associated with the model.
@@ -51,6 +46,22 @@ class Order extends BaseModel
         'created_by',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($item) {
+            self::beforeSave($item);
+
+            return true;
+        });
+    }
+
+    public static function beforeSave($item)
+    {
+        $item->created_by = Auth::user()->id;
+    }
+
     /**
      * Get the supplier.
      */
@@ -70,8 +81,10 @@ class Order extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['invoiceCode'] = $this->invoice_code;
-        $json['supplierId'] = $this->supplier_id;
-        $json['supplier'] = $this->supplier->name;
+        $json['supplier'] = [
+            'id' =>  $this->supplier->id,
+            'name' => $this->supplier->name
+        ];
         $json['invoiceDate'] = date('Y-m-d', strtotime($this->invoice_date));
         $json['status'] = $this->status;
         $json['subTotal'] = $this->sub_total;

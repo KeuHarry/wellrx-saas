@@ -2,13 +2,44 @@
   <div class="relative">
     <!-- Input Field -->
     <div class="flex items-center w-full">
+      <div
+        v-if="multiple"
+        @click="showDropdown = !showDropdown"
+        class="flex flex-wrap h-9 items-center gap-1 w-full border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 cursor-pointer px-2"
+        :class="{
+          'focus:ring-indigo-500 focus:border-indigo-500 ring-1 ring-indigo-500': isFocused,
+          'border-gray-300': !isFocused,
+          'border-indigo-500': isFocused,
+        }"
+      >
+        <span v-if="!showDropdown && !(selectedOptions.length > 0)" class="text-gray-500 px-1"
+          >Select label</span
+        >
+        <div
+          v-for="(selected, index) in selectedOptions"
+          :key="index"
+          class="flex items-center bg-indigo-100 text-indigo-700 text-sm px-2 py-1 rounded-md"
+        >
+          {{ selected.name }}
+          <button
+            @click.stop="removeOption(selected)"
+            class="ml-1 text-indigo-700 hover:text-indigo-900"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
       <input
+        v-else
         v-model="searchFilter"
         type="text"
+        @focus="handleFocus(true)"
+        @blur="handleFocus(false)"
         @input="filterOptions"
         @click="showDropdown = !showDropdown"
         :disabled="disabled"
         class="w-full h-9 py-2 cursor-pointer border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 focus:ring-indigo-500 focus:border-indigo-500"
+        :class="classes"
         :placeholder="placeholder"
         autocomplete="off"
       />
@@ -29,14 +60,33 @@
     </div>
 
     <!-- Dropdown -->
-    <ul v-if="showDropdown" class="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10">
+    <ul
+      v-if="showDropdown"
+      class="absolute w-full mt-1 bg-white border rounded-md shadow-lg z-10 max-h-48 overflow-y-auto"
+    >
+      <li v-if="multiple" class="px-4 py-2">
+        <input
+          v-model="searchFilter"
+          type="text"
+          class="w-full h-9 px-4 py-2 cursor-pointer border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 focus:ring-indigo-500 focus:border-indigo-500"
+          @input="filterOptions"
+          :placeholder="placeholder"
+          autocomplete="off"
+        />
+      </li>
       <li
         v-for="(option, index) in options"
         :key="index"
         @click="selectOption(option)"
         class="px-4 py-2 cursor-pointer text-sm hover:bg-indigo-100"
       >
-        {{ option.name }}
+        {{ option.name }} <span v-if="option.details">({{ option.details }})</span>
+        <span
+          v-if="multiple && selectedOptions.some((sel) => sel.id === option.id)"
+          class="text-indigo-500"
+        >
+          Selected
+        </span>
       </li>
     </ul>
   </div>
@@ -62,17 +112,38 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  defaultOption: {
-    type: Object as () => Option,
+  defaultOptions: {
+    type: Array as () => Option[],
     required: false,
+    default: () => [],
+  },
+  defaultOption: {
+    type: Object as () => Option | null,
+    default: null,
+    required: false,
+  },
+  multiple: {
+    type: Boolean,
+    default: false,
+  },
+  classes: {
+    type: String,
+    required: false,
+    default: '',
   },
 });
 
 const emit = defineEmits(['selected', 'search']);
 
 const searchFilter = ref<string>('');
-const filteredOptions = ref<Option[]>(props.options);
+const filteredOptions = ref<Option[]>([...props.options]);
+const selectedOptions = ref<Option[]>([...props.defaultOptions]);
 const showDropdown = ref<boolean>(false);
+const isFocused = ref<boolean>(false);
+
+const handleFocus = (focus: boolean) => {
+  isFocused.value = focus;
+};
 
 // Function to filter the options based on user input
 const filterOptions = () => {
@@ -83,10 +154,35 @@ const filterOptions = () => {
 
 // Function to handle option selection
 const selectOption = (option: Option) => {
-  searchFilter.value = option.name;
-  emit('selected', option);
-  showDropdown.value = false;
-  filteredOptions.value = props.options; // Reset the list to show all options
+  // searchFilter.value = option.name;
+  // emit('selected', option);
+  // showDropdown.value = false;
+  // filteredOptions.value = props.options;
+  if (props.multiple) {
+    const isSelected = selectedOptions.value.some((selected) => selected.id === option.id);
+    if (isSelected) {
+      selectedOptions.value = selectedOptions.value.filter((selected) => selected.id !== option.id);
+    } else {
+      selectedOptions.value.push(option);
+    }
+    emit('selected', selectedOptions.value);
+    searchFilter.value = '';
+  } else {
+    searchFilter.value = option.name;
+    selectedOptions.value = [option];
+    emit('selected', option);
+    showDropdown.value = false;
+  }
+  // filterOptions();
+};
+
+// Remove an option from selectedOptions (only in multi-selection mode)
+const removeOption = (option: Option) => {
+  if (props.multiple) {
+    selectedOptions.value = selectedOptions.value.filter((selected) => selected.id !== option.id);
+    emit('selected', selectedOptions.value);
+    filterOptions();
+  }
 };
 
 // Watch for clicks outside of the component to close the dropdown
@@ -102,14 +198,34 @@ watchEffect(() => {
 watch(
   () => props.defaultOption,
   (newDefaultOption) => {
-    if (newDefaultOption) {
+    if (newDefaultOption && !props.multiple) {
       searchFilter.value = newDefaultOption.name;
       emit('selected', newDefaultOption);
     }
   },
 );
 
+watch(
+  () => props.defaultOptions,
+  (newDefaultOptions) => {
+    if (Array.isArray(newDefaultOptions) && props.multiple) {
+      selectedOptions.value = [...newDefaultOptions];
+      emit('selected', selectedOptions.value);
+    }
+  },
+  { immediate: true }, // Run immediately to handle the initial value
+);
+
 onMounted(() => {
+  if (props.defaultOptions.length) {
+    if (props.multiple) {
+      selectedOptions.value = [...props.defaultOptions];
+    } else {
+      searchFilter.value = props.defaultOptions[0].name;
+    }
+    emit('selected', props.multiple ? props.defaultOptions : props.defaultOptions[0]);
+  }
+
   if (props.defaultOption) {
     searchFilter.value = props.defaultOption.name;
     emit('selected', props.defaultOption);

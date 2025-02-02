@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Product;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -36,5 +37,16 @@ class ProductRepository extends BaseRepository
         ->limit($limit)
         ->orderBy($sortBy, $sortOrder)
         ->get();
+    }
+
+    public function calculateQoh(int $productId): int
+    {
+        return Inventory::where('product_id', $productId)->sum('quantity');
+    } 
+
+    public function updateProductQoh(int $productId): void
+    {
+        $sum = $this->calculateQoh($productId);
+        Product::where('id', $productId)->update(['qoh' => $sum]);
     }
 }

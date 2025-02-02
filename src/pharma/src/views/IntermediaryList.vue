@@ -16,9 +16,7 @@
           <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" />Export to Excel</Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startIntermediaryCount }} to {{ paginate }} of {{ intermediaryTotal }} entries
-      </div>
+      <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput

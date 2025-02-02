@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
-use App\Exceptions\InternalServerErrorException;
-use App\Exceptions\ObjectNotFountException;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Order\OrderRequest;
+use App\Http\Requests\CompleteOrderRequest;
+use App\Http\Requests\OrderRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Order;
 use App\Services\OrderItemService;
 use App\Services\OrderService;
-use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends ApiController
 {
@@ -24,113 +24,83 @@ class OrderController extends ApiController
     {
         $this->orderService = $orderService;
         $this->orderItemService = $orderItemService;
-        $this->model = new Order;
-        parent::__construct();
+        $this->model = new Order();
+        parent::__construct($orderService);
     }
 
-    public function createOrder(OrderRequest $request)
+    public function getOrders(SearchRequest $request): JsonResponse
     {
-        $content = $request->all();
-        $content['createdBy'] = $request->user()->id;
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
+            $fromDate = $request->query->get('startDate');
+            $toDate = $request->query->get('endDate');
 
-        $order = $this->orderService->createOrder($content);
+            $orders = $this->orderService->search(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy,
+                $fromDate,
+                $toDate
+            );
 
-        $orderItems = $content['orderItems'];
-        foreach ($orderItems as $orderItem) {
-            $orderItem['orderId'] = $order->id;
-            $this->orderItemService->createOrderItem($orderItem);
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'order' => $order,
-        ]);
-    }
-
-    public function getOrder(int $orderId)
-    {
-        $order = $this->orderService->getOrder($orderId);
-
-        if (! isset($order)) {
-            throw new ObjectNotFountException($orderId, 'Order');
-        }
-
-        return $this->successResponse($order);
-    }
-
-    public function getOrders(SearchRequest $request)
-    {
-        $search = $request->query->get('search');
-        $sortBy = $request->query->get('sortBy');
-        $sortOrder = $request->query->get('sortOrder');
-        $offset = $request->query->get('offset');
-        $limit = $request->query->get('limit');
-
-        $orders = $this->orderService->search(
-            $search,
-            $sortBy,
-            $sortOrder,
-            $offset,
-            $limit
-        );
-
-        if (! assert($orders instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'success' => true,
-            'total' => empty($search) ? count($this->model->all()) : count($orders),
-            'data' => $orders,
-        ]);
-    }
-
-    public function deleteOrder(int $orderId)
-    {
-        $order = $this->orderService->getOrder($orderId);
-
-        if (! isset($order)) {
-            throw new ObjectNotFountException($orderId, 'Order');
-        }
-
-        if ($this->orderService->deleteOrder($order->id)) {
-            return new JsonResponse([
-                'code' => Response::HTTP_OK,
-                'order' => $orderId,
-                'message' => 'Order successfully deleted.',
-            ]);
-        } else {
-            return new JsonResponse([
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal Server Error. Try again or contact support',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->successResponse(
+                $orders, 
+                'Orders successfully retrieved!',
+                Response::HTTP_OK,
+                $this->orderService->getModelCount()
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
 
-    public function updateOrder(OrderRequest $request, int $orderId)
+    public function createOrder(OrderRequest $request): JsonResponse
     {
-        $order = $this->orderService->getOrder($orderId);
+        try {
+            $content = $request->safe()->toArray();
+            $orderContent = [];
+            $orderContent['invoiceCode'] = $content['invoiceCode'];
+            $orderContent['supplierId'] = $content['supplierId'];
+            $orderContent['invoiceDate'] = $content['invoiceDate'];
+            $orderContent['status'] = $content['status'];
+            $orderContent['subTotal'] = $content['subTotal'];
+            $orderContent['taxTotal'] = $content['taxTotal'];
+            $orderContent['total'] = $content['total'];
+            $orderContent['charges'] = $content['charges'];
+            $orderContent['comment'] = $content['comment'];
+            $orderItems = $content['orderItems'];
 
-        if (! isset($order)) {
-            throw new ObjectNotFountException($orderId, 'Order');
+            $order = $this->orderService->create($orderContent);
+            if ($order->id) {
+                $orderItems = array_map(function ($orderItem) use ($order) {
+                    $orderItem['orderId'] = $order->id;
+                    return $orderItem;
+                }, $orderItems);
+
+                $this->orderItemService->bulkCreate($orderItems);
+            }
+
+            return $this->successResponse($order, class_basename($this->model).' successfully created');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to create '.class_basename($this->model));
         }
+    }
 
-        $content = $request->all();
+    public function complete(CompleteOrderRequest $request): JsonResponse
+    {
+        $content = $request->safe()->toArray();
+        $order = $this->orderService->completeOrder($content['orderId']);
 
-        $updatedOrder = $this->orderService->updateOrder($orderId, $content);
-        $this->orderItemService->deleteAllOrderItems($updatedOrder);
-
-        $orderItems = $content['orderItems'];
-        foreach ($orderItems as $orderItem) {
-            $orderItem['orderId'] = $updatedOrder;
-            $this->orderItemService->createOrderItem($orderItem);
-        }
-
-        return new JsonResponse([
-            'code' => Response::HTTP_OK,
-            'order' => $updatedOrder,
-            'message' => 'Order successfully updated.',
-        ]);
+        return $this->successResponse($order, 'Order completed!');
     }
 }

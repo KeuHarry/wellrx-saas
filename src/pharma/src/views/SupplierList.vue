@@ -89,13 +89,18 @@
               ]"
             >
               <div class="flex items-center justify-center">
+                <Tippy content="View invoices">
+                  <a class="flex items-center text-blue-700" href="#">
+                    <Lucide icon="Files" class="w-4 h-4 mr-1" />
+                  </a>
+                </Tippy>
                 <Tippy content="Delete">
                   <a
                     class="flex items-center text-danger"
                     href="#"
                     @click="openDeleteSupplierModal(supplier)"
                   >
-                    <Lucide icon="Trash2" class="w-4 h-4 mr-1" />
+                    <Lucide icon="Trash2" class="w-4 h-4" />
                   </a>
                 </Tippy>
               </div>

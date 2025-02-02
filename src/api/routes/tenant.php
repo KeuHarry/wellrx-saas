@@ -170,11 +170,12 @@ Route::group([
         Route::delete('intermediaries/{intermediaryId}', [IntermediaryController::class, 'delete']);
 
         // orders
-        Route::get('orders/{orderId}', [OrderController::class, 'getOrder']);
+        Route::get('orders/{orderId}', [OrderController::class, 'show']);
         Route::get('orders', [OrderController::class, 'getOrders']);
         Route::post('orders', [OrderController::class, 'createOrder']);
-        Route::put('orders/{orderId}', [OrderController::class, 'updateOrder']);
-        Route::delete('orders/{orderId}', [OrderController::class, 'deleteOrder']);
+        Route::patch('orders/{orderId}', [OrderController::class, 'updateOrder']);
+        Route::delete('orders/{orderId}', [OrderController::class, 'delete']);
+        Route::post('orders/complete', [OrderController::class, 'complete']);
 
         // settings
         Route::get('settings', [SettingController::class, 'getSettings']);
