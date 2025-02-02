@@ -110,7 +110,7 @@ const openInventoryOutModal = (inventory: Inventory) => {
   show.value = true;
   formData.value = {
     ...formData.value,
-    quantity: inventory.batchQoh,
+    quantity: inventory.quantity,
     inventoryId: inventory.id,
   };
 

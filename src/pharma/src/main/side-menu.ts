@@ -99,7 +99,7 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'FileText',
-        pageName: 'order',
+        pageName: 'order-list',
         title: 'Orders',
       },
     ],

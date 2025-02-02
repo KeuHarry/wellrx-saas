@@ -30,7 +30,9 @@ class SearchRequest extends FormRequest
             'offset' => 'required|integer',
             'limit' => 'required|integer',
             'type' => 'sometimes|integer|nullable',
-            'shelfId' => 'sometimes|integer|nullable'
+            'shelfId' => 'sometimes|integer|nullable',
+            'fromDate' => 'sometimes|string|nullable',
+            'toDate' => 'sometimes|string|nullable'
         ];
     }
 }

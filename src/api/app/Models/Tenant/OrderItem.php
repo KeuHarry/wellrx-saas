@@ -40,17 +40,17 @@ class OrderItem extends BaseModel
         'discount',
         'tax',
         'wholesale_cost',
-        'markup',
         'retail_cost',
+        'markup',
     ];
 
     /**
      * Get the order.
      */
-    // public function order()
-    // {
-    //     return $this->belongsTo(Order::class, 'order_id');
-    // }
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
 
     /**
      * Get the product.
@@ -64,16 +64,19 @@ class OrderItem extends BaseModel
     {
         $json = [];
         $json['id'] = $this->id;
-        $json['productId'] = $this->product_id;
-        $json['productName'] = $this->product->label.'('.$this->product->qoh.')';
+        $json['product'] = [
+            'id' =>  $this->product->id,
+            'name' => $this->product->label,
+            'shelf' => $this->product->shelf->name
+        ];
         $json['quantity'] = $this->quantity;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['price'] = $this->price;
         $json['discount'] = $this->discount;
         $json['tax'] = $this->tax;
         $json['wholesaleCost'] = $this->wholesale_cost;
-        $json['markup'] = $this->markup;
         $json['retailCost'] = $this->retail_cost;
+        $json['markup'] = $this->markup;
 
         return $json;
     }

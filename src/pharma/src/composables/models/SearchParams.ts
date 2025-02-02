@@ -7,4 +7,6 @@ export interface SearchParams {
   sortOrder?: string;
   shelfId?: number | null;
   type?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
 }

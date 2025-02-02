@@ -7,7 +7,6 @@ import '@/assets/css/vendors/litepicker.css';
 import { type InputHTMLAttributes, onMounted, ref, inject } from 'vue';
 import { setValue, init, reInit } from './litepicker';
 import LitepickerJs from 'litepicker';
-import { FormInput } from '@/components/Base/Form';
 import { type ILPConfiguration } from 'litepicker/dist/types/interfaces.d';
 
 export interface LitepickerElement extends HTMLInputElement {
@@ -15,14 +14,14 @@ export interface LitepickerElement extends HTMLInputElement {
 }
 
 export interface LitepickerEmit {
-  (e: 'update:modelValue', value: string): void;
+  (e: 'update:modelValue', value: string | null): void;
 }
 
 export interface LitepickerProps extends /* @vue-ignore */ InputHTMLAttributes {
   options: {
     format?: string | undefined;
   } & LitepickerConfig;
-  modelValue: string;
+  modelValue: string | null;
   refKey?: string;
 }
 
@@ -65,7 +64,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <FormInput
+  <input
     ref="litepickerRef"
     type="text"
     :value="props.modelValue"

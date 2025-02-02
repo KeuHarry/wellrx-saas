@@ -83,7 +83,6 @@ class InventoryController extends ApiController
         $content['subTotal'] = $content['quantity'] * $content['acqCost'];
         $content['supplierId'] = $inventory->supplier_id;
         $newInventoryEntry = $this->inventoryService->create($content);
-        $this->inventoryService->updateBatchQoh($inventory);
 
         return $this->successResponse($newInventoryEntry, 'Inventory out completed!');
     }

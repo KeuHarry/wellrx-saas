@@ -16,9 +16,7 @@
           <Menu.Item><Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel</Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startShelfCount }} to {{ paginate }} of {{ shelfTotal }} entries
-      </div>
+      <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput
@@ -80,7 +78,7 @@
                 }
               "
               :class="[
-                'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600',
+                'box w-20 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600',
                 'before:absolute before:inset-y-0 before:left-0 before:my-auto before:block before:h-8 before:w-px before:bg-slate-200 before:dark:bg-darkmode-400',
               ]"
             >

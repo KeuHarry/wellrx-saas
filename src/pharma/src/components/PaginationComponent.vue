@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="showPagination"
-    class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap"
+    class="flex flex-wrap justify-between items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap"
   >
-    <Pagination class="w-full sm:w-auto sm:mr-auto">
+    <Pagination>
       <Pagination.Link @click="goToFirstPage">
         <Lucide icon="ChevronsLeft" class="w-4 h-4" />
       </Pagination.Link>
@@ -27,6 +27,9 @@
         <Lucide icon="ChevronsRight" class="w-4 h-4" />
       </Pagination.Link>
     </Pagination>
+    <div class="hidden mx-auto md:block text-slate-500">
+      Showing {{ startItemCount }} to {{ initialItemsPerPage }} of {{ totalItems }} entries
+    </div>
     <FormSelect v-model="itemsPerPage" class="w-20 mt-3 !box sm:mt-0">
       <option v-for="(limit, lkey) in pageLimits" :key="lkey" :value="limit">
         {{ limit }}
@@ -90,6 +93,7 @@ const visiblePages = computed(() => {
   return pages;
 });
 
+const startItemCount = computed(() => (props.totalItems > 0 ? 1 : 0));
 const showDotsBefore = computed(() => currentPage.value > 3);
 const showDotsAfter = computed(() => currentPage.value < totalPages.value - 2);
 
