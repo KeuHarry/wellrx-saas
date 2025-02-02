@@ -53,7 +53,7 @@
             @click="openInsurerModal(insurer)"
           >
             <Table.Td
-              class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               {{ insurer.name }}
             </Table.Td>
@@ -89,6 +89,11 @@
               ]"
             >
               <div class="flex items-center justify-center">
+                <Tippy content="View insurance payment">
+                  <a class="flex items-center text-blue-700" href="#">
+                    <Lucide icon="FileText" class="w-4 h-4 mr-1" />
+                  </a>
+                </Tippy>
                 <Tippy content="Delete">
                   <a
                     class="flex items-center text-danger"

@@ -2,7 +2,9 @@ import { SearchParams } from '@/composables/models/SearchParams';
 import { Setting } from '@/composables/models/Setting';
 import { inventoryTypeList } from '@/constants/inventoryTypeList';
 import { CURRENCY, DECIMAL_SEPARATOR, THOUSAND_SEPARATOR } from '@/constants/settings';
+import { COMPLETED, IN_PROGRESS } from '@/constants/status';
 import InventoryType from '@/enums/inventoryType';
+import OrderStatus from '@/enums/orderStatus';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -42,6 +44,7 @@ const onlyNumber = (string: string) => {
 
 const formatPrice = (number: number | null): string => {
   if (number !== null && number !== undefined) {
+    const isNegative = number < 0;
     // Convert the number to a string and split into integer and decimal parts
     const [integerPart, decimalPart] = number.toString().split('.');
     const data = localStorage.getItem('settings');
@@ -59,7 +62,7 @@ const formatPrice = (number: number | null): string => {
       return getValueByKey(settings, DECIMAL_SEPARATOR) ?? '.';
     })();
 
-    return `${
+    return `${isNegative ? '-' : ''}${
       decimalPart ? `${formattedInteger}${decimalSeparator}${decimalPart}` : formattedInteger
     } ${currency}`;
   }
@@ -225,6 +228,23 @@ const getInventoryTypeNameByValue = (value: InventoryType | null): string => {
   return entry ? entry.name : '-';
 };
 
+const getStatus = (value: number | null): string => {
+  let status = '';
+
+  switch (value) {
+    case OrderStatus.IN_PROGRESS:
+      status = IN_PROGRESS;
+      break;
+    case OrderStatus.COMPLETED:
+      status = COMPLETED;
+      break;
+    default:
+      break;
+  }
+
+  return status;
+};
+
 export {
   cutText,
   formatDate,
@@ -243,4 +263,5 @@ export {
   getValueByKey,
   buildQueryParams,
   getInventoryTypeNameByValue,
+  getStatus,
 };

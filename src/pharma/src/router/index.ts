@@ -40,7 +40,7 @@ const router = createRouter({
     {
       path: '/:identifier/dashboard',
       name: 'home',
-      component: () => import('../views/Home.vue'),
+      component: Home,
       meta: { requiresAuth: true },
       children: [
         {
@@ -94,13 +94,13 @@ const router = createRouter({
         {
           path: '/:identifier/products/add',
           name: 'add-product',
-          component: () => import('../views/AddProduct.vue'),
+          component: () => import('../views/AddEditProduct.vue'),
           meta: { requiresAuth: true },
         },
         {
           path: '/:identifier/products/edit/:id',
           name: 'edit-product',
-          component: () => import('../views/AddProduct.vue'),
+          component: () => import('../views/AddEditProduct.vue'),
           meta: { requiresAuth: true },
         },
         {
@@ -149,6 +149,24 @@ const router = createRouter({
           path: '/:identifier/suppliers',
           name: 'supplier-list',
           component: () => import('../views/SupplierList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/orders',
+          name: 'order-list',
+          component: () => import('../views/OrderList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/orders/add',
+          name: 'add-order',
+          component: () => import('../views/AddEditOrder.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/orders/edit/:id',
+          name: 'edit-order',
+          component: () => import('../views/AddEditOrder.vue'),
           meta: { requiresAuth: true },
         },
         {

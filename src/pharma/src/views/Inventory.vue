@@ -5,9 +5,7 @@
       <Button @click="openAddInventory('in')" variant="primary" class="mr-2 shadow-md">
         <span>Add Inventory</span>
       </Button>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startInventoryCount }} to {{ paginate }} of {{ inventoryTotal }} entries
-      </div>
+      <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="mr-3 h-9">
         <select
           v-model="inventoryType"

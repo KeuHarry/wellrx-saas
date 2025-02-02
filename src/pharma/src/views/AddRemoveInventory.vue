@@ -384,7 +384,6 @@ const resetFormData = () => {
 
 const addProduct = () => {
   const rawFormData = toRaw(formData.value);
-  console.log(formData.value);
   inventoriesData.value.push({ ...rawFormData });
   inventoriesTable.value.push({
     id: rawFormData.productId,

@@ -88,7 +88,7 @@
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               <span
-                class="border rounded-full px-4 py-1 bg-opacity-20 border-opacity-5"
+                class="text-xs border rounded-full px-4 py-1 bg-opacity-20 border-opacity-5"
                 :class="[
                   product.isActive
                     ? 'bg-green-600 border-green-600 text-green-600'

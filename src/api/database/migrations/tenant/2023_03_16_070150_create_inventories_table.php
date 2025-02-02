@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity');
-            $table->integer('batch_qoh')->default(0);
+            $table->integer('before_qoh')->default(0);
+            $table->integer('after_qoh')->default(0);
             $table->tinyInteger('type');
             $table->date('expiry_date');
             $table->integer('batch_id');

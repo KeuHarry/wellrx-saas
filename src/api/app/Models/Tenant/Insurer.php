@@ -7,18 +7,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Insurer extends BaseModel
 {
-    use Notifiable;
-
-    public $validation_rules = [
-        'name' => 'required|unique:App\Models\Tenant\Customer,name',
-        'tax_payer_number' => 'required|string',
-        'registration_number' => 'required|string',
-        'credit_limit' => 'numeric|min:0',
-        'balance' => 'numeric|min:0',
-        'deposit' => 'numeric|min:0',
-        'address' => 'string|nullable',
-        'neighborhood' => 'string|nullable',
-    ];
+    use Notifiable; 
 
     /**
      * The table associated with the model.

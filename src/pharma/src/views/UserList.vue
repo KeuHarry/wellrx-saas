@@ -126,7 +126,7 @@
                     href="#"
                     @click="openDeleteUserModal(user)"
                   >
-                    <Lucide icon="Trash2" class="w-4 h-4 mr-1" />
+                    <Lucide icon="Trash2" class="w-4 h-4" />
                   </a>
                 </Tippy>
               </div>

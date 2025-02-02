@@ -122,20 +122,13 @@
         </div>
         <div class="grid grid-cols-1 gap-1 mt-4">
           <label for="label-code" class="block text-sm/6 text-gray-600">Labels</label>
-          <TomSelect
-            v-model="selectedLabels"
-            :options="{
-              placeholder: 'Select your labels',
-            }"
-            class="w-full"
+          <ComboBox
+            :options="labelCodes"
+            @selected="selectLabels"
+            :defaultOptions="selectedLabels"
+            placeholder="Select label"
             multiple
-          >
-            <option value="1">Leonardo DiCaprio</option>
-            <option value="2">Johnny Deep</option>
-            <option value="3">Robert Downey, Jr</option>
-            <option value="4">Samuel L. Jackson</option>
-            <option value="5">Morgan Freeman</option>
-          </TomSelect>
+          />
         </div>
         <div class="flex items-center mt-6 gap-8">
           <div class="flex items-center space-x-2">
@@ -170,9 +163,10 @@
               >
               <ComboBox
                 :options="categories"
+                @search="searchCategory"
                 @selected="selectCategory"
                 :defaultOption="selectedCategory"
-                :placeholder="'Select category'"
+                placeholder="Select category"
               />
             </div>
             <div class="mt-4">
@@ -181,9 +175,10 @@
               >
               <ComboBox
                 :options="shelves"
+                @search="searchShelf"
                 @selected="selectShelf"
                 :defaultOption="selectedShelf"
-                :placeholder="'Select shelf'"
+                placeholder="Select shelf"
               />
             </div>
           </div>
@@ -396,13 +391,14 @@ import NotificationType from '@/enums/notification';
 import useProductStore from '@/stores/product';
 import useTenantStore from '@/stores/tenant';
 import useShelfStore from '@/stores/shelf';
-import { NAME } from '@/constants/properties';
+import { LABEL, NAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 import { Shelf } from '@/composables/models/Shelf';
 import ComboBox from '@/components/ComboBox.vue';
 import useCategoryStore from '@/stores/category';
 import { Option } from '@/composables/models/Option';
 import { defaultItemsPerPage, defaultOffset } from '@/constants/pagination';
+import useLabelCodeStore from '@/stores/labelCode';
 
 const router = useRouter();
 const route = useRoute();
@@ -463,10 +459,20 @@ const shelfStore = useShelfStore();
 const categoryStore = useCategoryStore();
 const toastStore = useToastStore();
 const productStore = useProductStore();
+const labelCodeStore = useLabelCodeStore();
 
 // COMPUTED
 const shelves = computed(() => shelfStore.getShelves);
 const categories = computed(() => categoryStore.getCategories);
+const labelCodes = computed(() =>
+  labelCodeStore.getLabelCodes.map((labelCode) => {
+    return {
+      id: labelCode.id,
+      name: labelCode.labelCode,
+      details: labelCode.label,
+    };
+  }),
+);
 const product = computed(() => productStore.getProduct);
 const productCode = computed(() => product.value?.productCode);
 const message = computed(() => toastStore.getMessage);
@@ -551,10 +557,22 @@ const getCategoriesData = async (query: string = '') => {
   });
 };
 
+const getLabelCodesData = async (query: string = '') => {
+  await labelCodeStore.getLabelCodesApi({
+    search: query,
+    sortBy: LABEL,
+    sortOrder: SortOrder.ASC,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage,
+  });
+};
+
 const searchShelf = async (query: string) => {
-  if (query.length === 0 || query.length >= 3) {
-    await getShelvesData(query);
-  }
+  await getShelvesData(query);
+};
+
+const searchCategory = async (query: string) => {
+  await getCategoriesData(query);
 };
 
 const selectShelf = (value: { id: number; name: string }) => {
@@ -565,10 +583,15 @@ const selectCategory = (value: { id: number; name: string }) => {
   formData.value.productCategoryId = value.id;
 };
 
+const selectLabels = async (value: Option[]) => {
+  //
+};
+
 onMounted(async () => {
   await tenantVerification();
   await getProductData();
   await getShelvesData();
   await getCategoriesData();
+  await getLabelCodesData();
 });
 </script>

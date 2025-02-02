@@ -37,4 +37,9 @@ class ProductService extends ApiService
             $shelfId
         );
     }
+
+    public function updateQoh(int $productId): void
+    {
+        $this->productRepository->updateProductQoh($productId);
+    }
 }

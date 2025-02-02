@@ -1,5 +1,5 @@
 import { SearchParams } from '@/composables/models/SearchParams';
-import { LABEL, NAME } from '@/constants/properties';
+import { LABEL } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 import { defineStore } from 'pinia';
 import useToastStore from './toast';

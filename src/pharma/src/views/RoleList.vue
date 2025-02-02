@@ -1,11 +1,10 @@
 <template>
   <h2 class="mt-10 text-lg font-medium intro-y">Roles</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
+    <div
+      class="flex flex-wrap justify-between items-center col-span-12 mt-2 intro-y sm:flex-nowrap"
+    >
       <Button @click="openRoleModal()" variant="primary" class="mr-2 shadow-md"> Add Role </Button>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startRoleCount }} to {{ paginate }} of {{ roleTotal }} entries
-      </div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput

@@ -4,13 +4,13 @@ namespace App\Models\Tenant;
 
 use App\Enums\InventoryType;
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 
 class Inventory extends BaseModel
 {
-    use Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     const OUT = 0;
 
@@ -52,7 +52,8 @@ class Inventory extends BaseModel
         'sub_total',
         'supplier_id',
         'created_by',
-        'reason'
+        'reason',
+        'order_item_id'
     ];
 
     /**
@@ -71,50 +72,11 @@ class Inventory extends BaseModel
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($item) {
-            self::beforeSave($item);
-
-            return true;
-        });
-
-        static::created(function (Inventory $item) {
-            self::afterSave($item);
-        });
-
-        static::updated(function (Inventory $item) {
-            self::afterSave($item);
-        });
-    }
-
-    public static function beforeSave($item)
-    {
-        $item->created_by = Auth::user()->id;
-        if ($item->type == self::IN) {
-            $item->batch_id = self::getNextBatchId($item->product_id);
-            $item->batch_qoh = $item->quantity;
-        }
-    }
-
-    public static function getNextBatchId($productId)
+    public function getNextBatchId(int $productId): int
     {
         $last = self::where('type', InventoryType::IN)->where('product_id', $productId)->orderBy('batch_id', 'desc')->take(1)->get()->first();
 
         return $last ? $last->batch_id + 1 : 1;
-    }
-
-    public static function afterSave($item)
-    {
-        self::updateProductQoh($item);
-    }
-
-    public static function updateProductQoh($item): void
-    {
-        $sum = self::where('product_id', $item->product_id)->sum('quantity');
-        Product::where('id', $item->product_id)->first()->update(['qoh' => $sum]);
     }
 
     public function jsonSerialize(): mixed
@@ -131,7 +93,8 @@ class Inventory extends BaseModel
         $json['retailCost'] = $this->retail_cost;
         $json['unitCost'] = $this->unit_cost;
         $json['quantity'] = $this->quantity;
-        $json['batchQoh'] = $this->batch_qoh;
+        $json['qohBefore'] = $this->qoh_before;
+        $json['qohAfter'] = $this->qoh_after;
         $json['type'] = $this->type;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['batchId'] = $this->batch_id;
