@@ -5,8 +5,8 @@
         <h2 class="text-lg font-medium">{{ pageTitle }}</h2>
       </div>
       <div class="flex items-center">
-        <Button variant="primary" @click="addInventory" class="mr-3"> Save </Button>
-        <Button variant="outline-secondary" @click="closeAddRemoveInventoryForm"> Cancel </Button>
+        <Button :disabled="!canAddInventory" variant="primary" @click="addInventory" class="mr-3 disabled:cursor-not-allowed">Save</Button>
+        <Button variant="outline-secondary" @click="closeAddRemoveInventoryForm">Cancel</Button>
       </div>
     </div>
     <div class="grid grid-cols-12 gap-3 m-5">
@@ -306,6 +306,8 @@ const iconType = computed(() => {
 
   return 'CheckCircle';
 });
+
+const canAddInventory = computed(() => inventoriesTable.value.length > 0);
 
 // METHOD
 const tenantVerification = async () => {

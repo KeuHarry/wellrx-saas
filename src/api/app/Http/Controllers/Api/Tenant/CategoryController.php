@@ -9,7 +9,6 @@ use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class CategoryController extends ApiController
 {
@@ -18,7 +17,7 @@ class CategoryController extends ApiController
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
-        $this->model = new Category();
+        $this->model = new Category;
         parent::__construct($categoryService);
     }
 

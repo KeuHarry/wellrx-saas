@@ -24,15 +24,14 @@ class OrderService extends ApiService
     }
 
     public function search(
-        int $offset = 0, 
-        int $limit = 10, 
-        string $sortOrder = 'ASC', 
-        ?string $search = null, 
+        int $offset = 0,
+        int $limit = 10,
+        string $sortOrder = 'ASC',
+        ?string $search = null,
         ?string $sortBy = null,
         ?string $fromDate = null,
         ?string $toDate = null
-    ): Collection
-    {
+    ): Collection {
         return $this->orderRepository->search(
             $offset,
             $limit,
@@ -62,7 +61,7 @@ class OrderService extends ApiService
                 'unitCost' => $orderItem->retail_cost,
                 'subTotal' => $orderItem->quantity * $orderItem->wholesale_cost,
                 'supplierId' => $order->supplier->id,
-                'orderItemId' => $orderItem->id
+                'orderItemId' => $orderItem->id,
             ];
         }
 

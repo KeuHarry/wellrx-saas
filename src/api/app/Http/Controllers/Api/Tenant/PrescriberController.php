@@ -19,7 +19,7 @@ class PrescriberController extends ApiController
     public function __construct(PrescriberService $prescriberService)
     {
         $this->prescriberService = $prescriberService;
-        $this->model = new Prescriber();
+        $this->model = new Prescriber;
         parent::__construct($prescriberService);
     }
 

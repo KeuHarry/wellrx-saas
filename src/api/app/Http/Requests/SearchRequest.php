@@ -29,10 +29,12 @@ class SearchRequest extends FormRequest
             'sortOrder' => 'required|string',
             'offset' => 'required|integer',
             'limit' => 'required|integer',
+            'status' => 'sometimes|integer|nullable',
+            'cashierStatus' => 'sometimes|integer|nullable',
             'type' => 'sometimes|integer|nullable',
             'shelfId' => 'sometimes|integer|nullable',
             'fromDate' => 'sometimes|string|nullable',
-            'toDate' => 'sometimes|string|nullable'
+            'toDate' => 'sometimes|string|nullable',
         ];
     }
 }

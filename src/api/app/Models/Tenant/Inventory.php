@@ -53,7 +53,8 @@ class Inventory extends BaseModel
         'supplier_id',
         'created_by',
         'reason',
-        'order_item_id'
+        'order_item_id',
+        'sale_item_id',
     ];
 
     /**
@@ -76,7 +77,7 @@ class Inventory extends BaseModel
     {
         $last = self::where('type', InventoryType::IN)->where('product_id', $productId)->orderBy('batch_id', 'desc')->take(1)->get()->first();
 
-        return $last ? $last->batch_id + 1 : 1;
+        return $last ? intval($last->batch_id) + 1 : 1;
     }
 
     public function jsonSerialize(): mixed
@@ -84,9 +85,9 @@ class Inventory extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['product'] = [
-            'id' =>  $this->product->id,
+            'id' => $this->product->id,
             'label' => $this->product->label,
-            'shelf' => $this->product->shelf->name
+            'shelf' => $this->product->shelf->name,
         ];
         $json['acqCost'] = $this->acq_cost;
         $json['wholesaleCost'] = $this->wholesale_cost;
@@ -99,8 +100,8 @@ class Inventory extends BaseModel
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['batchId'] = $this->batch_id;
         $json['supplier'] = [
-            'id' =>  $this->supplier->id,
-            'name' => $this->supplier->name
+            'id' => $this->supplier->id,
+            'name' => $this->supplier->name,
         ];
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
         $json['reason'] = $this->reason;

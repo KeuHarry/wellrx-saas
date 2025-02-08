@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Tenant\Inventory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class InventorySeeder extends Seeder
@@ -30,6 +29,7 @@ class InventorySeeder extends Seeder
                 'quantity' => $quantity,
                 'before_qoh' => 0,
                 'after_qoh' => $quantity,
+                'actual_quantity' => $quantity,
                 'type' => 1,
                 'expiry_date' => $faker->dateTimeBetween('+6 month', '+1 years')->format('Y-m-d'),
                 'acq_cost' => $product->acq_cost,

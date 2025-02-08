@@ -29,7 +29,7 @@ class CustomerRequest extends FormRequest
             'deposit' => 'numeric|min:0',
             'phone' => 'string|required',
             'address' => 'string|nullable',
-            'city' => 'string|nullable'
+            'city' => 'string|nullable',
         ];
     }
 }

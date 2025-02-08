@@ -9,7 +9,7 @@ class LabelRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new LabelCode();
+        $this->model = new LabelCode;
         parent::__construct();
     }
 
@@ -21,9 +21,9 @@ class LabelRepository extends BaseRepository
                     ->orWhere('label', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

@@ -8,6 +8,7 @@ import { CashRegisterRequest } from '@/composables/models/CashRegisterRequest';
 import useGetCashRegisters from '@/composables/api/cashRegisters/useGetCashRegisters';
 import useOpenCashRegister from '@/composables/api/cashRegisters/useOpenCashRegister';
 import useCloseCashRegister from '@/composables/api/cashRegisters/useCloseCashRegister';
+import useGetCurrentCashRegister from '@/composables/api/cashRegisters/useGetCurrentCashRegister';
 
 type CashRegisterState = {
   cashRegisters: CashRegister[];
@@ -78,6 +79,22 @@ export const useCashRegisterStore = defineStore('cash-register-store', {
         const response = await closeCashRegister(id, cashRegisterRequest);
         localStorage.removeItem('cashRegister');
         toastStore.setMessage('cash register closed!');
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async getCurrentCashRegisterApi() {
+      const getCurrentCashRegister = useGetCurrentCashRegister();
+      try {
+        this.isPending = true;
+        const response = await getCurrentCashRegister();
+        this.cashRegister = response.data;
+        localStorage.setItem(
+          'cashRegister',
+          JSON.stringify({ id: this.cashRegister?.id, isOpen: this.cashRegister?.status }),
+        );
         return response;
       } catch (error) {
         this.isPending = false;

@@ -19,7 +19,7 @@ class SupplierController extends ApiController
     public function __construct(SupplierService $supplierService)
     {
         $this->supplierService = $supplierService;
-        $this->model = new Supplier();
+        $this->model = new Supplier;
         parent::__construct($supplierService);
     }
 

@@ -23,7 +23,8 @@ class FeeRequest extends FormRequest
     {
         return [
             'name' => 'required|max:50|unique:App\Models\Tenant\Fee,name',
-            'cost' => 'required|numeric|min:0',
+            'value' => 'required|numeric|min:0',
+            'type' => 'required|integer',
             'tag' => 'required|integer',
             'description' => 'string|nullable',
         ];

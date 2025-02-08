@@ -10,9 +10,12 @@ import useGetProducts from '@/composables/api/products/useGetProducts';
 import useUpdateProduct from '@/composables/api/products/useUpdateProduct';
 import useDeleteProduct from '@/composables/api/products/useDeleteProduct';
 import useGetProduct from '@/composables/api/products/useGetProduct';
+import { InStockProduct } from '@/composables/models/InStockProduct';
+import useGetInStockProducts from '@/composables/api/products/useGetInStockProducts';
 
 type ProductState = {
   products: Product[];
+  inStockProducts: InStockProduct[];
   productTotal: number;
   product: Product | null;
   searchParams: SearchParams;
@@ -24,6 +27,7 @@ const toastStore = useToastStore();
 export const useProductStore = defineStore('product-store', {
   state: (): ProductState => ({
     products: [],
+    inStockProducts: [],
     productTotal: 0,
     product: null,
     searchParams: {
@@ -41,6 +45,7 @@ export const useProductStore = defineStore('product-store', {
     getProducts: (state) => state.products,
     getProduct: (state) => state.product,
     getProductTotal: (state) => state.productTotal,
+    getInStockProducts: (state) => state.inStockProducts,
   },
 
   actions: {
@@ -105,6 +110,18 @@ export const useProductStore = defineStore('product-store', {
         if (response.success) {
           this.product = response.data;
         }
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async getInStockProductsApi(searchParams: SearchParams | null = null) {
+      const getProducts = useGetInStockProducts(searchParams ? searchParams : this.searchParams);
+      try {
+        this.isPending = true;
+        const response = await getProducts();
+        this.inStockProducts = response.data ?? [];
         return response;
       } catch (error) {
         this.isPending = false;

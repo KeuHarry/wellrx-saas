@@ -42,7 +42,7 @@ class ProductRequest extends FormRequest
             'shelfId' => 'integer|required',
             'productCategoryId' => 'integer|required',
             'isDecomposable' => 'boolean|required',
-            'pkgSize' => 'integer|required'
+            'pkgSize' => 'integer|required',
         ];
     }
 }

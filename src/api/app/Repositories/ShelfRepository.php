@@ -8,7 +8,7 @@ class ShelfRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Shelf();
+        $this->model = new Shelf;
         parent::__construct();
     }
 }

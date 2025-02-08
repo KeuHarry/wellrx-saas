@@ -19,83 +19,83 @@ return new class extends Migration
         });
 
         DB::table('settings')->insert([
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'pharmacy_name',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'pharmacy_address',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'pharmacy_city',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'pharmacy_phone',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'pharmacy_email',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'proprietor',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'footer_message',
                 'value' => null,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'currency',
                 'value' => '$',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'decimal_digit',
                 'value' => '2',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'decimal_separator',
                 'value' => '.',
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ],
-            [   
+            [
                 'id' => Str::uuid(),
                 'key' => 'thousand_separator',
                 'value' => ',',
                 'created_at' => now(),
-                'updated_at' => now()
-            ]
+                'updated_at' => now(),
+            ],
         ]);
     }
 

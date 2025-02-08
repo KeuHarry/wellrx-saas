@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class InventoryObserver
 {
     protected $productService;
+
     protected $productRepository;
 
     public function __construct(ProductService $productService, ProductRepository $productRepository)
@@ -29,7 +30,7 @@ class InventoryObserver
         $inventory->before_qoh = $inventory->product->qoh;
         $inventory->after_qoh = $inventory->product->qoh + $inventory->quantity;
     }
-    
+
     /**
      * Handle the Inventory "created" event.
      */

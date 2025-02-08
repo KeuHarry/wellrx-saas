@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Insurer extends BaseModel
 {
-    use Notifiable; 
+    use Notifiable;
 
     /**
      * The table associated with the model.

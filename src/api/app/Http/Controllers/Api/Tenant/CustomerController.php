@@ -19,7 +19,7 @@ class CustomerController extends ApiController
     public function __construct(CustomerService $customerService)
     {
         $this->customerService = $customerService;
-        $this->model = new Customer();
+        $this->model = new Customer;
         parent::__construct($customerService);
     }
 
@@ -41,7 +41,7 @@ class CustomerController extends ApiController
             );
 
             return $this->successResponse(
-                $customers, 
+                $customers,
                 class_basename($this->model).'s successfully retrieved!',
                 Response::HTTP_OK,
                 $this->customerService->getModelCount()

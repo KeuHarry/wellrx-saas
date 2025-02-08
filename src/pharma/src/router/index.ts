@@ -116,6 +116,12 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/prescriptions',
+          name: 'prescription-list',
+          component: () => import('../views/PrescriptionList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/patients',
           name: 'patient-list',
           component: () => import('../views/PatientList.vue'),
@@ -176,9 +182,33 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/cashier',
+          name: 'cashier',
+          component: () => import('../views/Cashier.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/cash-register',
           name: 'cash-register',
           component: () => import('../views/CashRegister.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/sales',
+          name: 'sale-list',
+          component: () => import('../views/SaleList.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/sales/add',
+          name: 'add-sale',
+          component: () => import('../views/AddEditSale.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/sales/edit/:id',
+          name: 'edit-sale',
+          component: () => import('../views/AddEditSale.vue'),
           meta: { requiresAuth: true },
         },
       ],

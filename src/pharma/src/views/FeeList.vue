@@ -14,9 +14,7 @@
           <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel </Menu.Item>
         </Menu.Items>
       </Menu>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startFeeCount }} to {{ paginate }} of {{ feeTotal }} entries
-      </div>
+      <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput
@@ -37,7 +35,8 @@
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">CODE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">NAME</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">COST</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">VALUE</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">TYPE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">TAG</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">DESCRIPTION</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
@@ -64,6 +63,11 @@
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               {{ fee.cost }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              {{ getFeeTypeName(fee.type) }}
             </Table.Td>
             <Table.Td
               class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
@@ -161,6 +165,7 @@ import useTenantStore from '@/stores/tenant';
 import SortOrder from '@/enums/sortOrder';
 import { FEE_CODE } from '@/constants/properties';
 import PaginationComponent from '@/components/PaginationComponent.vue';
+import { getFeeTypeName } from '@/utils/helper';
 
 const feeModal = ref<InstanceType<typeof AddUpdateFeeModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
@@ -256,6 +261,7 @@ const createUpdateFee = async (
     id: number | null;
     name: string;
     cost: number;
+    type: number;
     tag: number;
     description: string;
   }>,
@@ -263,14 +269,16 @@ const createUpdateFee = async (
   if (formData.value.id) {
     await feeStore.updateFeeApi(formData.value.id, {
       name: formData.value.name,
-      cost: formData.value.cost,
+      value: formData.value.cost,
+      type: formData.value.type,
       tag: formData.value.tag,
       description: formData.value.description,
     });
   } else {
     await feeStore.createFeeApi({
       name: formData.value.name,
-      cost: formData.value.cost,
+      value: formData.value.cost,
+      type: formData.value.type,
       tag: formData.value.tag,
       description: formData.value.description,
     });

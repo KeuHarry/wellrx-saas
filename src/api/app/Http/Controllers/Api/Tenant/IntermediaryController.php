@@ -16,7 +16,7 @@ class IntermediaryController extends ApiController
     public function __construct(IntermediaryService $intermediaryService)
     {
         $this->intermediaryService = $intermediaryService;
-        $this->model = new Intermediary();
+        $this->model = new Intermediary;
         parent::__construct($intermediaryService);
     }
 

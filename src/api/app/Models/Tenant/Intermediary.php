@@ -3,7 +3,6 @@
 namespace App\Models\Tenant;
 
 use App\Models\BaseModel;
-use App\Models\Tenant\Patient;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 

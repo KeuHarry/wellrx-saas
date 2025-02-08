@@ -8,7 +8,7 @@ class OrderItemRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new OrderItem();
+        $this->model = new OrderItem;
         parent::__construct();
     }
 }

@@ -19,7 +19,7 @@ class UserController extends ApiController
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
-        $this->model = new User();
+        $this->model = new User;
         parent::__construct($userService);
     }
 
@@ -67,5 +67,5 @@ class UserController extends ApiController
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
-    }  
+    }
 }

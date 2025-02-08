@@ -9,7 +9,7 @@ class IntermediaryRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Intermediary();
+        $this->model = new Intermediary;
         parent::__construct();
     }
 
@@ -20,9 +20,9 @@ class IntermediaryRepository extends BaseRepository
                 $query->where('name', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

@@ -65,9 +65,9 @@ class OrderItem extends BaseModel
         $json = [];
         $json['id'] = $this->id;
         $json['product'] = [
-            'id' =>  $this->product->id,
+            'id' => $this->product->id,
             'name' => $this->product->label,
-            'shelf' => $this->product->shelf->name
+            'shelf' => $this->product->shelf->name,
         ];
         $json['quantity'] = $this->quantity;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));

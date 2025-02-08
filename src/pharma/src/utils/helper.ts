@@ -1,10 +1,16 @@
 import { SearchParams } from '@/composables/models/SearchParams';
 import { Setting } from '@/composables/models/Setting';
+import { COST, PERCENTAGE } from '@/constants/feeTypes';
 import { inventoryTypeList } from '@/constants/inventoryTypeList';
+import { REFUND, SALE } from '@/constants/saleTypeList';
 import { CURRENCY, DECIMAL_SEPARATOR, THOUSAND_SEPARATOR } from '@/constants/settings';
-import { COMPLETED, IN_PROGRESS } from '@/constants/status';
+import { COMPLETED, IN_PROGRESS, PAID, PENDING } from '@/constants/status';
+import CashierStatus from '@/enums/cashierStatus';
+import FeeType from '@/enums/feeType';
 import InventoryType from '@/enums/inventoryType';
 import OrderStatus from '@/enums/orderStatus';
+import SaleStatus from '@/enums/saleStatus';
+import SaleType from '@/enums/saleType';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { parseColor } from 'tailwindcss/lib/util/color';
@@ -62,9 +68,9 @@ const formatPrice = (number: number | null): string => {
       return getValueByKey(settings, DECIMAL_SEPARATOR) ?? '.';
     })();
 
-    return `${isNegative ? '-' : ''}${
+    return `${currency}${isNegative ? '-' : ''}${
       decimalPart ? `${formattedInteger}${decimalSeparator}${decimalPart}` : formattedInteger
-    } ${currency}`;
+    }`;
   }
 
   return '';
@@ -228,7 +234,7 @@ const getInventoryTypeNameByValue = (value: InventoryType | null): string => {
   return entry ? entry.name : '-';
 };
 
-const getStatus = (value: number | null): string => {
+const getOrderStatus = (value: number | null): string => {
   let status = '';
 
   switch (value) {
@@ -243,6 +249,80 @@ const getStatus = (value: number | null): string => {
   }
 
   return status;
+};
+
+const getSaleStatus = (value: number | null): string => {
+  let status = '';
+
+  switch (value) {
+    case SaleStatus.IN_PROGRESS:
+      status = IN_PROGRESS;
+      break;
+    case SaleStatus.COMPLETED:
+      status = COMPLETED;
+      break;
+    case SaleStatus.PAID:
+      status = PAID;
+      break;
+    default:
+      break;
+  }
+
+  return status;
+};
+
+const getCashierStatus = (value: number): string => {
+  let status = '';
+
+  switch (value) {
+    case CashierStatus.PENDING:
+      status = PENDING;
+      break;
+    case CashierStatus.IN_PROGRESS:
+      status = IN_PROGRESS;
+      break;
+    case CashierStatus.PAID:
+      status = PAID;
+      break;
+    default:
+      break;
+  }
+
+  return status;
+};
+
+const getFeeTypeName = (value: number): string => {
+  let status = '';
+
+  switch (value) {
+    case FeeType.COST:
+      status = COST;
+      break;
+    case FeeType.PERCENTAGE:
+      status = PERCENTAGE;
+      break;
+    default:
+      break;
+  }
+
+  return status;
+};
+
+const getSaleTypeName = (value: number): string => {
+  let type = '';
+
+  switch (value) {
+    case SaleType.SALE:
+      type = SALE;
+      break;
+    case SaleType.REFUND:
+      type = REFUND;
+      break;
+    default:
+      break;
+  }
+
+  return type;
 };
 
 export {
@@ -263,5 +343,9 @@ export {
   getValueByKey,
   buildQueryParams,
   getInventoryTypeNameByValue,
-  getStatus,
+  getOrderStatus,
+  getSaleStatus,
+  getFeeTypeName,
+  getSaleTypeName,
+  getCashierStatus,
 };

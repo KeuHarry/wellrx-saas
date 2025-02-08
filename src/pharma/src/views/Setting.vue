@@ -1,6 +1,11 @@
 <template>
-  <div class="flex items-center mt-8 intro-y">
-    <h2 class="mr-auto text-lg font-medium">Settings</h2>
+  <div class="flex col-span-12 h-14 px-5 justify-between">
+    <div class="flex items-center mt-8 intro-y">
+      <h2 class="mr-auto text-lg font-medium">Settings</h2>
+    </div>
+    <div class="flex items-center mt-8">
+      <Button @click="saveSettings" variant="primary" type="button" class="w-20">Save</Button>
+    </div>
   </div>
   <div class="grid grid-cols-12 gap-3 mt-5">
     <!-- BEGIN: Setting Menu -->
@@ -171,17 +176,33 @@
               />
             </div>
           </div>
-          <div class="flex px-5 pb-5 justify-end">
-            <Button @click="saveSettings" variant="primary" type="button" class="w-20">Save</Button>
-          </div>
         </div>
         <div v-if="activeSection === SUBSCRIPTION" class="col-span-12 intro-y box 2xl:col-span-12">
           <div
             class="flex items-center px-5 py-5 border-b sm:py-3 border-slate-200/60 dark:border-darkmode-400"
           >
-            <h2 class="mr-auto text-base font-medium text-black">Subscription</h2>
+            <h2 class="mr-auto text-base font-medium text-slate-700">Subscription</h2>
           </div>
           <div class="grid grid-cols-9 gap-2 p-5"></div>
+        </div>
+        <div v-if="activeSection === PRINTING" class="col-span-12 intro-y box 2xl:col-span-12">
+          <div
+            class="flex items-center px-5 py-5 border-b sm:py-3 border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="mr-auto text-base font-medium text-slate-700">Printing</h2>
+          </div>
+          <div class="grid grid-cols-9 gap-2 p-5">
+            <div class="col-span-4">
+              <label for="printer-model" class="block text-sm/6 text-gray-600">Cashier Printer Model</label>
+              <ComboBox
+                :options="models"
+                @search="searchPrinterModel"
+                @selected="selectModel"
+                :defaultOption="selectedPrinterModel"
+                placeholder="Select printer model"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -203,11 +224,12 @@ import _ from 'lodash';
 import { computed, onMounted, provide, ref } from 'vue';
 import Lucide from '@/components/Base/Lucide';
 import { MenuItem } from '@/types/menu-setting';
-import { GENERAL, SUBSCRIPTION } from '@/constants/menuItemSetting';
+import { GENERAL, PRINTING, SUBSCRIPTION } from '@/constants/menuItemSetting';
 import Button from '@/components/Base/Button';
 import { Setting } from '@/composables/models/Setting';
 import { getValueByKey } from '@/utils/helper';
 import {
+  CASHIER_PRINTER_MODEL,
   CURRENCY,
   DECIMAL_DIGIT,
   DECIMAL_SEPARATOR,
@@ -227,6 +249,8 @@ import { type NotificationElement } from '@/components/Base/Notification';
 import Notification from '@/components/Base/Notification';
 import NotificationType from '@/enums/notification';
 import useToastStore from '@/stores/toast';
+import ComboBox from '@/components/ComboBox.vue';
+import { printerModels } from '@/constants/printerModels';
 
 const notificationRef = ref<NotificationElement>();
 const basicNonStickyNotificationToggle = () => {
@@ -258,10 +282,13 @@ const formData = ref({
   decimalDigit: '',
   decimalSeparator: '',
   thousandSeparator: '',
+  cashierPrinterModel: ''
 });
 
 const settings = ref<Setting[]>([]);
 const route = useRoute();
+const models = ref<{id: number; name: string; value: string;}[]>([]);
+const selectedPrinterModel = ref<{id: number; name: string; value: string;}|null>(null);
 
 // STORE
 const tenantStore = useTenantStore();
@@ -309,6 +336,8 @@ const setFormData = async () => {
   formData.value.decimalDigit = getValueByKey(settings.value, DECIMAL_DIGIT) ?? '';
   formData.value.decimalSeparator = getValueByKey(settings.value, DECIMAL_SEPARATOR) ?? '';
   formData.value.thousandSeparator = getValueByKey(settings.value, THOUSAND_SEPARATOR) ?? '';
+  formData.value.cashierPrinterModel = getValueByKey(settings.value, CASHIER_PRINTER_MODEL) ?? '';
+  selectedPrinterModel.value = printerModels.find((printerModel) => printerModel.name === formData.value.cashierPrinterModel) ?? null;
 };
 
 const updateSettingsData = async () => {
@@ -347,12 +376,29 @@ const updateSettingsData = async () => {
       case THOUSAND_SEPARATOR:
         setting.value = formData.value.thousandSeparator;
         break;
+      case CASHIER_PRINTER_MODEL:
+        setting.value = formData.value.cashierPrinterModel;
+        break;
 
       default:
         break;
     }
     return setting;
   });
+};
+
+const getModels = async (searchFilter: string = '') => {
+  models.value = printerModels.filter(
+    (printerModel) => printerModel.name.toLowerCase().includes(searchFilter.toLowerCase())
+  ).slice(0,5);
+}
+
+const searchPrinterModel = async (searchFilter: string = '') => {
+  await getModels(searchFilter);
+};
+
+const selectModel = (printerModel: { id: number; name: string; value: string; }) => {
+  formData.value.cashierPrinterModel = printerModel.name;
 };
 
 const saveSettings = async () => {
@@ -364,5 +410,6 @@ const saveSettings = async () => {
 onMounted(async () => {
   await accountVerification();
   await setSettingsData();
+  await getModels();
 });
 </script>

@@ -6,9 +6,7 @@
         <Lucide :icon="cashRegisterIcon" class="w-4 h-4 mr-2" />
         {{ cashRegister ? 'Close' : 'Open' }}
       </Button>
-      <div class="hidden mx-auto md:block text-slate-500">
-        Showing {{ startCashRegisterCount }} to {{ paginate }} of {{ cashRegisterTotal }} entries
-      </div>
+      <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput

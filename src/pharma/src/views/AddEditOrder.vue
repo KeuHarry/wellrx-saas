@@ -23,7 +23,7 @@
           >Save</Button
         >
         <Button
-          v-if="!isCompleted"
+          v-if="order"
           @click="openCompleteModal"
           :disabled="!canComplete"
           class="hover:bg-teal-600/15 bg-teal-600 hover:border-teal-600/10 border-teal-600 text-teal-600 bg-opacity-20 border-opacity-5 mr-3"
@@ -401,7 +401,7 @@ import useTenantStore from '@/stores/tenant';
 import { LABEL, NAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 import ComboBox from '@/components/ComboBox.vue';
-import { formatPrice, getStatus } from '@/utils/helper';
+import { formatPrice, getOrderStatus } from '@/utils/helper';
 import Litepicker from '@/components/Base/Litepicker';
 import { dateFormat } from '@/constants/dateFormat';
 import useSupplierStore from '@/stores/supplier';
@@ -555,7 +555,7 @@ const taxTotal = computed(() => formatPrice(orderForm.value.taxTotal));
 const canComplete = computed(
   () => order.value?.status === OrderStatus.IN_PROGRESS && order.value.id,
 );
-const orderStatus = computed(() => (order.value ? getStatus(order.value?.status) : ''));
+const orderStatus = computed(() => (order.value ? getOrderStatus(order.value?.status) : ''));
 const isCompleted = computed(() => order.value?.status === OrderStatus.COMPLETED);
 const isInProgress = computed(() => order.value?.status === OrderStatus.IN_PROGRESS);
 

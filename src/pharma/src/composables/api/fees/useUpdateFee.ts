@@ -10,7 +10,7 @@ export default function useUpdateFee(): (
   payload: FeeRequest,
 ) => Promise<ApiResponse<number>> {
   return async (id: number, payload: FeeRequest) => {
-    const response = await axiosTenant.put<ApiResponse<number>>(`/fees/${id}`, payload);
+    const response = await axiosTenant.patch<ApiResponse<number>>(`/fees/${id}`, payload);
 
     if (!response) {
       const tenantStore = useTenantStore();

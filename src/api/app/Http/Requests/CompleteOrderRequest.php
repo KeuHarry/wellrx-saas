@@ -22,7 +22,7 @@ class CompleteOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderId' => 'required|integer'
+            'orderId' => 'required|integer',
         ];
     }
 }

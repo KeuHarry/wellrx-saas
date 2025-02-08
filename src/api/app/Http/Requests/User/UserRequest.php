@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
             'email' => 'email:rfc,dns',
             'isActive' => 'required|boolean',
             'preferredLang' => 'string|required',
-            'roleId' => 'integer|nullable'
+            'roleId' => 'integer|nullable',
         ];
     }
 }

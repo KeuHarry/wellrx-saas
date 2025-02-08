@@ -19,7 +19,7 @@ class InsurerController extends ApiController
     public function __construct(InsuranceService $insuranceService)
     {
         $this->insuranceService = $insuranceService;
-        $this->model = new Insurer();
+        $this->model = new Insurer;
         parent::__construct($insuranceService);
     }
 
@@ -41,7 +41,7 @@ class InsurerController extends ApiController
             );
 
             return $this->successResponse(
-                $insurers, 
+                $insurers,
                 class_basename($this->model).'s successfully retrieved!',
                 Response::HTTP_OK,
                 $this->insuranceService->getModelCount()

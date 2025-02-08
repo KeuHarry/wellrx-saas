@@ -13,8 +13,7 @@ class RoleService extends ApiService
     public function __construct(
         private RoleRepository $roleRepository,
         private PermissionRepository $permissionRepository
-    )
-    {
+    ) {
         parent::__construct($roleRepository);
     }
 
@@ -50,11 +49,12 @@ class RoleService extends ApiService
     }
 
     /**
-     * @param int[] $permissionIds
+     * @param  int[]  $permissionIds
      */
     public function assignPermissions(int $roleId, array $permissionIds = []): bool
     {
         $this->roleRepository->deletePermissions($roleId);
+
         return $this->roleRepository->assignPermissions($roleId, $permissionIds);
     }
 
