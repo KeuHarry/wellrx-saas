@@ -22,15 +22,14 @@ class FeeService extends ApiService
         ?string $sortBy = null,
         ?string $sortOrder = null,
         ?int $tag = null
-    ): Collection 
-    {
+    ): Collection {
         $fees = Fee::where('name', 'LIKE', '%'.$search.'%')
-                    ->orWhere('fee_code', 'LIKE', '%'.$search.'%')
-                    ->orWhere('tag', $tag)
-                    ->offset($offset)
-                    ->limit($limit)
-                    ->orderBy($sortBy, $sortOrder)
-                    ->get();
+            ->orWhere('fee_code', 'LIKE', '%'.$search.'%')
+            ->orWhere('tag', $tag)
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
 
         if (! assert($fees instanceof Collection)) {
             throw new InternalServerErrorException;

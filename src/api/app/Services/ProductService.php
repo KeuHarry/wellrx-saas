@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Tenant\Product;
 use App\Repositories\ProductRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductService extends ApiService
 {
@@ -20,14 +21,13 @@ class ProductService extends ApiService
     }
 
     public function search(
-        int $offset = 0, 
-        int $limit = 10, 
+        int $offset = 0,
+        int $limit = 10,
         string $sortOrder = 'ASC',
-        ?string $search = null, 
+        ?string $search = null,
         ?string $sortBy = null,
         ?int $shelfId = null
-    ): Collection
-    {
+    ): array {
         return $this->productRepository->search(
             $offset,
             $limit,
@@ -41,5 +41,21 @@ class ProductService extends ApiService
     public function updateQoh(int $productId): void
     {
         $this->productRepository->updateProductQoh($productId);
+    }
+
+    public function getProductsInStock(
+        int $offset = 0,
+        int $limit = 10,
+        string $sortOrder = 'ASC',
+        ?string $search = null,
+        ?string $sortBy = null
+    ): AnonymousResourceCollection {
+        return $this->productRepository->findInStockProducts(
+            $offset,
+            $limit,
+            $sortOrder,
+            $search,
+            $sortBy
+        );
     }
 }

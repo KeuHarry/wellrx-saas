@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Tenant\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder
@@ -28,7 +27,7 @@ class RoleSeeder extends Seeder
         $roles = array_map(function ($name) {
             return [
                 'label' => $name,
-                'description' => $name .' description',
+                'description' => $name.' description',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Tenant\Product;
 use Faker\Factory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -67,7 +66,7 @@ class ProductSeeder extends Seeder
             'Probiotic Capsules',
             'Laxative Soft Gel Capsules',
             'Anti-Diarrheal Solution',
-            'Motion Sickness Tablets'
+            'Motion Sickness Tablets',
         ];
 
         $products = [];

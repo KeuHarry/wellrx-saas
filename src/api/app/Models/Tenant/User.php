@@ -52,7 +52,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
     ];
 
     public function setPasswordAttribute($value)
@@ -83,8 +83,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $json['username'] = $this->username;
         $json['role'] = $this->getRole() ? [
             'id' => $this->role->id,
-            'label' => $this->role->label
-        ] : null ;
+            'label' => $this->role->label,
+        ] : null;
         $json['pin'] = $this->pin;
         $json['isActive'] = $this->is_active;
         $json['preferredLang'] = $this->preferred_lang;

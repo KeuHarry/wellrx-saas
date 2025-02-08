@@ -23,7 +23,7 @@ class RoleRequest extends FormRequest
     {
         return [
             'label' => 'required|max:50',
-            'description' => 'nullable'
+            'description' => 'nullable',
         ];
     }
 }

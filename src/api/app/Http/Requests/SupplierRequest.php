@@ -31,7 +31,7 @@ class SupplierRequest extends FormRequest
             'fax' => 'string|nullable',
             'city' => 'string|nullable',
             'e_order_number' => 'integer|nullable',
-            'last_date' => 'date|nullable'
+            'last_date' => 'date|nullable',
         ];
     }
 }

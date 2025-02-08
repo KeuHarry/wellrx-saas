@@ -35,7 +35,7 @@ class Prescriber extends BaseModel
         'last_name',
         'registration_number',
         'phone',
-        'address'
+        'address',
     ];
 
     public function jsonSerialize(): mixed

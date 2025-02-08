@@ -19,7 +19,7 @@ class LabelCodeController extends ApiController
     public function __construct(LabelCodeService $labelCodeService)
     {
         $this->labelCodeService = $labelCodeService;
-        $this->model = new LabelCode();
+        $this->model = new LabelCode;
         parent::__construct($labelCodeService);
     }
 
@@ -41,9 +41,9 @@ class LabelCodeController extends ApiController
             );
 
             return $this->successResponse(
-                $labelCodes, 
-                class_basename($this->model).'s successfully retrieved!', 
-                Response::HTTP_OK, 
+                $labelCodes,
+                class_basename($this->model).'s successfully retrieved!',
+                Response::HTTP_OK,
                 $this->labelCodeService->getModelCount()
             );
         } catch (ValidationException $e) {

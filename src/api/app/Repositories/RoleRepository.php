@@ -11,7 +11,7 @@ class RoleRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Role();
+        $this->model = new Role;
         parent::__construct();
     }
 
@@ -21,7 +21,7 @@ class RoleRepository extends BaseRepository
     }
 
     /**
-     * @param int[] $permissionIds
+     * @param  int[]  $permissionIds
      */
     public function assignPermissions(int $roleId, array $permissionIds): bool
     {
@@ -39,5 +39,5 @@ class RoleRepository extends BaseRepository
     public function permissionsCount(): int
     {
         return Permission::count();
-    } 
+    }
 }

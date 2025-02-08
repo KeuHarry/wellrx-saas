@@ -17,7 +17,7 @@ class ShelfController extends ApiController
     public function __construct(ShelfService $shelfService)
     {
         $this->shelfService = $shelfService;
-        $this->model = new Shelf();
+        $this->model = new Shelf;
         parent::__construct($shelfService);
     }
 

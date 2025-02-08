@@ -26,11 +26,12 @@ return new class extends Migration
             $table->float('wholesale_cost', 20, 2);
             $table->float('retail_cost', 20, 2);
             $table->float('unit_cost', 20, 2);
-            $table->float('sub_total', 20, 2);
-            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->float('sub_total', 20, 2)->nullable();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
             $table->text('reason')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('order_item_id')->nullable()->constrained('order_items');
+            $table->foreignId('sale_item_id')->nullable()->constrained('sale_items');
             $table->softDeletes();
             $table->timestamps();
         });

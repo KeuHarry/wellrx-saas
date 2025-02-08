@@ -20,7 +20,7 @@ class FeeController extends ApiController
     public function __construct(FeeService $feeService)
     {
         $this->feeService = $feeService;
-        $this->model = new Fee();
+        $this->model = new Fee;
         parent::__construct($feeService);
     }
 

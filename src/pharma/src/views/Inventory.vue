@@ -258,7 +258,7 @@ const getInventoriesData = async () => {
   await inventoryStore.getInventoryListApi({
     search: search.value,
     sortBy: CREATED_AT,
-    sortOrder: SortOrder.ASC,
+    sortOrder: SortOrder.DESC,
     offset: (currentPage.value - 1) * paginate.value,
     limit: paginate.value,
     type: inventoryType.value,

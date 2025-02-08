@@ -9,7 +9,7 @@ class PermissionRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Permission();
+        $this->model = new Permission;
         parent::__construct();
     }
 

@@ -18,7 +18,7 @@ class ShelfFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->word(),
-            'description' => $this->faker->sentence(10)
+            'description' => $this->faker->sentence(10),
         ];
     }
 }

@@ -33,7 +33,8 @@ class Fee extends BaseModel
     protected $fillable = [
         'fee_code',
         'name',
-        'cost',
+        'value',
+        'type',
         'tag',
         'description',
     ];
@@ -67,7 +68,8 @@ class Fee extends BaseModel
         $json['id'] = $this->id;
         $json['feeCode'] = $this->fee_code;
         $json['name'] = $this->name;
-        $json['cost'] = $this->cost;
+        $json['cost'] = $this->value;
+        $json['type'] = $this->type;
         $json['tag'] = $this->tag;
         $json['description'] = $this->description;
 

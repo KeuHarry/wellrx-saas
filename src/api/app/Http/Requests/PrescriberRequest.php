@@ -26,7 +26,7 @@ class PrescriberRequest extends FormRequest
             'lastName' => 'string|required',
             'phone' => 'string|required',
             'registrationNumber' => 'string|required',
-            'address' => 'string|nullable'
+            'address' => 'string|nullable',
         ];
     }
 }

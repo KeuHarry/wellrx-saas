@@ -21,7 +21,7 @@ class InventoryController extends ApiController
     public function __construct(InventoryService $inventoryService)
     {
         $this->inventoryService = $inventoryService;
-        $this->model = new Inventory();
+        $this->model = new Inventory;
         parent::__construct($inventoryService);
     }
 
@@ -33,7 +33,7 @@ class InventoryController extends ApiController
             $sortOrder = $request->query->get('sortOrder');
             $offset = $request->query->get('offset');
             $limit = $request->query->get('limit');
-            $type = intval($request->query->get('type'));
+            $type = $request->query->get('type');
 
             $inventories = $this->inventoryService->search(
                 $offset,
@@ -45,7 +45,7 @@ class InventoryController extends ApiController
             );
 
             return $this->successResponse(
-                $inventories, 
+                $inventories,
                 'Inventories successfully retrieved!',
                 Response::HTTP_OK,
                 $this->inventoryService->getModelCount()
@@ -56,7 +56,6 @@ class InventoryController extends ApiController
             return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
-
 
     public function createInventory(InventoryRequest $request): JsonResponse
     {

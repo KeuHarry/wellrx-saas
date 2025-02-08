@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Services\ApiService;
-use Countable;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class ApiController extends Controller
@@ -123,6 +120,7 @@ class ApiController extends Controller
         try {
             $content = $request->safe();
             $result = $this->apiService->update($id, $content->toArray());
+
             return $this->successResponse($result, class_basename($this->model).' successfully updated');
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse($e->getMessage(), 'Resource not found', Response::HTTP_NOT_FOUND);
@@ -140,6 +138,7 @@ class ApiController extends Controller
     {
         try {
             $result = $this->apiService->delete($id);
+
             return $this->successResponse($result, class_basename($this->model).' successfully deleted');
         } catch (ModelNotFoundException $e) {
             return $this->errorResponse($e->getMessage(), 'Resource not found', Response::HTTP_NOT_FOUND);
@@ -168,7 +167,7 @@ class ApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'total' => $total ? $total : ($data instanceof Countable ? $this->model::count() : 1),
+            'total' => $total,
             'data' => $data,
         ], $statusCode);
     }

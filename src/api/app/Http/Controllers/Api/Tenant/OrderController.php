@@ -24,7 +24,7 @@ class OrderController extends ApiController
     {
         $this->orderService = $orderService;
         $this->orderItemService = $orderItemService;
-        $this->model = new Order();
+        $this->model = new Order;
         parent::__construct($orderService);
     }
 
@@ -50,7 +50,7 @@ class OrderController extends ApiController
             );
 
             return $this->successResponse(
-                $orders, 
+                $orders,
                 'Orders successfully retrieved!',
                 Response::HTTP_OK,
                 $this->orderService->getModelCount()
@@ -82,6 +82,7 @@ class OrderController extends ApiController
             if ($order->id) {
                 $orderItems = array_map(function ($orderItem) use ($order) {
                     $orderItem['orderId'] = $order->id;
+
                     return $orderItem;
                 }, $orderItems);
 

@@ -239,7 +239,7 @@
             />
           </div>
           <div class="col-span-2">
-            <label for="tax" class="block text-sm/6 text-gray-600">Tax (%)</label>
+            <label for="tax" class="block text-sm/6 text-gray-600">Tax</label>
             <TomSelect
               v-model="feeId"
               :options="{
@@ -557,9 +557,9 @@ const getCategoriesData = async (query: string = '') => {
   });
 };
 
-const getLabelCodesData = async (query: string = '') => {
+const getLabelCodesData = async (queryString: string = '') => {
   await labelCodeStore.getLabelCodesApi({
-    search: query,
+    search: queryString,
     sortBy: LABEL,
     sortOrder: SortOrder.ASC,
     offset: defaultOffset,
@@ -567,12 +567,12 @@ const getLabelCodesData = async (query: string = '') => {
   });
 };
 
-const searchShelf = async (query: string) => {
-  await getShelvesData(query);
+const searchShelf = async (queryString: string) => {
+  await getShelvesData(queryString);
 };
 
-const searchCategory = async (query: string) => {
-  await getCategoriesData(query);
+const searchCategory = async (queryString: string) => {
+  await getCategoriesData(queryString);
 };
 
 const selectShelf = (value: { id: number; name: string }) => {

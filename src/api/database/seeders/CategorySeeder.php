@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Tenant\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -29,7 +28,7 @@ class CategorySeeder extends Seeder
         $categories = array_map(function ($name) {
             return [
                 'name' => $name,
-                'markup' => round(mt_rand(100, 150) / 10, 2)
+                'markup' => round(mt_rand(100, 150) / 10, 2),
             ];
         }, $categoriesName);
 

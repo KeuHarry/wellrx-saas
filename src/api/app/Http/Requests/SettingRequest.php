@@ -22,7 +22,7 @@ class SettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'settings' => 'array|required'
+            'settings' => 'array|required',
         ];
     }
 }

@@ -46,19 +46,21 @@ class ApiService
     public function create(array $content): Model
     {
         $inputs = $this->updateKey($content);
+
         return $this->baseRepository->create($inputs);
     }
 
     /**
-     * @param mixed[][] $contents
+     * @param  mixed[][]  $contents
      */
     public function bulkCreate(array $contents): bool
     {
-        $inputs = []; 
+        $inputs = [];
         foreach ($contents as $content) {
             $input = $this->updateKey($content);
             $inputs[] = $input;
         }
+
         return $this->baseRepository->bulkCreate($inputs);
     }
 
@@ -80,6 +82,7 @@ class ApiService
     public function update(string $id, array $content): int
     {
         $inputs = $this->updateKey($content);
+
         return $this->baseRepository->update($id, $inputs);
     }
 

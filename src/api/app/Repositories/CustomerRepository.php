@@ -9,7 +9,7 @@ class CustomerRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Customer();
+        $this->model = new Customer;
         parent::__construct();
     }
 
@@ -21,9 +21,9 @@ class CustomerRepository extends BaseRepository
                     ->orWhere('email', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }
