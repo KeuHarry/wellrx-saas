@@ -9,7 +9,7 @@ class PrescriberRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Prescriber();
+        $this->model = new Prescriber;
         parent::__construct();
     }
 
@@ -18,13 +18,13 @@ class PrescriberRepository extends BaseRepository
         return Prescriber::when($search, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
-                        ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
-                        ->orWhere('registration_number', 'LIKE', "%{$search}%");
+                    ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
+                    ->orWhere('registration_number', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

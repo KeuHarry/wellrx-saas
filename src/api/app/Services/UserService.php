@@ -33,7 +33,7 @@ class UserService extends ApiService
     public function createDefaultUser(string $firstName, string $lastName, string $username, string $email, string $password): User
     {
         return $this->userRepository->createDefaultUser(
-            $firstName, 
+            $firstName,
             $lastName,
             $username,
             $email,

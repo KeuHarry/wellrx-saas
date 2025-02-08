@@ -40,7 +40,7 @@ class OrderRequest extends FormRequest
             'orderItems.*.tax' => 'nullable|numeric',
             'orderItems.*.wholesaleCost' => 'nullable|numeric|min:0',
             'orderItems.*.retailCost' => 'nullable|numeric|min:0',
-            'orderItems.*.markup' => 'nullable|numeric'
+            'orderItems.*.markup' => 'nullable|numeric',
         ];
     }
 

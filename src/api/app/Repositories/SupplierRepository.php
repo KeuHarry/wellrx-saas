@@ -9,7 +9,7 @@ class SupplierRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Supplier();
+        $this->model = new Supplier;
         parent::__construct();
     }
 
@@ -22,9 +22,9 @@ class SupplierRepository extends BaseRepository
                     ->orWhere('contact', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

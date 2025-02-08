@@ -24,7 +24,7 @@ class IntermediaryRequest extends FormRequest
         return [
             'name' => 'required|string',
             'phone' => 'required|string',
-            'address' => 'string|nullable'
+            'address' => 'string|nullable',
         ];
     }
 }

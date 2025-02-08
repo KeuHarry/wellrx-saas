@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Tenant\Shelf;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ShelfSeeder extends Seeder
@@ -29,13 +28,13 @@ class ShelfSeeder extends Seeder
         $shelves = array_map(function ($name) {
             return [
                 'name' => $name,
-                'description' => $name .' description'
+                'description' => $name.' description',
             ];
         }, $shelvesName);
 
         foreach ($shelves as $shelf) {
             Shelf::factory()->create($shelf);
         }
-        
+
     }
 }

@@ -1,6 +1,7 @@
 export interface FeeRequest {
   name: string;
-  cost: number;
+  value: number;
+  type: number;
   tag: number;
   description: string;
 }

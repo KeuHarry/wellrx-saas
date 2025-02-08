@@ -8,7 +8,7 @@ class FeeRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Fee();
+        $this->model = new Fee;
         parent::__construct();
     }
 }

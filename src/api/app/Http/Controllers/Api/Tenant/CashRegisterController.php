@@ -20,7 +20,7 @@ class CashRegisterController extends ApiController
     public function __construct(CashRegisterService $cashRegisterService)
     {
         $this->cashRegisterService = $cashRegisterService;
-        $this->model = new CashRegister();
+        $this->model = new CashRegister;
         parent::__construct($cashRegisterService);
     }
 
@@ -42,7 +42,7 @@ class CashRegisterController extends ApiController
             );
 
             return $this->successResponse(
-                $cashRegisters, 
+                $cashRegisters,
                 class_basename($this->model).'s successfully retrieved!',
                 Response::HTTP_OK,
                 $this->cashRegisterService->getModelCount()

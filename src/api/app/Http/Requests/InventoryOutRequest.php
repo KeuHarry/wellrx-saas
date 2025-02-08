@@ -25,7 +25,7 @@ class InventoryOutRequest extends FormRequest
             'inventoryId' => 'integer|required',
             'quantity' => 'numeric',
             'type' => 'integer|required',
-            'reason' => 'nullable|string'
+            'reason' => 'nullable|string',
         ];
     }
 }

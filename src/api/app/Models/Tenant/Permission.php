@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Permission extends BaseModel
 {
-    use Notifiable, HasFactory;
+    use HasFactory, Notifiable;
 
     /**
      * The table associated with the model.

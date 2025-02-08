@@ -9,7 +9,7 @@ class InsurerRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Insurer();
+        $this->model = new Insurer;
         parent::__construct();
     }
 
@@ -20,9 +20,9 @@ class InsurerRepository extends BaseRepository
                 $query->where('name', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

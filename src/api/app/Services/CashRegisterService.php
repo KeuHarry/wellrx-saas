@@ -28,4 +28,10 @@ class CashRegisterService extends ApiService
             $sortBy
         );
     }
+
+    public function updateCurrentCashRegisterAmount(float $amount): void
+    {
+        $cashRegister = $this->cashRegisterRepository->getCurrentCashRegister();
+        $cashRegister->increment('amount', $amount);
+    }
 }

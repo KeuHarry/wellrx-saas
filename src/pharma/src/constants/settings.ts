@@ -9,3 +9,4 @@ export const THOUSAND_SEPARATOR = 'thousand_separator';
 export const DECIMAL_DIGIT = 'decimal_digit';
 export const CURRENCY = 'currency';
 export const PHARMA_PHONE = 'pharmacy_phone';
+export const CASHIER_PRINTER_MODEL = 'cashier_printer_model';

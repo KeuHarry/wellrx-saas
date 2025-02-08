@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
         return [
             'name' => $this->faker->unique()->word(),
             'markup' => $this->faker->randomFloat(2, 6, 15),
-            'description' => $this->faker->sentence(10)
+            'description' => $this->faker->sentence(10),
         ];
     }
 }

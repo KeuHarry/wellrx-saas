@@ -18,7 +18,7 @@
       </Menu>
       <div class="hidden mx-auto md:block text-slate-500"></div>
       <div class="flex items-center mr-3 h-9">
-        <label for="retail-cost" class="block mr-2 text-sm/6 text-gray-600">From</label>
+        <label for="from-date" class="block mr-2 text-sm/6 text-gray-600">From</label>
         <Litepicker
           v-model="fromDate"
           :options="dateOptions"
@@ -27,7 +27,7 @@
         />
       </div>
       <div class="flex items-center mr-3 h-9">
-        <label for="retail-cost" class="block mr-2 text-sm/6 text-gray-600">To</label>
+        <label for="to-date" class="block mr-2 text-sm/6 text-gray-600">To</label>
         <Litepicker
           v-model="toDate"
           :options="dateOptions"
@@ -100,7 +100,7 @@
                     order.status === OrderStatus.IN_PROGRESS,
                 }"
               >
-                {{ getStatus(order.status) }}
+                {{ getOrderStatus(order.status) }}
               </span>
             </Table.Td>
             <Table.Td
@@ -163,7 +163,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash';
-import { computed, onMounted, provide, Ref, ref, watch } from 'vue';
+import { computed, onMounted, provide, Ref, ref, watch, watchEffect } from 'vue';
 import Button from '@/components/Base/Button';
 import { FormInput } from '@/components/Base/Form';
 import Notification from '@/components/Base/Notification';
@@ -180,7 +180,7 @@ import { useRoute, useRouter } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { INVOICE_DATE } from '@/constants/properties';
-import { getStatus } from '@/utils/helper';
+import { getOrderStatus } from '@/utils/helper';
 import Litepicker from '@/components/Base/Litepicker';
 import { dateFormat } from '@/constants/dateFormat';
 import useOrderStore from '@/stores/order';
@@ -304,11 +304,7 @@ const openAddEditOrder = (orderId: number | null = null) => {
   }
 };
 
-watch(fromDate, async () => {
-  await getOrdersData();
-});
-
-watch(toDate, async () => {
+watchEffect(async () => {
   await getOrdersData();
 });
 

@@ -19,7 +19,7 @@ class PatientController extends ApiController
     public function __construct(PatientService $patientService)
     {
         $this->patientService = $patientService;
-        $this->model = new Patient();
+        $this->model = new Patient;
         parent::__construct($patientService);
     }
 

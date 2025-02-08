@@ -67,7 +67,7 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'ShoppingCart',
-        pageName: 'sale',
+        pageName: 'sale-list',
         title: 'Sales',
       },
       {
@@ -111,7 +111,7 @@ const menu: Array<Menu | 'divider'> = [
     subMenu: [
       {
         icon: 'Clipboard',
-        pageName: 'prescription',
+        pageName: 'prescription-list',
         title: 'Prescriptions',
       },
       {

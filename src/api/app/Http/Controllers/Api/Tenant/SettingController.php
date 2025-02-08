@@ -15,7 +15,7 @@ class SettingController extends ApiController
     public function __construct(SettingService $settingService)
     {
         $this->settingService = $settingService;
-        $this->model = new Setting();
+        $this->model = new Setting;
         parent::__construct($settingService);
     }
 

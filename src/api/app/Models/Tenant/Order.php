@@ -82,8 +82,8 @@ class Order extends BaseModel
         $json['id'] = $this->id;
         $json['invoiceCode'] = $this->invoice_code;
         $json['supplier'] = [
-            'id' =>  $this->supplier->id,
-            'name' => $this->supplier->name
+            'id' => $this->supplier->id,
+            'name' => $this->supplier->name,
         ];
         $json['invoiceDate'] = date('Y-m-d', strtotime($this->invoice_date));
         $json['status'] = $this->status;

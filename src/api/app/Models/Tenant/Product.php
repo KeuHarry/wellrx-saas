@@ -62,7 +62,7 @@ class Product extends BaseModel
         'shelf_id',
         'product_category_id',
         'is_decomposable',
-        'pkg_size'
+        'pkg_size',
     ];
 
     /**
@@ -122,14 +122,6 @@ class Product extends BaseModel
     }
 
     /**
-     * Get the inventory items.
-     */
-    public function inventory_items()
-    {
-        return $this->hasMany('App\Models\Inventory', 'product_id');
-    }
-
-    /**
      * Get the cip codes.
      */
     /*public function cip_codes()
@@ -166,13 +158,18 @@ class Product extends BaseModel
      */
     public function fee()
     {
-        return $this->belongsTo(Fee::class, 'tax_id');
+        return $this->belongsTo(Fee::class, 'fee_id');
     }
 
     /* Get all inventory records related to product */
     public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class, 'product_id');
+    }
+
+    public function saleItems(): HasMany
+    {
+        return $this->hasMany(SaleItem::class, 'product_id');
     }
 
     /**
@@ -259,16 +256,16 @@ class Product extends BaseModel
         $json['isActive'] = $this->is_active;
         $json['shelf'] = [
             'id' => $this->shelf->id,
-            'name' => $this->shelf->name
+            'name' => $this->shelf->name,
         ];
         $json['category'] = [
             'id' => $this->category->id,
-            'name' => $this->category->name
+            'name' => $this->category->name,
 
         ];
         $json['fee'] = $this->fee ? [
             'id' => $this->fee->id,
-            'name' => $this->fee->name
+            'name' => $this->fee->name,
         ] : null;
 
         return $json;

@@ -45,7 +45,6 @@ class BaseRepository
         return boolval($result);
     }
 
-
     public function update(int $id, array $content): int
     {
         $resource = $this->findById($id);

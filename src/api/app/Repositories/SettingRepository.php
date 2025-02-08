@@ -8,7 +8,7 @@ class SettingRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Setting();
+        $this->model = new Setting;
         parent::__construct();
     }
 
@@ -19,5 +19,10 @@ class SettingRepository extends BaseRepository
         $setting->save();
 
         return $setting->id;
+    }
+
+    public function findByKey(string $key): ?Setting
+    {
+        return Setting::where('key', $key)->first();
     }
 }

@@ -20,14 +20,13 @@ class InventoryService extends ApiService
     }
 
     public function search(
-        int $offset = 0, 
-        int $limit = 10, 
-        string $sortOrder = 'ASC', 
-        ?string $search = null, 
+        int $offset = 0,
+        int $limit = 10,
+        string $sortOrder = 'ASC',
+        ?string $search = null,
         ?string $sortBy = null,
         ?int $type = null
-    ): Collection
-    {
+    ): Collection {
         return $this->inventoryRepository->search(
             $offset,
             $limit,

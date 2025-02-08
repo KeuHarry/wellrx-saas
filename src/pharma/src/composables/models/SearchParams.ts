@@ -7,6 +7,8 @@ export interface SearchParams {
   sortOrder?: string;
   shelfId?: number | null;
   type?: number | null;
+  status?: number | null;
+  cashierStatus?: number | null;
   startDate?: string | null;
   endDate?: string | null;
 }

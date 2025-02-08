@@ -9,7 +9,7 @@ class UserRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new User();
+        $this->model = new User;
         parent::__construct();
     }
 
@@ -18,20 +18,20 @@ class UserRepository extends BaseRepository
         return User::when($search, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
-                        ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
-                        ->orWhere('username', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
+                    ->orWhere('username', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 
     public function createDefaultUser(string $firstName, string $lastName, string $username, string $email, string $password): User
     {
-        $user = new User();
+        $user = new User;
         $user->first_name = $firstName;
         $user->last_name = $lastName;
         $user->username = $username;

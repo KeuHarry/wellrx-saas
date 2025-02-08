@@ -14,8 +14,10 @@ use App\Http\Controllers\Api\Tenant\LabelCodeController;
 use App\Http\Controllers\Api\Tenant\OrderController;
 use App\Http\Controllers\Api\Tenant\PatientController;
 use App\Http\Controllers\Api\Tenant\PrescriberController;
+use App\Http\Controllers\Api\Tenant\PrintingController;
 use App\Http\Controllers\Api\Tenant\ProductController;
 use App\Http\Controllers\Api\Tenant\RoleController;
+use App\Http\Controllers\Api\Tenant\SaleController;
 use App\Http\Controllers\Api\Tenant\SettingController;
 use App\Http\Controllers\Api\Tenant\ShelfController;
 use App\Http\Controllers\Api\Tenant\SupplierController;
@@ -112,7 +114,7 @@ Route::group([
         Route::get('fees/{feeId}', [FeeController::class, 'show']);
         Route::get('fees', [FeeController::class, 'getFees']);
         Route::post('fees', [FeeController::class, 'createFee']);
-        Route::put('fees/{feeId}', [FeeController::class, 'updateFee']);
+        Route::patch('fees/{feeId}', [FeeController::class, 'updateFee']);
         Route::delete('fees/{feeId}', [FeeController::class, 'delete']);
 
         //Supplier rest crud
@@ -128,6 +130,7 @@ Route::group([
         Route::post('products', [ProductController::class, 'createProduct']);
         Route::put('products/{productId}', [ProductController::class, 'updateProduct']);
         Route::delete('products/{productId}', [ProductController::class, 'delete']);
+        Route::get('in-stock', [ProductController::class, 'getProductsInStock']);
 
         //Inventory
         Route::get('inventories/{inventoryId}', [InventoryController::class, 'show']);
@@ -177,8 +180,22 @@ Route::group([
         Route::delete('orders/{orderId}', [OrderController::class, 'delete']);
         Route::post('orders/complete', [OrderController::class, 'complete']);
 
+        // sales
+        Route::get('sales/{saleId}', [SaleController::class, 'show']);
+        Route::get('sales', [SaleController::class, 'getSales']);
+        Route::get('unpaid-sales', [SaleController::class, 'getUnPaidSales']);
+        Route::post('sales', [SaleController::class, 'createSale']);
+        Route::patch('sales/{saleId}', [SaleController::class, 'updateSale']);
+        Route::delete('sales/{saleId}', [SaleController::class, 'delete']);
+        Route::post('sales/pay', [SaleController::class, 'paySale']);
+
         // settings
         Route::get('settings', [SettingController::class, 'getSettings']);
         Route::put('settings', [SettingController::class, 'updateSetting']);
+
+        // Printing
+        Route::get('invoice/sale/{saleId}/print', [PrintingController::class, 'printSaleInvoice']);
+        Route::get('receipt/sale/{saleId}/print', [PrintingController::class, 'printSaleReceipt']);
+        Route::get('proforma/sale/{saleId}/print', [PrintingController::class, 'printProformaInvoice']);
     });
 });

@@ -20,9 +20,22 @@
             class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
           />
         </div>
-        <div class="grid grid-cols-6 gap-2">
+        <div class="grid grid-cols-8 gap-2">
+          <div class="col-span-2">
+            <label for="type" class="block text-sm/6 text-gray-900">Type</label>
+            <select
+              v-model="formData.type"
+              name="type"
+              id="type"
+              class="w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm"
+            >
+              <option :value="type.value" v-for="(type, tkey) in feeTypes" :key="tkey">
+                {{ type.name }}
+              </option>
+            </select>
+          </div>
           <div class="col-span-4">
-            <label for="cost" class="block text-sm/6 text-gray-900">Cost</label>
+            <label for="cost" class="block text-sm/6 text-gray-900">Value</label>
             <input
               v-model="formData.cost"
               type="number"
@@ -74,6 +87,7 @@ import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import { ref } from 'vue';
 import { tags } from '@/constants/tags';
+import { feeTypes } from '@/constants/feeTypes';
 
 const emit = defineEmits(['submit']);
 
@@ -82,12 +96,14 @@ const formData = ref<{
   id?: number | null;
   name: string;
   cost: number;
+  type: number;
   tag: number;
   description: string;
 }>({
   id: null,
   name: '',
   cost: 0,
+  type: 0,
   tag: 0,
   description: '',
 });

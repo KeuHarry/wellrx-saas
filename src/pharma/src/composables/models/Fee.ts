@@ -3,6 +3,7 @@ export interface Fee {
   feeCode: string;
   name: string;
   cost: number;
+  type: number;
   tag: number;
   description: string;
 }

@@ -9,7 +9,7 @@ class PatientRepository extends BaseRepository
 {
     public function __construct()
     {
-        $this->model = new Patient();
+        $this->model = new Patient;
         parent::__construct();
     }
 
@@ -18,14 +18,14 @@ class PatientRepository extends BaseRepository
         return Patient::when($search, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
-                        ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
-                        ->orWhere('patient_code', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhereRaw("CONCAT(last_name, ' ', first_name) LIKE ?", ["%{$search}%"])
+                    ->orWhere('patient_code', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
             });
         })
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
+            ->offset($offset)
+            ->limit($limit)
+            ->orderBy($sortBy, $sortOrder)
+            ->get();
     }
 }

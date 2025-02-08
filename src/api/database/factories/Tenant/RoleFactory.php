@@ -18,7 +18,7 @@ class RoleFactory extends Factory
     {
         return [
             'label' => $this->faker->unique()->word(),
-            'description' => $this->faker->sentence(10)
+            'description' => $this->faker->sentence(10),
         ];
     }
 }
