@@ -15,6 +15,7 @@ return new class extends Migration
             $table->dropConstrainedForeignId('fee_id');
             $table->float('fee')->nullable();
             $table->float('tax')->nullable();
+            $table->float('total')->nullable();
         });
     }
 

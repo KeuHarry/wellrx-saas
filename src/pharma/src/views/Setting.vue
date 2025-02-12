@@ -193,7 +193,9 @@
           </div>
           <div class="grid grid-cols-9 gap-2 p-5">
             <div class="col-span-4">
-              <label for="printer-model" class="block text-sm/6 text-gray-600">Cashier Printer Model</label>
+              <label for="printer-model" class="block text-sm/6 text-gray-600"
+                >Cashier Printer Model</label
+              >
               <ComboBox
                 :options="models"
                 @search="searchPrinterModel"
@@ -282,13 +284,13 @@ const formData = ref({
   decimalDigit: '',
   decimalSeparator: '',
   thousandSeparator: '',
-  cashierPrinterModel: ''
+  cashierPrinterModel: '',
 });
 
 const settings = ref<Setting[]>([]);
 const route = useRoute();
-const models = ref<{id: number; name: string; value: string;}[]>([]);
-const selectedPrinterModel = ref<{id: number; name: string; value: string;}|null>(null);
+const models = ref<{ id: number; name: string; value: string }[]>([]);
+const selectedPrinterModel = ref<{ id: number; name: string; value: string } | null>(null);
 
 // STORE
 const tenantStore = useTenantStore();
@@ -337,7 +339,10 @@ const setFormData = async () => {
   formData.value.decimalSeparator = getValueByKey(settings.value, DECIMAL_SEPARATOR) ?? '';
   formData.value.thousandSeparator = getValueByKey(settings.value, THOUSAND_SEPARATOR) ?? '';
   formData.value.cashierPrinterModel = getValueByKey(settings.value, CASHIER_PRINTER_MODEL) ?? '';
-  selectedPrinterModel.value = printerModels.find((printerModel) => printerModel.name === formData.value.cashierPrinterModel) ?? null;
+  selectedPrinterModel.value =
+    printerModels.find(
+      (printerModel) => printerModel.name === formData.value.cashierPrinterModel,
+    ) ?? null;
 };
 
 const updateSettingsData = async () => {
@@ -388,16 +393,16 @@ const updateSettingsData = async () => {
 };
 
 const getModels = async (searchFilter: string = '') => {
-  models.value = printerModels.filter(
-    (printerModel) => printerModel.name.toLowerCase().includes(searchFilter.toLowerCase())
-  ).slice(0,5);
-}
+  models.value = printerModels
+    .filter((printerModel) => printerModel.name.toLowerCase().includes(searchFilter.toLowerCase()))
+    .slice(0, 5);
+};
 
 const searchPrinterModel = async (searchFilter: string = '') => {
   await getModels(searchFilter);
 };
 
-const selectModel = (printerModel: { id: number; name: string; value: string; }) => {
+const selectModel = (printerModel: { id: number; name: string; value: string }) => {
   formData.value.cashierPrinterModel = printerModel.name;
 };
 

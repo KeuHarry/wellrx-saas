@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use NumberFormatter;
 
 class PrintingService
 {
@@ -38,5 +39,12 @@ class PrintingService
         $pdf = $this->generatePdf($view, $data, $filename, $paperSize);
 
         return $pdf->download($filename);
+    }
+
+    public function convertToWords(float $amount): string
+    {
+        $formatter = new NumberFormatter('en', NumberFormatter::SPELLOUT);
+
+        return ucfirst($formatter->format($amount));
     }
 }

@@ -266,6 +266,7 @@ class Product extends BaseModel
         $json['fee'] = $this->fee ? [
             'id' => $this->fee->id,
             'name' => $this->fee->name,
+            'value' => $this->fee->value,
         ] : null;
 
         return $json;

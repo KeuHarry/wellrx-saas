@@ -122,6 +122,18 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: '/:identifier/prescriptions/add',
+          name: 'add-prescription',
+          component: () => import('../views/AddEditPrescription.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
+          path: '/:identifier/prescriptions/edit/:id',
+          name: 'edit-prescription',
+          component: () => import('../views/AddEditPrescription.vue'),
+          meta: { requiresAuth: true },
+        },
+        {
           path: '/:identifier/patients',
           name: 'patient-list',
           component: () => import('../views/PatientList.vue'),

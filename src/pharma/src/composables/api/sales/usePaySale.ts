@@ -6,7 +6,9 @@ import { CashierOneTimePaymentRequest } from '@/composables/models/CashierReques
 
 const axiosTenant = useSetupAxios();
 
-export default function usePaySale(): (payload: CashierOneTimePaymentRequest) => Promise<ApiResponse<Sale>> {
+export default function usePaySale(): (
+  payload: CashierOneTimePaymentRequest,
+) => Promise<ApiResponse<Sale>> {
   return async (payload: CashierOneTimePaymentRequest) => {
     const response = await axiosTenant.post<ApiResponse<Sale>>(`/sales/pay`, payload);
 

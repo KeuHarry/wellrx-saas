@@ -6,11 +6,12 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class Prescription extends BaseModel
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -38,6 +39,7 @@ class Prescription extends BaseModel
         'patient_id',
         'status',
         'total',
+        'taxes',
         'net_due',
         'discount_percentage',
         'discount_flat',
@@ -70,12 +72,18 @@ class Prescription extends BaseModel
         $json['id'] = $this->id;
         $json['prescriptionCode'] = $this->prescription_code;
         $json['patient'] = [
-            'id' => $this->id,
+            'id' => $this->patient->id,
             'firstName' => $this->patient->first_name,
             'lastName' => $this->patient->last_name,
+            'dob' => $this->patient->dob,
+            'phone' => $this->patient->phone,
+            'address' => $this->patient->address,
+            'city' => $this->patient->city,
+            'company' => $this->patient->company,
         ];
         $json['status'] = $this->status;
         $json['total'] = $this->total;
+        $json['taxes'] = $this->taxes;
         $json['netDue'] = $this->net_due;
         $json['discountPercentage'] = $this->discount_percentage;
         $json['discountFlat'] = $this->discount_flat;
@@ -84,7 +92,7 @@ class Prescription extends BaseModel
         $json['prescriptionDate'] = $this->prescription_date;
         $json['prescriptionExpDate'] = $this->prescription_exp_date;
         $json['prescriber'] = [
-            'id' => $this->id,
+            'id' => $this->prescriber->id,
             'firstName' => $this->prescriber->first_name,
             'lastName' => $this->prescriber->last_name,
         ];

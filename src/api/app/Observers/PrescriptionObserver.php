@@ -3,9 +3,17 @@
 namespace App\Observers;
 
 use App\Models\Tenant\Prescription;
+use Illuminate\Support\Facades\Auth;
 
 class PrescriptionObserver
 {
+    public function creating(Prescription $prescription): void
+    {
+        $authUser = Auth::user();
+        $prescription->created_by = $authUser ? $authUser->id : 1;
+        $prescription->prescription_code = 'RX-'.date('Ymd').'-'.str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+    }
+
     /**
      * Handle the Prescription "created" event.
      */

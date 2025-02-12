@@ -86,11 +86,7 @@
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          <Table.Tr
-            v-for="(sale, ckey) in sales"
-            :key="ckey"
-            class="intro-x"
-          >
+          <Table.Tr v-for="(sale, ckey) in sales" :key="ckey" class="intro-x">
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600"
             >
@@ -114,8 +110,10 @@
                 :class="{
                   'bg-red-600 border-red-600 text-red-600':
                     sale.cashierStatus === CashierStatus.PENDING,
-                  'bg-yellow-600 border-yellow-600 text-yellow-600': sale.cashierStatus === CashierStatus.IN_PROGRESS,
-                  'bg-blue-700 border-blue-700 text-blue-700': sale.cashierStatus === CashierStatus.PAID,
+                  'bg-yellow-600 border-yellow-600 text-yellow-600':
+                    sale.cashierStatus === CashierStatus.IN_PROGRESS,
+                  'bg-blue-700 border-blue-700 text-blue-700':
+                    sale.cashierStatus === CashierStatus.PAID,
                 }"
               >
                 {{ getCashierStatus(sale.cashierStatus) }}
@@ -139,14 +137,14 @@
             >
               <div class="flex items-center justify-center">
                 <Button
-                    v-if="sale.status === SaleStatus.IN_PROGRESS"
-                    class="text-xs w-20 hover:bg-sky-600/15 bg-sky-600 hover:border-sky-600/10 border-sky-600 text-sky-700 bg-opacity-20 border-opacity-5"
+                  v-if="sale.status === SaleStatus.IN_PROGRESS"
+                  class="text-xs w-20 hover:bg-sky-600/15 bg-sky-600 hover:border-sky-600/10 border-sky-600 text-sky-700 bg-opacity-20 border-opacity-5"
                   @click="openProcessViewSaleModal(sale)"
                 >
                   VIEW
                 </Button>
                 <Button
-                    v-if="sale.status === SaleStatus.COMPLETED"
+                  v-if="sale.status === SaleStatus.COMPLETED"
                   class="text-xs w-20 hover:bg-teal-600/15 bg-teal-600 hover:border-teal-600/10 border-teal-600 text-teal-700 bg-opacity-20 border-opacity-5"
                   @click="openProcessViewSaleModal(sale, true)"
                 >
@@ -329,7 +327,7 @@ const openCashRegisterModal = () => {
 };
 
 const openProcessViewSaleModal = async (sale: SaleFragment, isCompleted: boolean = false) => {
-    await processViewSaleModal.value?.openProcessViewSaleModal(sale.id, isCompleted);
+  await processViewSaleModal.value?.openProcessViewSaleModal(sale.id, isCompleted);
 };
 
 const closeCashRegister = async () => {

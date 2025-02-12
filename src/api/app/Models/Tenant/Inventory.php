@@ -99,10 +99,10 @@ class Inventory extends BaseModel
         $json['type'] = $this->type;
         $json['expiryDate'] = date('Y-m-d', strtotime($this->expiry_date));
         $json['batchId'] = $this->batch_id;
-        $json['supplier'] = [
+        $json['supplier'] = $this->supplier ? [
             'id' => $this->supplier->id,
             'name' => $this->supplier->name,
-        ];
+        ] : null;
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
         $json['reason'] = $this->reason;
 

@@ -5,7 +5,13 @@
         <h2 class="text-lg font-medium">{{ pageTitle }}</h2>
       </div>
       <div class="flex items-center">
-        <Button :disabled="!canAddInventory" variant="primary" @click="addInventory" class="mr-3 disabled:cursor-not-allowed">Save</Button>
+        <Button
+          :disabled="!canAddInventory"
+          variant="primary"
+          @click="addInventory"
+          class="mr-3 disabled:cursor-not-allowed"
+          >Save</Button
+        >
         <Button variant="outline-secondary" @click="closeAddRemoveInventoryForm">Cancel</Button>
       </div>
     </div>
