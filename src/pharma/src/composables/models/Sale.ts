@@ -13,7 +13,11 @@ export interface Sale {
   customer: {
     id: number;
     name: string;
-  } | null
+  } | null;
+  prescription: {
+    id: number;
+    prescriptionCode: string;
+  } | null;
   createdAt: string;
   saleItems: SaleItem[];
 }

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Exceptions\InternalServerErrorException;
 use App\Models\Tenant\Fee;
 use App\Repositories\FeeRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,19 +21,31 @@ class FeeService extends ApiService
         ?string $sortBy = null,
         ?string $sortOrder = null,
         ?int $tag = null
-    ): Collection {
-        $fees = Fee::where('name', 'LIKE', '%'.$search.'%')
-            ->orWhere('fee_code', 'LIKE', '%'.$search.'%')
-            ->orWhere('tag', $tag)
-            ->offset($offset)
+    ): array {
+        $query = Fee::when($search, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('fee_code', 'LIKE', "%{$search}%");
+            });
+        })
+            ->when($tag !== null, function ($query) use ($tag) {
+                $query->where('tag', $tag);
+            });
+
+        $total = $query->count();
+        $fees = $query->offset($offset)
             ->limit($limit)
             ->orderBy($sortBy, $sortOrder)
             ->get();
 
-        if (! assert($fees instanceof Collection)) {
-            throw new InternalServerErrorException;
-        }
+        return [
+            'fees' => $fees,
+            'total' => $total,
+        ];
+    }
 
-        return $fees;
+    public function getFeeByTag(int $tag): Collection
+    {
+        return $this->feeRepository->findFeeByTag($tag);
     }
 }

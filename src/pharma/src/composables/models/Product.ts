@@ -27,5 +27,9 @@ export interface Product {
     id: number;
     name: string;
   } | null;
-  feeId: number | null;
+  fee: {
+    id: number;
+    name: string;
+    value: number;
+  } | null;
 }

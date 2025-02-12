@@ -29,9 +29,13 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .header {
+        .header, .document-type {
             text-align: center;
             margin-bottom: 20px;
+        }
+
+        .document-type h2 {
+            font-size: 24px;
         }
 
         .header h1 {
@@ -113,6 +117,10 @@
                 margin: 5px 0;
             }
 
+            .document-type h2 {
+                font-size: 14px;
+            }
+
             .footer {
                 page-break-after: always;
             }
@@ -128,15 +136,19 @@
     <div class="container">
         <!-- Header Section -->
         <div class="header">
-            <h1>Pharmacy Name</h1>
-            <p>123 Main Street, Montreal, QC</p>
-            <p>Email: pharmacy@example.com | Phone: (123) 456-7890</p>
+            <h1>{{ $pharmacy['pharmacy_name'] }}</h1>
+            <p>{{ $pharmacy['pharmacy_address'] }}, {{ $pharmacy['pharmacy_city'] }}</p>
+            <p>Phone: {{ $pharmacy['pharmacy_phone'] }} | Email: {{ $pharmacy['pharmacy_email'] }}</p>
+        </div>
+
+        <div class="document-type">
+            <h2>CUSTOMER INVOICE</h2>
+            <p>{{ $sale->code }}</p>
         </div>
 
         <!-- Sale Details -->
         <div class="details">
             <p><strong>Invoice Date:</strong> {{ $sale->created_at->format('jS F Y') }}</p>
-            <h3><strong>CUSTOMER INVOICE -</strong> {{ $sale->code }}</h3>
             <p><strong>Customer Name:</strong> {{ $sale->customer ? $sale->customer->name : 'Client' }}</p>
         </div>
 
@@ -147,8 +159,8 @@
                     <th>#</th>
                     <th>Product Name</th>
                     <th>Quantity</th>
-                    <th>Unit Price ({{ $currency ? $currency->value : '$' }})</th>
-                    <th>Total ({{ $currency ? $currency->value : '$' }})</th>
+                    <th>Unit Price ({{ $pharmacy['currency'] ?? '$' }})</th>
+                    <th>Total ({{ $pharmacy['currency'] ?? '$' }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -165,27 +177,32 @@
             <tfoot>
                 <tr>
                     <th colspan="4" style="text-align: right;">Total:</th>
-                    <th>{{ $currency ? $currency->value : '$' }}{{ number_format($sale->total, 2) }}</th>
+                    <th>{{ $pharmacy['currency'] ?? '$' }}{{ number_format($sale->total, 2) }}</th>
                 </tr>
                 <tr>
                     <th colspan="4" style="text-align: right;">Tax:</th>
-                    <th>{{ $currency ? $currency->value : '$' }}{{ number_format($sale->taxes, 2) }}</th>
+                    <th>{{ $pharmacy['currency'] ?? '$' }}{{ number_format($sale->taxes, 2) }}</th>
                 </tr>
                 <tr>
                     <th colspan="4" style="text-align: right;">Discount:</th>
-                    <th>{{ $sale->discount > 0 ? '-' : '' }}{{ $currency ? $currency->value : '$' }}{{ number_format($sale->discount, 2) }}</th>
+                    <th>{{ $sale->discount > 0 ? '-' : '' }}{{ $pharmacy['currency'] ?? '$' }}{{ number_format($sale->discount, 2) }}</th>
                 </tr>
                 <tr>
                     <th colspan="4" style="text-align: right;">Net Due:</th>
-                    <th>{{ $currency ? $currency->value : '$' }}{{ number_format($sale->net_due, 2) }}</th>
+                    <th>{{ $pharmacy['currency'] ?? '$' }}{{ number_format($sale->net_due, 2) }}</th>
                 </tr>
             </tfoot>
         </table>
 
         <!-- Footer Section -->
         <div class="footer">
-            <p>Thank you for your business!</p>
+            <p>{{ $pharmacy['footer_message'] }}</p>
         </div>
+        <!-- Print Button -->
+        <div class="text-center no-print">
+            <button onclick="window.print()">Print Invoice</button>
+        </div>
+
     </div>
 </body>
 </html>

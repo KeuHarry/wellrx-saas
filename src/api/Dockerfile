@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     sudo \
     unzip \
-    curl
+    curl \
+    libicu-dev
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -24,7 +25,9 @@ RUN a2enmod rewrite headers
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 RUN docker-php-ext-install bcmath \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl gd
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl gd \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

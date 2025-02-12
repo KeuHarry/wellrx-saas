@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Tenant;
 use App\Models\Tenant\Inventory;
+use App\Models\Tenant\Prescription;
 use App\Models\Tenant\Sale;
 use App\Observers\InventoryObserver;
+use App\Observers\PrescriptionObserver;
 use App\Observers\SaleObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useCustomerModel(Tenant::class);
         Inventory::observe(InventoryObserver::class);
         Sale::observe(SaleObserver::class);
+        Prescription::observe(PrescriptionObserver::class);
     }
 }

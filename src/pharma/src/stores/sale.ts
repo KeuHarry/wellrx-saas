@@ -40,7 +40,6 @@ export const useSaleStore = defineStore('sale-store', {
       sortOrder: SortOrder.DESC,
       offset: 0,
       limit: 10,
-      shelfId: null,
     },
     isPending: false,
   }),

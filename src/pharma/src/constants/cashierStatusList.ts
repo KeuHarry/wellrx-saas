@@ -1,4 +1,4 @@
-import CashierStatus from "@/enums/cashierStatus";
+import CashierStatus from '@/enums/cashierStatus';
 
 export const cashierStatusList = [
   { id: 0, value: null, name: 'Select status', class: 'text-slate-500' },

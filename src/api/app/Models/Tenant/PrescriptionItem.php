@@ -40,6 +40,7 @@ class PrescriptionItem extends BaseModel
         'fee',
         'tax',
         'cost',
+        'total',
     ];
 
     /**
@@ -72,6 +73,7 @@ class PrescriptionItem extends BaseModel
         $json['fee'] = $this->fee;
         $json['tax'] = $this->tax;
         $json['cost'] = $this->cost;
+        $json['total'] = $this->total;
 
         return $json;
     }

@@ -13,6 +13,7 @@ import SaleStatus from '@/enums/saleStatus';
 import SaleType from '@/enums/saleType';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import { now } from 'lodash';
 import { parseColor } from 'tailwindcss/lib/util/color';
 
 dayjs.extend(duration);
@@ -325,6 +326,25 @@ const getSaleTypeName = (value: number): string => {
   return type;
 };
 
+const calculateAge = (dob: string): number => {
+  const birthDate = new Date(dob);
+  const today = new Date(now());
+
+  if (isNaN(birthDate.getTime())) {
+    throw new Error('Invalid date format. Please use a valid date string.');
+  }
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+
+  // Adjust the age if the current date is earlier than the birthday in the same year
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
+};
+
 export {
   cutText,
   formatDate,
@@ -348,4 +368,5 @@ export {
   getFeeTypeName,
   getSaleTypeName,
   getCashierStatus,
+  calculateAge,
 };

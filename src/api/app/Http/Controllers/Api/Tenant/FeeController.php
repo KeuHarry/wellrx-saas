@@ -34,7 +34,7 @@ class FeeController extends ApiController
         return $this->update($feeId, $request);
     }
 
-    public function getFees(Request $request)
+    public function getFees(Request $request): JsonResponse
     {
         $search = $request->query->get('search');
         $tag = $request->query->get('tag');
@@ -43,7 +43,7 @@ class FeeController extends ApiController
         $offset = $request->query->get('offset');
         $limit = $request->query->get('limit');
 
-        $fees = $this->feeService->search(
+        $result = $this->feeService->search(
             $offset,
             $limit,
             $search,
@@ -52,10 +52,13 @@ class FeeController extends ApiController
             $tag
         );
 
+        $total = $result['total'];
+        $fees = $result['fees'];
+
         if (! assert($fees instanceof Collection)) {
             throw new InternalServerErrorException;
         }
 
-        return $this->successResponse($fees, 'Fees successfully retrieved!', Response::HTTP_OK, $this->feeService->getModelCount());
+        return $this->successResponse($fees, 'Fees successfully retrieved!', Response::HTTP_OK, $total);
     }
 }
