@@ -116,7 +116,7 @@
                   'bg-green-600 border-green-600 text-green-600':
                     sale.status === SaleStatus.COMPLETED,
                   'bg-red-600 border-red-600 text-red-600': sale.status === SaleStatus.IN_PROGRESS,
-                  'bg-blue-700 border-blue-700 text-blue-700': sale.status === SaleStatus.PAID,
+                  'bg-blue-800 border-blue-800 text-blue-800': sale.status === SaleStatus.PAID,
                 }"
               >
                 {{ getSaleStatus(sale.status) }}
@@ -144,17 +144,16 @@
               ]"
             >
               <div class="flex items-center justify-center">
-                
-                  <a
+                <a
                   v-if="sale.status !== SaleStatus.PAID"
-                    class="flex items-center text-danger"
-                    href="#"
-                    @click="openDeleteSaleModal(sale)"
-                  >
+                  class="flex items-center text-danger"
+                  href="#"
+                  @click="openDeleteSaleModal(sale)"
+                >
                   <Tippy content="Delete">
                     <Lucide icon="Trash2" class="w-4 h-4 mr-1" />
                   </Tippy>
-                  </a>
+                </a>
               </div>
             </Table.Td>
           </Table.Tr>

@@ -9,5 +9,6 @@ export interface SaleItem {
   quantity: number;
   price: number;
   tax: number;
+  fee: number | null;
   total: number;
 }

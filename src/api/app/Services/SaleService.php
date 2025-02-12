@@ -13,6 +13,7 @@ use App\Repositories\InventoryRepository;
 use App\Repositories\SaleRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SaleService extends ApiService
@@ -116,59 +117,6 @@ class SaleService extends ApiService
                 $this->saleItemService->bulkCreate($saleItems);
             }
 
-            // if ($createdSale->status === SaleStatus::COMPLETED->value) {
-            //     foreach ($saleItems as $saleItem) {
-            //         $productId = $saleItem['productId'];
-            //         $quantityToSell = $saleItem['quantity'];
-            //         $product = $this->productService->getById($productId);
-            //         assert($product instanceof Product);
-
-            //         $batches = $this->inventoryRepository->getAvailableBatches($product->id);
-
-            //         foreach ($batches as $batch) {
-            //             if ($quantityToSell <= 0) {
-            //                 break;
-            //             }
-            //             assert($batch instanceof Inventory);
-            //             $deductedQuantity = min($batch->actual_quantity, $quantityToSell);
-            //             $batch->actual_quantity -= $deductedQuantity;
-            //             $batch->save();
-
-            //             $newInventoryEntry = [];
-            //             $newInventoryEntry['productId'] = $product->id;
-            //             $newInventoryEntry['quantity'] = -$deductedQuantity;
-            //             $newInventoryEntry['type'] = InventoryType::SELL->value;
-            //             $newInventoryEntry['expiryDate'] = $batch->expiry_date;
-            //             $newInventoryEntry['batchId'] = $batch->batch_id;
-            //             $newInventoryEntry['acqCost'] = $batch->acq_cost;
-            //             $newInventoryEntry['wholesaleCost'] = $batch->wholesale_cost;
-            //             $newInventoryEntry['retailCost'] = $batch->retail_cost;
-            //             $newInventoryEntry['unitCost'] = $batch->unit_cost;
-            //             $newInventoryEntry['supplierId'] = $batch->supplier_id;
-            //             $this->inventoryService->create($newInventoryEntry);
-
-            //             $quantityToSell -= $deductedQuantity;
-            //         }
-
-            //         if ($quantityToSell > 0) {
-            //             $newInventoryEntry = [];
-            //             $newInventoryEntry['productId'] = $product->id;
-            //             $newInventoryEntry['quantity'] = -$quantityToSell;
-            //             $newInventoryEntry['type'] = InventoryType::SELL->value;
-            //             $newInventoryEntry['expiryDate'] = now()->addYear(1);
-            //             $newInventoryEntry['batchId'] = 'OOS-' . $product->product_code;
-            //             $newInventoryEntry['acqCost'] = $product->acq_cost;
-            //             $newInventoryEntry['wholesaleCost'] = $product->wholesale_cost;
-            //             $newInventoryEntry['retailCost'] = $product->retail_cost;
-            //             $newInventoryEntry['unitCost'] = $product->unit_cost;
-            //             $this->inventoryService->create($newInventoryEntry);
-            //         }
-
-            //         $product->qoh -= $saleItem['quantity'];
-            //         $product->save();
-            //     }
-            // }
-
             return $createdSale;
         });
         assert($sale instanceof Sale);
@@ -206,7 +154,10 @@ class SaleService extends ApiService
     private function performPayment(Sale $sale, array $content): void
     {
         $content['status'] = SaleStatus::PAID->value;
-        $content['cashier_status'] = CashierStatus::PAID->value;
+        $content['cashierStatus'] = CashierStatus::PAID->value;
+        $authUser = Auth::user();
+        $content['cashierId'] = $authUser ? $authUser->id : 1;
+        $content = $this->updateKey($content);
         $sale->update($content);
         $sale->refresh();
 

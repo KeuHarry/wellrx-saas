@@ -15,7 +15,9 @@ export default function useGetUnPaidSales(
     const tenantStore = useTenantStore();
 
     try {
-      const response = await axiosTenant.get<ApiResponse<SaleFragment[]>>(`/unpaid-sales?${queryParams}`);
+      const response = await axiosTenant.get<ApiResponse<SaleFragment[]>>(
+        `/unpaid-sales?${queryParams}`,
+      );
       return response.data;
     } catch (error) {
       throw new Error(`${tenantStore.getTenantUrl}/unpaid-sales: Failed to fetch the sales list.`);

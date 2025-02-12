@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Tenant\LabelCodeController;
 use App\Http\Controllers\Api\Tenant\OrderController;
 use App\Http\Controllers\Api\Tenant\PatientController;
 use App\Http\Controllers\Api\Tenant\PrescriberController;
+use App\Http\Controllers\Api\Tenant\PrescriptionController;
 use App\Http\Controllers\Api\Tenant\PrintingController;
 use App\Http\Controllers\Api\Tenant\ProductController;
 use App\Http\Controllers\Api\Tenant\RoleController;
@@ -194,8 +195,15 @@ Route::group([
         Route::put('settings', [SettingController::class, 'updateSetting']);
 
         // Printing
-        Route::get('invoice/sale/{saleId}/print', [PrintingController::class, 'printSaleInvoice']);
+        Route::get('invoice/{entity}/{entityId}/print', [PrintingController::class, 'printEntityInvoice']);
         Route::get('receipt/sale/{saleId}/print', [PrintingController::class, 'printSaleReceipt']);
-        Route::get('proforma/sale/{saleId}/print', [PrintingController::class, 'printProformaInvoice']);
+        Route::get('proforma/{entity}/{entityId}/print', [PrintingController::class, 'printProformaInvoice']);
+
+        // Prescription
+        Route::get('prescriptions/{prescriptionId}', [PrescriptionController::class, 'show']);
+        Route::get('prescriptions', [PrescriptionController::class, 'getPrescriptions']);
+        Route::post('prescriptions', [PrescriptionController::class, 'createPrescription']);
+        Route::patch('prescriptions/{prescriptionId}', [PrescriptionController::class, 'updatePrescription']);
+        Route::delete('prescriptions/{prescriptionId}', [PrescriptionController::class, 'delete']);
     });
 });

@@ -9,7 +9,7 @@
           :class="{
             'bg-red-600 border-red-600 text-red-600': isInProgress,
             'bg-green-600 border-green-600 text-green-600': isCompleted,
-            'bg-blue-700 border-blue-700 text-blue-700': isPaid,
+            'bg-blue-800 border-blue-800 text-blue-800': isPaid,
           }"
           >{{ saleStatus }}
         </span>
@@ -22,8 +22,12 @@
             </span>
           </Menu.Button>
           <Menu.Items class="w-40">
-            <Menu.Item @click="printProforma"><Lucide icon="FileDown" class="w-4 h-4 mr-2" /> Proforma Invoice</Menu.Item>
-            <Menu.Item v-if="isPaid" @click="printInvoice"><Lucide icon="FileDown" class="w-4 h-4 mr-2" />Invoice</Menu.Item>
+            <Menu.Item @click="printProforma"
+              ><Lucide icon="FileDown" class="w-4 h-4 mr-2" /> Proforma Invoice</Menu.Item
+            >
+            <Menu.Item v-if="isPaid" @click="printInvoice"
+              ><Lucide icon="FileDown" class="w-4 h-4 mr-2" />Invoice</Menu.Item
+            >
           </Menu.Items>
         </Menu>
         <Button
@@ -35,13 +39,15 @@
           >Save</Button
         >
         <Button
-          v-if="!isPaid"
+          v-if="!isCompleteOrPaid"
           @click="openCompleteModal"
           :disabled="!canComplete"
           class="hover:bg-teal-600/15 bg-teal-600 hover:border-teal-600/10 border-teal-600 text-teal-600 bg-opacity-20 border-opacity-5 ml-3"
           >Complete</Button
         >
-        <Button class="ml-3" variant="outline-secondary" @click="closeAddEditSaleForm">Cancel</Button>
+        <Button class="ml-3" variant="outline-secondary" @click="closeAddEditSaleForm"
+          >Cancel</Button
+        >
       </div>
     </div>
     <!-- <div class="mb-6">
@@ -119,7 +125,10 @@
             <div>
               <p class="font-semibold">
                 {{ item.productName }}
-                <span class="font-normal">{{ item.shelf ? `- shelf: ${item.shelf}` : '' }}</span>
+                <span class="font-normal"
+                  >{{ item.shelf ? ` shelf: ${item.shelf}` : '' }}
+                  {{ item.fee ? `| fee: ${item.fee}` : '' }}</span
+                >
               </p>
               <p class="text-sm text-gray-600">
                 <input
@@ -163,7 +172,7 @@
         <div class="mt-6 space-y-4">
           <div>
             <label for="tax" class="block text-sm font-medium text-gray-700"
-              >Tax ({{ currency }})</label
+              >Tax+Fee ({{ currency }})</label
             >
             <input
               v-model.number="saleForm.taxes"
@@ -299,15 +308,16 @@ const sale = computed(() => (saleId.value ? saleStore.getSale : null));
 const products = computed(() => productStore.getInStockProducts);
 const saleStatus = computed(() => (sale.value ? getSaleStatus(sale.value?.status) : ''));
 const currency = computed(() => {
-    const data = localStorage.getItem('settings');
-    const settings = data ? JSON.parse(data) : [];
-    return getValueByKey(settings, CURRENCY) ?? '$';
+  const data = localStorage.getItem('settings');
+  const settings = data ? JSON.parse(data) : [];
+  return getValueByKey(settings, CURRENCY) ?? '$';
 });
 
 const saleCode = computed(() => `${sale.value ? `- ${sale.value.code}` : ''}`);
 const isCompleted = computed(() => sale.value?.status === SaleStatus.COMPLETED);
 const isInProgress = computed(() => sale.value?.status === SaleStatus.IN_PROGRESS);
 const isPaid = computed(() => sale.value?.status === SaleStatus.PAID);
+const isCompleteOrPaid = computed(() => isCompleted.value || isPaid.value);
 const canSaveSale = computed(() => cart.value.length > 0);
 
 const subtotal = computed(() => {
@@ -350,6 +360,7 @@ const setSaleForm = async () => {
         quantity: saleItem.quantity,
         price: saleItem.price,
         tax: saleItem.tax,
+        fee: saleItem.fee,
         total: saleItem.total,
         shelf: saleItem.product.shelf,
       };
@@ -378,6 +389,7 @@ const addToCart = (product: InStockProduct) => {
       quantity: 1,
       price: isRetail.value ? rawProduct.retailCost : rawProduct.wholesaleCost,
       tax: parseFloat(tax?.toFixed(2) ?? '0'),
+      fee: null,
       total: (isRetail.value ? rawProduct.retailCost : rawProduct.wholesaleCost) + (tax ?? 0),
     });
   }
@@ -450,13 +462,13 @@ const completeSale = async () => {
 
 const printInvoice = () => {
   if (saleId.value) {
-      saleStore.printSaleInvoiceApi(saleId.value);
+    saleStore.printSaleInvoiceApi(saleId.value);
   }
 };
 
 const printProforma = () => {
   if (saleId.value) {
-      saleStore.printSaleProformaApi(saleId.value);
+    saleStore.printSaleProformaApi(saleId.value);
   }
 };
 

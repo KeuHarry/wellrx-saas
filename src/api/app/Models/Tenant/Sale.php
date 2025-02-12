@@ -76,6 +76,11 @@ class Sale extends BaseModel
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
+    public function prescription(): BelongsTo
+    {
+        return $this->belongsTo(Prescription::class, 'prescription_id');
+    }
+
     public function jsonSerialize(): mixed
     {
         $json = [];
@@ -95,6 +100,10 @@ class Sale extends BaseModel
         $json['customer'] = $this->customer ? [
             'id' => $this->customer->id,
             'name' => $this->customer->name,
+        ] : null;
+        $json['prescription'] = $this->prescription ? [
+            'id' => $this->prescription->id,
+            'prescriptionCode' => $this->prescription->prescription_code,
         ] : null;
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
         $json['saleItems'] = $this->saleItems;

@@ -8,7 +8,7 @@
       </Button>
     </div>
     <div class="grid grid-cols-12 gap-3 m-5">
-      <div class="col-span-8 p-5 bg-white border rounded-md shadow-sm">
+      <div class="col-span-8 p-5 bg-white border rounded-lg shadow-md">
         <h2 class="text-slate-900 pb-5 font-medium">General Information</h2>
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-10">
@@ -154,7 +154,7 @@
         </div>
       </div>
       <div class="col-span-4">
-        <div class="grid grid-cols-1 p-5 bg-white border rounded-md shadow-sm">
+        <div class="grid grid-cols-1 p-5 bg-white border rounded-lg shadow-md">
           <h2 class="text-slate-900 pb-5 font-medium">Category</h2>
           <div class="grid grid-cols-1 gap-2">
             <div>
@@ -183,7 +183,7 @@
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-1 p-5 mt-3 bg-white border rounded-md shadow-sm">
+        <div class="grid grid-cols-1 p-5 mt-3 bg-white border rounded-lg shadow-md">
           <h2 class="text-slate-900 pb-5 font-medium">Inventory</h2>
           <div class="grid grid-cols-1 gap-2">
             <div>
@@ -224,7 +224,7 @@
           </div>
         </div>
       </div>
-      <div class="col-span-8 p-5 bg-white border rounded-md shadow-sm">
+      <div class="col-span-8 p-5 bg-white border rounded-lg shadow-md">
         <h2 class="text-slate-900 pb-5 font-medium">Pricing</h2>
         <div class="grid grid-cols-12 gap-2">
           <div class="col-span-2">
@@ -308,7 +308,7 @@
           </div>
         </div>
       </div>
-      <div class="col-span-4 p-5 bg-white border rounded-md shadow-sm">
+      <div class="col-span-4 p-5 bg-white border rounded-lg shadow-md">
         <h2 class="text-slate-900 pb-5 font-medium">Quantities</h2>
         <div class="grid grid-cols-12 gap-2">
           <div class="col-span-3">
