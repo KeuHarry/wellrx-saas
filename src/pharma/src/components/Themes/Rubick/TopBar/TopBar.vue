@@ -53,13 +53,13 @@
       <Menu.Button
         class="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x"
       >
-        <img alt="Midone Tailwind HTML Admin Template" :src="fakerData[9].photos[0]" />
+        <img alt="wellrx user" src="@/assets/images/user-avatar.png" />
       </Menu.Button>
       <Menu.Items class="w-56 mt-px text-white bg-primary">
         <Menu.Header class="font-normal">
-          <div class="font-medium">{{ fakerData[0].users[0].name }}</div>
+          <div class="font-medium">{{ user.username }}</div>
           <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-            {{ fakerData[0].jobs[0] }}
+            {{ user.role }}
           </div>
         </Menu.Header>
         <Menu.Divider class="bg-white/[0.08]" />
@@ -80,10 +80,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Lucide from '@/components/Base/Lucide';
 import Breadcrumb from '@/components/Base/Breadcrumb';
-import { FormInput } from '@/components/Base/Form';
 import { Menu, Popover } from '@/components/Base/Headless';
 import fakerData from '@/utils/faker';
 import _ from 'lodash';
@@ -95,4 +94,11 @@ const showSearchDropdown = () => {
 const hideSearchDropdown = () => {
   searchDropdown.value = false;
 };
+
+const user = computed(() => {
+  const data = sessionStorage.getItem('user');
+  const user = data ? JSON.parse(data) : null;
+
+  return user;
+});
 </script>
