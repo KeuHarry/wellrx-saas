@@ -45,7 +45,6 @@
           <Table.Tr
             v-for="(intermediary, ckey) in intermediaries"
             :key="ckey"
-            class="intro-x"
             @click="openIntermediaryModal(intermediary)"
           >
             <Table.Td

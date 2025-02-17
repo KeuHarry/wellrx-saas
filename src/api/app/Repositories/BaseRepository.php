@@ -32,17 +32,19 @@ class BaseRepository
         return $resource;
     }
 
-    public function bulkCreate(array $contents): bool
+    public function bulkCreate(array $contents): array
     {
         $result = DB::transaction(function () use ($contents) {
+            $modelIds = [];
             foreach ($contents as $content) {
-                $this->create($content);
+                $modelInstance = $this->create($content);
+                $modelIds[] = $modelInstance->id;
             }
 
-            return true;
+            return $modelIds;
         });
 
-        return boolval($result);
+        return (array) $result;
     }
 
     public function update(int $id, array $content): int

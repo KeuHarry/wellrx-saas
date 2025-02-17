@@ -25,10 +25,10 @@ class SearchRequest extends FormRequest
     {
         return [
             'search' => 'string|nullable',
-            'sortBy' => 'required|string',
-            'sortOrder' => 'required|string',
-            'offset' => 'required|integer',
-            'limit' => 'required|integer',
+            'sortBy' => 'sometimes|string',
+            'sortOrder' => 'sometimes|string',
+            'offset' => 'sometimes|integer',
+            'limit' => 'sometimes|integer',
             'status' => 'sometimes|integer|nullable',
             'cashierStatus' => 'sometimes|integer|nullable',
             'type' => 'sometimes|integer|nullable',

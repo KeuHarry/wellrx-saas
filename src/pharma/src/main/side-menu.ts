@@ -161,18 +161,8 @@ const menu: Array<Menu | 'divider'> = [
       },
       {
         icon: 'Activity',
-        pageName: 'cash-register-report',
-        title: 'Cash Register Report',
-      },
-      {
-        icon: 'Activity',
-        pageName: 'profit-and-loss',
-        title: 'Profit and Loss Report',
-      },
-      {
-        icon: 'Activity',
         pageName: 'stock-report',
-        title: 'Stock Report',
+        title: 'Inventory Report',
       },
     ],
   },

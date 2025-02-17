@@ -8,5 +8,8 @@ export interface PrescriptionItemRequest {
   fee: number;
   cost: number;
   total: number;
-  labelCodes: number[];
+  labelCodes: {
+    id: number;
+    code: string;
+  }[];
 }

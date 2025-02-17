@@ -49,7 +49,6 @@
           <Table.Tr
             v-for="(product, ckey) in products"
             :key="ckey"
-            class="intro-x"
             @click="openAddEditProduct(product.id)"
           >
             <Table.Td

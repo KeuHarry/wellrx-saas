@@ -22,6 +22,7 @@
                   v-model="cashierForm.isOneTimePayment"
                   :id="'id-' + type.id"
                   class="border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  disabled
                 />
                 <label class="mr-4">{{ type.name }}</label>
               </div>
@@ -59,7 +60,8 @@
               placeholder="Enter client name"
               name="client-name"
               id="client-name"
-              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 disabled:bg-blue-50 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              :disabled="hasCustomer"
             />
           </div>
         </div>
@@ -110,20 +112,59 @@
               disabled
             />
           </div>
+          <div v-if="!cashierForm.isOneTimePayment" class="flex items-center justify-between">
+            <label for="paid-amount" class="block text-sm/6 text-gray-900 font-medium"
+              >Paid Amount:</label
+            >
+            <input
+              v-model="salePaidAmount"
+              type="text"
+              name="paid-amount"
+              id="paid-amount"
+              class="block w-[70%] h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 disabled:cursor-not-allowed disabled:bg-blue-50 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              disabled
+            />
+          </div>
           <div class="flex items-center justify-between">
             <label for="tendered" class="block text-sm/6 text-gray-900 font-medium"
               >Tendered ({{ currency }}):</label
             >
             <input
+              @input="onChangeTendered"
               v-model="cashierForm.tendered"
               type="number"
               name="tendered"
               id="tendered"
               class="block w-[70%] h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 disabled:cursor-not-allowed disabled:bg-blue-50 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
-              :disabled="hasCustomer"
             />
           </div>
-          <div class="flex items-center justify-between">
+          <div v-if="!cashierForm.isOneTimePayment" class="flex items-center justify-between">
+            <label for="amount" class="block text-sm/6 text-gray-900 font-medium"
+              >Amount ({{ currency }}):</label
+            >
+            <input
+              @input="onChangeTendered"
+              v-model="partialPaymentForm.amount"
+              type="number"
+              name="amount"
+              id="amount"
+              class="block w-[70%] h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 disabled:cursor-not-allowed disabled:bg-blue-50 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+            />
+          </div>
+          <div v-if="!cashierForm.isOneTimePayment" class="flex items-center justify-between">
+            <label for="partial-change" class="block text-sm/6 text-gray-900 font-medium"
+              >Changes:</label
+            >
+            <input
+              v-model="partialPaymentForm.change"
+              type="text"
+              name="partial-change"
+              id="partial-change"
+              class="block w-[70%] h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 disabled:cursor-not-allowed disabled:bg-blue-50 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              disabled
+            />
+          </div>
+          <div v-if="cashierForm.isOneTimePayment" class="flex items-center justify-between">
             <label for="change" class="block text-sm/6 text-gray-900 font-medium">Changes:</label>
             <input
               v-model="changeAmount"
@@ -192,16 +233,21 @@
               Complete + Print
             </Button>
             <Button
-              v-if="!cashierForm.isOneTimePayment"
+              v-if="!cashierForm.isOneTimePayment && canViewHistory"
               variant="primary"
               type="button"
               @click="openHistorySlideover"
               class="mr-1"
               >View History</Button
             >
-            <Button v-if="!cashierForm.isOneTimePayment" variant="primary" type="button"
-              >Save</Button
+            <Button
+              v-if="!cashierForm.isOneTimePayment"
+              @click="savePayment"
+              variant="primary"
+              type="button"
             >
+              Save
+            </Button>
           </div>
         </div>
       </Dialog.Footer>
@@ -229,6 +275,7 @@ import { CashierOneTimePaymentRequest } from '@/composables/models/CashierReques
 import PaymentMethod from '@/enums/paymentMethod';
 import usePrintingStore from '@/stores/printing';
 import { EntityType } from '@/enums/entityType';
+import { PartialPaymentRequest } from '@/composables/models/PartialPaymentRequest';
 
 const emit = defineEmits(['submit', 'salesUpdated']);
 
@@ -249,6 +296,14 @@ const cashierForm = ref<CashierOneTimePaymentRequest>({
     this.isOneTimePayment = true;
     this.tendered = 0;
   },
+});
+const partialPaymentForm = ref<PartialPaymentRequest>({
+  saleId: 0,
+  paymentMethod: 0,
+  reference: '',
+  tendered: 0,
+  amount: 0,
+  change: 0,
 });
 const saleId = ref<number | null>(null);
 const isCompleted = ref<boolean>(false);
@@ -281,11 +336,12 @@ const canCompletePrint = computed(
   () => isCompleted.value && cashierForm.value.tendered >= (sale.value?.netDue ?? 0),
 );
 const hasCustomer = computed(() => !!(sale.value?.id && sale.value?.customer?.id));
-const showReference = computed(
-  () =>
-    cashierForm.value.paymentMethod !== PaymentMethod.CASH &&
-    cashierForm.value.paymentMethod !== PaymentMethod.CREDIT,
+const showReference = computed(() => cashierForm.value.paymentMethod !== PaymentMethod.CASH);
+const salePaidAmount = computed(() =>
+  sale.value ? formatPrice(sale.value.paidAmount) : formatPrice(0),
 );
+const salePayments = computed(() => (sale.value ? sale.value.payments : []));
+const canViewHistory = computed(() => salePayments.value.length > 0);
 
 // METHODS
 const openProcessViewSaleModal = async (id: number, isComplete: boolean) => {
@@ -298,10 +354,24 @@ const openProcessViewSaleModal = async (id: number, isComplete: boolean) => {
 const closeModal = () => {
   show.value = false;
   cashierForm.value.reset();
+  resetPartialPaymentForm();
+};
+
+const resetPartialPaymentForm = () => {
+  partialPaymentForm.value.saleId = 0;
+  partialPaymentForm.value.paymentMethod = 0;
+  partialPaymentForm.value.reference = '';
+  partialPaymentForm.value.tendered = 0;
+  partialPaymentForm.value.amount = 0;
+  partialPaymentForm.value.change = 0;
+  cashierForm.value.paymentMethod = 0;
+  cashierForm.value.paymentReference = '';
+  cashierForm.value.tendered = 0;
 };
 
 const setSaleDetails = async () => {
   cashierForm.value.isOneTimePayment = sale.value?.isOneTimePayment ?? true;
+  cashierForm.value.customerName = sale.value?.customer ? sale.value?.customer.name : 'Client';
 };
 
 const getSaleData = async () => {
@@ -324,7 +394,9 @@ const printReceipt = () => {
 };
 
 const openHistorySlideover = () => {
-  paymentHistoryslideoverRef.value?.openSlideover();
+  if (sale.value) {
+    paymentHistoryslideoverRef.value?.openSlideover(sale.value.code, salePayments.value);
+  }
 };
 
 const paySale = async () => {
@@ -333,6 +405,27 @@ const paySale = async () => {
   }
   await saleStore.paySaleApi(cashierForm.value);
   emit('salesUpdated');
+};
+
+const savePayment = async () => {
+  if (saleId.value) {
+    await saleStore.performPartialPaymentApi({
+      saleId: saleId.value,
+      paymentMethod: cashierForm.value.paymentMethod,
+      reference: cashierForm.value.paymentReference,
+      tendered: cashierForm.value.tendered,
+      amount: partialPaymentForm.value.amount,
+      change: partialPaymentForm.value.change,
+    });
+    resetPartialPaymentForm();
+    await getSaleData();
+    emit('salesUpdated');
+  }
+};
+
+const onChangeTendered = () => {
+  const change = cashierForm.value.tendered - partialPaymentForm.value.amount;
+  partialPaymentForm.value.change = parseFloat(change.toFixed(2));
 };
 
 defineExpose({

@@ -72,7 +72,6 @@
           <Table.Tr
             v-for="(prescription, ckey) in prescriptions"
             :key="ckey"
-            class="intro-x"
             @click="openAddEditPrescription(prescription.id)"
           >
             <Table.Td

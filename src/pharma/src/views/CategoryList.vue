@@ -47,7 +47,6 @@
           <Table.Tr
             v-for="(category, ckey) in categories"
             :key="ckey"
-            class="intro-x"
             @click="openCategoryModal(category)"
           >
             <Table.Td

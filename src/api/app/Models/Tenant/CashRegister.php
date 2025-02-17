@@ -51,7 +51,7 @@ class CashRegister extends BaseModel
      */
     public function closer()
     {
-        return $this->belongsTo(User::class, 'close_by');
+        return $this->belongsTo(User::class, 'closed_by');
     }
 
     public function jsonSerialize(): mixed
@@ -61,7 +61,7 @@ class CashRegister extends BaseModel
         $json['openedBy'] = $this->opener->first_name.' '.$this->opener->last_name;
         $json['amount'] = $this->amount;
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
-        $json['closedBy'] = $this->closed_by;
+        $json['closedBy'] = $this->closer ? ($this->closer->first_name.' '.$this->closer->last_name) : null;
         $json['closingTime'] = $this->closing_time;
         $json['status'] = $this->status;
 

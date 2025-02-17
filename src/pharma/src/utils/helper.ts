@@ -2,6 +2,7 @@ import { SearchParams } from '@/composables/models/SearchParams';
 import { Setting } from '@/composables/models/Setting';
 import { COST, PERCENTAGE } from '@/constants/feeTypes';
 import { inventoryTypeList } from '@/constants/inventoryTypeList';
+import { CASH, CHECK, MOMO, POS } from '@/constants/paymentMethods';
 import { REFUND, SALE } from '@/constants/saleTypeList';
 import { CURRENCY, DECIMAL_SEPARATOR, THOUSAND_SEPARATOR } from '@/constants/settings';
 import { COMPLETED, IN_PROGRESS, PAID, PENDING } from '@/constants/status';
@@ -9,6 +10,7 @@ import CashierStatus from '@/enums/cashierStatus';
 import FeeType from '@/enums/feeType';
 import InventoryType from '@/enums/inventoryType';
 import OrderStatus from '@/enums/orderStatus';
+import PaymentMethod from '@/enums/paymentMethod';
 import SaleStatus from '@/enums/saleStatus';
 import SaleType from '@/enums/saleType';
 import dayjs from 'dayjs';
@@ -345,6 +347,29 @@ const calculateAge = (dob: string): number => {
   return age;
 };
 
+const getPaymentMethod = (value: number): string => {
+  let paymentMethod = '';
+
+  switch (value) {
+    case PaymentMethod.CASH:
+      paymentMethod = CASH;
+      break;
+    case PaymentMethod.CHECK:
+      paymentMethod = CHECK;
+      break;
+    case PaymentMethod.MOMO:
+      paymentMethod = MOMO;
+      break;
+    case PaymentMethod.POS:
+      paymentMethod = POS;
+      break;
+    default:
+      break;
+  }
+
+  return paymentMethod;
+};
+
 export {
   cutText,
   formatDate,
@@ -369,4 +394,5 @@ export {
   getSaleTypeName,
   getCashierStatus,
   calculateAge,
+  getPaymentMethod,
 };

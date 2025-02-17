@@ -1,4 +1,5 @@
 import { SaleItem } from './SaleItem';
+import { SalePayment } from './SalePayment';
 
 export interface Sale {
   id: number;
@@ -8,8 +9,10 @@ export interface Sale {
   taxes: number;
   discount: number;
   netDue: number;
+  paidAmount: number;
   paymentMethod: number;
   isOneTimePayment: boolean;
+  paymentDateLimit: string;
   customer: {
     id: number;
     name: string;
@@ -20,4 +23,5 @@ export interface Sale {
   } | null;
   createdAt: string;
   saleItems: SaleItem[];
+  payments: SalePayment[];
 }

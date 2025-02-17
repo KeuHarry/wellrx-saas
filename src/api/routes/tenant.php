@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\Tenant\PrescriberController;
 use App\Http\Controllers\Api\Tenant\PrescriptionController;
 use App\Http\Controllers\Api\Tenant\PrintingController;
 use App\Http\Controllers\Api\Tenant\ProductController;
+use App\Http\Controllers\Api\Tenant\ReportController;
 use App\Http\Controllers\Api\Tenant\RoleController;
 use App\Http\Controllers\Api\Tenant\SaleController;
 use App\Http\Controllers\Api\Tenant\SettingController;
@@ -189,6 +190,7 @@ Route::group([
         Route::patch('sales/{saleId}', [SaleController::class, 'updateSale']);
         Route::delete('sales/{saleId}', [SaleController::class, 'delete']);
         Route::post('sales/pay', [SaleController::class, 'paySale']);
+        Route::post('sales/partial-payment', [SaleController::class, 'performPartialPayment']);
 
         // settings
         Route::get('settings', [SettingController::class, 'getSettings']);
@@ -198,6 +200,7 @@ Route::group([
         Route::get('invoice/{entity}/{entityId}/print', [PrintingController::class, 'printEntityInvoice']);
         Route::get('receipt/sale/{saleId}/print', [PrintingController::class, 'printSaleReceipt']);
         Route::get('proforma/{entity}/{entityId}/print', [PrintingController::class, 'printProformaInvoice']);
+        Route::get('receipt/sale-payment/{salePaymentId}/print', [PrintingController::class, 'printPartialPaymentReceipt']);
 
         // Prescription
         Route::get('prescriptions/{prescriptionId}', [PrescriptionController::class, 'show']);
@@ -205,5 +208,9 @@ Route::group([
         Route::post('prescriptions', [PrescriptionController::class, 'createPrescription']);
         Route::patch('prescriptions/{prescriptionId}', [PrescriptionController::class, 'updatePrescription']);
         Route::delete('prescriptions/{prescriptionId}', [PrescriptionController::class, 'delete']);
+
+        // Reports
+        Route::get('sales-report/paid', [ReportController::class, 'getPaidSalesReport']);
+        Route::get('profit-loss-report', [ReportController::class, 'getProfitLossReport']);
     });
 });

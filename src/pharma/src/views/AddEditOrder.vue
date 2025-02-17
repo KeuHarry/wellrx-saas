@@ -541,9 +541,9 @@ const iconType = computed(() => {
 });
 const canSaveExpected = computed(() => orderForm.value.invoiceCode.length > 0);
 const canSaveOrder = computed(
-  () => canSaveExpected && orderItemsTable.value.length > 0 && orderForm.value.supplierId > 0,
+  () => canSaveExpected.value && orderItemsTable.value.length > 0 && orderForm.value.supplierId > 0,
 );
-const canAddProduct = computed(() => canSaveExpected && orderItemForm.value.productId > 0);
+const canAddProduct = computed(() => canSaveExpected.value && orderItemForm.value.productId > 0);
 const orderId = computed(() => (route.params.id ? parseInt(route.params.id.toString()) : null));
 const order = computed(() => (orderId.value ? orderStore.getOrder : null));
 

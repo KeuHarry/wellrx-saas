@@ -29,4 +29,14 @@ class CustomerService extends ApiService
             $sortBy
         );
     }
+
+    public function updatePurchasedTotal(int $customerId): void
+    {
+        $this->customerRepository->updatePurchasedTotal($customerId);
+    }
+
+    public function addBalance(int $customerId, float $amount)
+    {
+        $this->customerRepository->addBalance($customerId, $amount);
+    }
 }

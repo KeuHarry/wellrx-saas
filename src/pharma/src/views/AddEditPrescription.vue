@@ -176,6 +176,15 @@
           >
             <div class="w-[40%] text-slate-900">
               <span>{{ prescriptionItem.productName }}</span>
+              <div class="flex items-center">
+                <div
+                  v-for="(lCode, index) in prescriptionItem.labelCodes"
+                  :key="index"
+                  class="bg-indigo-100 text-indigo-700 text-sm rounded-md px-2 py-1 mr-2"
+                >
+                  {{ lCode.code }}
+                </div>
+              </div>
             </div>
             <div>
               <label for="quantity" class="block text-sm/6 text-gray-600">Quantity</label>
@@ -831,7 +840,7 @@ const addProduct = () => {
       fee: rawFormData.fee,
       cost: rawFormData.cost,
       total: prescriptionItemSubTotal.value,
-      labelCodes: [],
+      labelCodes: rawFormData.labelCodes,
     });
   }
   resetFormData();
@@ -872,7 +881,9 @@ const getPrescribersData = async (queryString: string = '') => {
 };
 
 const selectLabels = async (value: Option[]) => {
-  //
+  prescriptionItemForm.value.labelCodes = value.map((option) => {
+    return { id: option.id, code: option.name };
+  });
 };
 
 const openAddPatientModal = (patient: Patient | null = null) => {
@@ -981,7 +992,9 @@ const setPrescriptionForm = () => {
         fee: prescriptionItem.fee,
         cost: prescriptionItem.cost,
         total: prescriptionItem.total,
-        labelCodes: [],
+        labelCodes: prescriptionItem.labelCodes.map((lCode) => {
+          return { id: lCode.id, code: lCode.labelCode };
+        }),
       };
     });
     setPatientForm();
