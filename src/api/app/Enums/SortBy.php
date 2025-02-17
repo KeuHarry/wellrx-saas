@@ -5,6 +5,7 @@ namespace App\Enums;
 enum SortBy: string
 {
     case CREATED_AT = 'created_at';
+    case UPDATED_AT = 'updated_at';
     case ID = 'id';
     case NAME = 'name';
     case CODE = 'code';

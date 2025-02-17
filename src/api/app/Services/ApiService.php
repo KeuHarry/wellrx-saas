@@ -53,7 +53,7 @@ class ApiService
     /**
      * @param  mixed[][]  $contents
      */
-    public function bulkCreate(array $contents): bool
+    public function bulkCreate(array $contents): array
     {
         $inputs = [];
         foreach ($contents as $content) {

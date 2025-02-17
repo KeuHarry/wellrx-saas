@@ -37,7 +37,8 @@
           <Table.Tr>
             <Table.Th class="border-b-0 whitespace-nowrap">NAME</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">EMAIL</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">CREDIT LIMIT </Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">CREDIT LIMIT</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">PURCHASED TOTAL</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">BALANCE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">DEPOSIT</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
@@ -64,6 +65,11 @@
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
               {{ formatPrice(customer.creditLimit) }}
+            </Table.Td>
+            <Table.Td
+              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
+            >
+              {{ formatPrice(customer.purchasedTotal) }}
             </Table.Td>
             <Table.Td
               class="box w-40 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"

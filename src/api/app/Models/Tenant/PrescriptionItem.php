@@ -59,6 +59,11 @@ class PrescriptionItem extends BaseModel
         return $this->belongsTo(Product::class, 'product_id');
     }
 
+    public function labelCodes()
+    {
+        return $this->belongsToMany(LabelCode::class, 'prescription_item_label_codes', 'prescription_item_id', 'label_code_id');
+    }
+
     public function jsonSerialize(): mixed
     {
         $json = [];
@@ -74,6 +79,7 @@ class PrescriptionItem extends BaseModel
         $json['tax'] = $this->tax;
         $json['cost'] = $this->cost;
         $json['total'] = $this->total;
+        $json['labelCodes'] = $this->labelCodes;
 
         return $json;
     }

@@ -10,16 +10,17 @@ import useDeleteInventory from '@/composables/api/inventory/useDeleteInventory';
 import { InRequest } from '@/composables/models/InRequest';
 import useInventoryOut from '@/composables/api/inventory/useInventoryOut';
 import { InventoryOutRequest } from '@/composables/models/InventoryOutRequest';
+import { useLoadingStore } from './loading';
 
 type InventoryState = {
   inventoryList: Inventory[];
   inventoryTotal: number;
   inventory: Inventory | null;
   searchParams: SearchParams;
-  isPending: boolean;
 };
 
 const toastStore = useToastStore();
+const loadingStore = useLoadingStore();
 
 export const useInventoryStore = defineStore('inventory-store', {
   state: (): InventoryState => ({
@@ -34,7 +35,6 @@ export const useInventoryStore = defineStore('inventory-store', {
       limit: 10,
       type: null,
     },
-    isPending: false,
   }),
 
   getters: {
@@ -47,58 +47,62 @@ export const useInventoryStore = defineStore('inventory-store', {
     async getInventoryListApi(searchParams: SearchParams | null = null) {
       const getInventoryList = useGetInventoryList(searchParams ? searchParams : this.searchParams);
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await getInventoryList();
+        loadingStore.stopLoading();
         this.inventoryList = response.data ?? [];
         this.inventoryTotal = response.total ?? 0;
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },
     async createInventoryApi(inRequest: InRequest) {
       const createInventory = useCreateInventory();
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await createInventory(inRequest);
         this.inventory = response.data;
         if (this.inventory) {
+          loadingStore.stopLoading();
           toastStore.setMessage('Inventory entry successfully added!');
         }
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },
     async deleteInventoryApi(id: number) {
       const deleteInventory = useDeleteInventory();
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await deleteInventory(id);
         if (response.success) {
+          loadingStore.stopLoading();
           this.inventoryList = this.inventoryList.filter((inventory) => inventory.id !== id);
         }
         toastStore.setMessage('Inventory entry successfully deleted!');
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },
     async inventoryOutApi(outRequest: InventoryOutRequest) {
       const inventoryOut = useInventoryOut();
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await inventoryOut(outRequest);
         this.inventory = response.data;
         if (this.inventory) {
+          loadingStore.stopLoading();
           toastStore.setMessage('Inventory batch reduced!');
         }
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },

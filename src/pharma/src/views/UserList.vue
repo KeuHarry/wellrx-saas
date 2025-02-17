@@ -53,12 +53,7 @@
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          <Table.Tr
-            v-for="(user, ukey) in users"
-            :key="ukey"
-            class="intro-x"
-            @click="openUserModal(user)"
-          >
+          <Table.Tr v-for="(user, ukey) in users" :key="ukey" @click="openUserModal(user)">
             <Table.Td
               class="box w-60 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >

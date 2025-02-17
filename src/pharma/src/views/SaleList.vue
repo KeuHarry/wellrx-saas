@@ -86,12 +86,7 @@
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          <Table.Tr
-            v-for="(sale, ckey) in sales"
-            :key="ckey"
-            class="intro-x"
-            @click="openAddEditSale(sale.id)"
-          >
+          <Table.Tr v-for="(sale, ckey) in sales" :key="ckey" @click="openAddEditSale(sale.id)">
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
             >
@@ -209,8 +204,6 @@ import { useRoute, useRouter } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { CREATED_AT } from '@/constants/properties';
-import { Inventory } from '@/composables/models/Inventory';
-import ViewInventoryModal from '@/components/Modals/ViewInventoryModal.vue';
 import { formatPrice, getSaleStatus, getSaleTypeName } from '@/utils/helper';
 import { saleTypeList } from '@/constants/saleTypeList';
 import { saleStatusList } from '@/constants/saleStatusList';
@@ -340,10 +333,6 @@ const openAddEditSale = (saleId: number | null = null) => {
     });
   }
 };
-
-// watch([saleType, saleStatus, fromDate, toDate], async () => {
-//   await getSalesData();
-// });
 
 watchEffect(async () => {
   await getSalesData();

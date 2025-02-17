@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\Tenant;
 
 use App\Enums\EntityType;
 use App\Http\Controllers\ApiController;
+use App\Models\Tenant\SalePayment;
 use App\Services\PrescriptionService;
 use App\Services\PrintingService;
+use App\Services\SalePaymentService;
 use App\Services\SaleService;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\Auth;
@@ -20,16 +22,20 @@ class PrintingController extends ApiController
 
     protected $prescriptionService;
 
+    protected $salePaymentService;
+
     public function __construct(
         PrintingService $printingService,
         SaleService $saleService,
         SettingService $settingService,
-        PrescriptionService $prescriptionService
+        PrescriptionService $prescriptionService,
+        SalePaymentService $salePaymentService
     ) {
         $this->printingService = $printingService;
         $this->saleService = $saleService;
         $this->settingService = $settingService;
         $this->prescriptionService = $prescriptionService;
+        $this->salePaymentService = $salePaymentService;
     }
 
     public function printInvoice($data)
@@ -70,6 +76,16 @@ class PrintingController extends ApiController
         $pharmacyDetails = $this->settingService->getPharmacyDetails();
 
         return $this->printingService->showPrintPreview('receipt.saleReceipt', ['sale' => $sale, 'pharmacy' => $pharmacyDetails]);
+    }
+
+    public function printPartialPaymentReceipt(int $salePaymentId)
+    {
+        $salePayment = $this->salePaymentService->getById($salePaymentId);
+        assert($salePayment instanceof SalePayment);
+        $sale = $this->saleService->getWithMoreDetails($salePayment->sale_id);
+        $pharmacyDetails = $this->settingService->getPharmacyDetails();
+
+        return $this->printingService->showPrintPreview('receipt.partialPaymentReceipt', ['salePayment' => $salePayment, 'sale' => $sale, 'pharmacy' => $pharmacyDetails]);
     }
 
     public function printProformaInvoice(string $entity, int $entityId)

@@ -48,7 +48,6 @@
           <Table.Tr
             v-for="(patient, ckey) in patients"
             :key="ckey"
-            class="intro-x"
             @click="openPatientModal(patient)"
           >
             <Table.Td

@@ -7,4 +7,5 @@ export interface SaleFragment {
   items: number;
   netDue: number;
   createdAt: string;
+  completedDate: string;
 }

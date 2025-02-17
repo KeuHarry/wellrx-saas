@@ -9,3 +9,5 @@ export const FEE_CODE = 'fee_code';
 export const CREATED_AT = 'created_at';
 export const INVOICE_DATE = 'invoice_date';
 export const PRESCRIPTION_DATE = 'prescription_date';
+export const COMPLETED_DATE = 'completed_date';
+export const UPDATED_AT = 'updated_at';

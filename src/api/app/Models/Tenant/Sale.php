@@ -55,6 +55,8 @@ class Sale extends BaseModel
         'refunded_sale_id',
         'customer_name',
         'created_by',
+        'paid_amount',
+        'is_deducted',
     ];
 
     /**
@@ -64,6 +66,7 @@ class Sale extends BaseModel
      */
     protected $casts = [
         'is_one_time_payment' => 'boolean',
+        'is_deducted' => 'boolean',
     ];
 
     public function saleItems(): HasMany
@@ -81,6 +84,11 @@ class Sale extends BaseModel
         return $this->belongsTo(Prescription::class, 'prescription_id');
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(SalePayment::class, 'sale_id');
+    }
+
     public function jsonSerialize(): mixed
     {
         $json = [];
@@ -91,11 +99,14 @@ class Sale extends BaseModel
         $json['discount'] = $this->discount;
         $json['netDue'] = $this->net_due;
         $json['tendered'] = $this->tendered;
+        $json['paidAmount'] = $this->paid_amount;
         $json['status'] = $this->status;
         $json['cashierStatus'] = $this->cashier_status;
         $json['type'] = $this->type;
         $json['paymentMethod'] = $this->payment_method;
         $json['isOneTimePayment'] = $this->is_one_time_payment;
+        $json['isDeducted'] = $this->is_deducted;
+        $json['paymentDateLimit'] = $this->payment_date_limit;
         $json['customerName'] = $this->customer_name;
         $json['customer'] = $this->customer ? [
             'id' => $this->customer->id,
@@ -105,6 +116,7 @@ class Sale extends BaseModel
             'id' => $this->prescription->id,
             'prescriptionCode' => $this->prescription->prescription_code,
         ] : null;
+        $json['payments'] = $this->payments;
         $json['createdAt'] = date('Y-m-d H:i:s', strtotime($this->created_at));
         $json['saleItems'] = $this->saleItems;
 

@@ -81,12 +81,12 @@
             <Table.Th class="border-b-0 whitespace-nowrap">ITEMS</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">NET DUE</Table.Th>
             <Table.Th class="border-b-0 whitespace-nowrap">STATUS</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">CREATED AT</Table.Th>
+            <Table.Th class="border-b-0 whitespace-nowrap">COMPLETED DATE</Table.Th>
             <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          <Table.Tr v-for="(sale, ckey) in sales" :key="ckey" class="intro-x">
+          <Table.Tr v-for="(sale, ckey) in sales" :key="ckey">
             <Table.Td
               class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600"
             >
@@ -122,7 +122,7 @@
             <Table.Td
               class="box w-44 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600"
             >
-              {{ sale.createdAt }}
+              {{ sale.completedDate }}
             </Table.Td>
             <Table.Td
               @click="
@@ -186,6 +186,7 @@
   </Notification>
   <OpenCloseCashRegisterModal ref="cashRegisterModal" @submit="closeCashRegister" />
   <ProcessViewSaleModal ref="processViewSaleModal" @salesUpdated="getSalesData" />
+  <CashRegisterWarningModal ref="cashRegisterWarningModal" />
 </template>
 
 <script setup lang="ts">
@@ -203,7 +204,6 @@ import useTenantStore from '@/stores/tenant';
 import { useRoute, useRouter } from 'vue-router';
 import PaginationComponent from '@/components/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
-import { CREATED_AT } from '@/constants/properties';
 import { saleTypeList } from '@/constants/saleTypeList';
 import Litepicker from '@/components/Base/Litepicker';
 import { dateFormat } from '@/constants/dateFormat';
@@ -218,10 +218,13 @@ import CashierStatus from '@/enums/cashierStatus';
 import { formatPrice, getCashierStatus } from '@/utils/helper';
 import SaleStatus from '@/enums/saleStatus';
 import ProcessViewSaleModal from '@/components/Modals/ProcessViewSaleModal.vue';
+import CashRegisterWarningModal from '@/components/Modals/CashRegisterWarningModal.vue';
+import { COMPLETED_DATE } from '@/constants/properties';
 
 const route = useRoute();
 const cashRegisterModal = ref<InstanceType<typeof OpenCloseCashRegisterModal> | null>(null);
 const processViewSaleModal = ref<InstanceType<typeof ProcessViewSaleModal> | null>(null);
+const cashRegisterWarningModal = ref<InstanceType<typeof CashRegisterWarningModal> | null>(null);
 
 const notificationRef = ref<NotificationElement>();
 const basicNonStickyNotificationToggle = () => {
@@ -282,7 +285,7 @@ const cashRegister = computed(() => {
   return cashRegister;
 });
 
-//METHOD
+// METHOD
 const accountVerification = async () => {
   await tenantStore.accountVerificationApi(route.params.identifier as string);
 };
@@ -303,17 +306,21 @@ const handleItemsPerPageChange = (itemsPerPage: number) => {
 };
 
 const getSalesData = async () => {
-  await saleStore.getUnPaidSalesApi({
-    search: search.value,
-    sortBy: CREATED_AT,
-    sortOrder: SortOrder.DESC,
-    offset: (currentPage.value - 1) * paginate.value,
-    limit: paginate.value,
-    type: saleType.value,
-    cashierStatus: saleStatus.value,
-    startDate: fromDate.value,
-    endDate: toDate.value,
-  });
+  if (!cashRegister.value) {
+    openCashRegisterWarningModal();
+  } else {
+    await saleStore.getUnPaidSalesApi({
+      search: search.value,
+      sortBy: COMPLETED_DATE,
+      sortOrder: SortOrder.DESC,
+      offset: (currentPage.value - 1) * paginate.value,
+      limit: paginate.value,
+      type: saleType.value,
+      cashierStatus: saleStatus.value,
+      startDate: fromDate.value,
+      endDate: toDate.value,
+    });
+  }
 };
 
 const searchSale = async () => {
@@ -337,6 +344,10 @@ const closeCashRegister = async () => {
     });
   }
   basicNonStickyNotificationToggle();
+};
+
+const openCashRegisterWarningModal = () => {
+  cashRegisterWarningModal.value?.openCashRegisterWarningModal();
 };
 
 watchEffect(async () => {

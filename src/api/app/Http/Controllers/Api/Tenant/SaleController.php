@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Tenant;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\OneTimePaymentRequest;
+use App\Http\Requests\PartialPaymentRequest;
 use App\Http\Requests\SaleRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Tenant\Sale;
@@ -126,6 +127,20 @@ class SaleController extends ApiController
         try {
             $content = $request->safe()->toArray();
             $sale = $this->saleService->paySale($content);
+
+            return $this->successResponse($sale, class_basename($this->model).' successfully paid');
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to pay '.class_basename($this->model));
+        }
+    }
+
+    public function performPartialPayment(PartialPaymentRequest $request): JsonResponse
+    {
+        try {
+            $content = $request->safe()->toArray();
+            $sale = $this->saleService->performPartialPayment($content);
 
             return $this->successResponse($sale, class_basename($this->model).' successfully paid');
         } catch (ValidationException $e) {

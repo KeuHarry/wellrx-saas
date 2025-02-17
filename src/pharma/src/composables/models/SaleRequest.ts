@@ -7,5 +7,9 @@ export interface SaleRequest {
   taxes: number;
   discount: number;
   netDue: number;
+  customerId: number | null;
+  paymentDateLimit: string;
+  isOneTimePayment: boolean;
+  isDeducted: boolean;
   saleItems: SaleItemRequest[];
 }
