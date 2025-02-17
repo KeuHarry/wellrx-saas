@@ -18,6 +18,8 @@ class AuthUserResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'changeDefaultPass' => $this->change_default_pass,
+            'role' => $this->role ? $this->role->label : null,
+            'permissions' => $this->role ? $this->role->permissions : null,
         ];
     }
 }
