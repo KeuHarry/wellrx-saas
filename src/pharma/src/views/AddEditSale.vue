@@ -65,8 +65,63 @@
     <!-- Search and Product List -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 px-5 pb-5">
       <!-- Product Search and List -->
-      <div v-if="!isCompleted && !isPaid" class="bg-white md:h-[420px] p-6 rounded-lg shadow-md">
-        <div class="flex">
+      <div
+        v-if="!isCompleteOrPaid || sale?.customer?.id"
+        class="bg-white p-6 rounded-lg shadow-md"
+        :class="[isCompleteOrPaid ? 'md:h-[200px]' : 'md:h-[600px]']"
+      >
+        <div class="flex mb-7 space-x-5 items-center">
+          <div><h3 class="font-medium">Customer Type:</h3></div>
+          <div v-for="type in customerTypes" :key="type.id" class="space-x-2 text-center">
+            <input
+              type="radio"
+              :value="type.value"
+              v-model="isNormalClient"
+              :id="'id-' + type.id"
+              class="border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              :disabled="isCompleteOrPaid"
+            />
+            <label class="mr-4">{{ type.name }}</label>
+          </div>
+          <div v-if="!isNormalClient" class="w-[45%]">
+            <label for="customer" class="block text-sm/6 text-gray-600">Customer</label>
+            <ComboBox
+              :options="customers"
+              @search="searchCustomer"
+              @selected="selectCustomer"
+              :defaultOption="selectedCustomer"
+              placeholder="Select customer"
+              :disabled="isCompleteOrPaid"
+            />
+          </div>
+        </div>
+        <div v-if="!isNormalClient" class="flex mb-7 space-x-5 items-center">
+          <div><h3 class="font-medium">Payment Type:</h3></div>
+          <div v-for="type in paymentTypes" :key="type.id" class="space-x-2 text-center">
+            <input
+              type="radio"
+              :value="type.value"
+              v-model="saleForm.isOneTimePayment"
+              :id="'id-' + type.id"
+              class="border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              :disabled="isCompleteOrPaid"
+            />
+            <label class="mr-4">{{ type.name }}</label>
+          </div>
+          <div v-if="!saleForm.isOneTimePayment" class="w-[43%]">
+            <label for="payment-date-limit" class="block text-sm/6 text-gray-600"
+              >Payment Date Limit</label
+            >
+            <Litepicker
+              v-model="saleForm.paymentDateLimit"
+              :options="dateOptions"
+              class="block w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 placeholder:text-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm/6"
+              :disabled="isCompleteOrPaid"
+            />
+          </div>
+        </div>
+
+        <div v-if="!isCompleteOrPaid" class="flex">
           <h3 class="font-medium">Pricing Mode:</h3>
           <FormSwitch class="w-full sm:w-auto sm:ml-auto sm:mt-0 mb-5">
             <FormSwitch.Label htmlFor="retail-cost"> Wholesale cost </FormSwitch.Label>
@@ -82,13 +137,14 @@
         </div>
 
         <input
+          v-if="!isCompleteOrPaid"
           v-model="searchQuery"
           @input="searchProduct"
           type="text"
           placeholder="Search for products..."
           class="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 mb-4 focus:outline-none focus:ring-indigo-500"
         />
-        <ul>
+        <ul v-if="!isCompleteOrPaid">
           <li
             v-for="product in products"
             :key="product.id"
@@ -220,7 +276,7 @@
     <Lucide :icon="iconType" class="text-success" />
     <div class="font-medium ml-4 mr-4">{{ message.content }}</div>
   </Notification>
-  <ConfirmModal
+  <CompleteSaleConfirmModal
     ref="confirmModal"
     :modal-title="modalTitle"
     :content="content"
@@ -236,13 +292,12 @@ import { type NotificationElement } from '@/components/Base/Notification';
 import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import SortOrder from '@/enums/sortOrder';
-import ConfirmModal from '@/components/Modals/ConfirmModal.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted, provide, ref, toRaw } from 'vue';
 import useTenantStore from '@/stores/tenant';
 import useSaleStore from '@/stores/sale';
-import { defaultOffset } from '@/constants/pagination';
-import { LABEL } from '@/constants/properties';
+import { defaultItemsPerPage, defaultOffset } from '@/constants/pagination';
+import { LABEL, NAME } from '@/constants/properties';
 import useProductStore from '@/stores/product';
 import { formatPrice, getSaleStatus, getValueByKey } from '@/utils/helper';
 import SaleStatus from '@/enums/saleStatus';
@@ -253,11 +308,21 @@ import { CURRENCY } from '@/constants/settings';
 import FeeType from '@/enums/feeType';
 import { SaleRequest } from '@/composables/models/SaleRequest';
 import { Menu } from '@/components/Base/Headless';
+import { customerTypes } from '@/constants/customerTypes';
+import useCustomerStore from '@/stores/customer';
+import { Customer } from '@/composables/models/Customer';
+import ComboBox from '@/components/ComboBox.vue';
+import { Option } from '@/composables/models/Option';
+import { paymentTypes } from '@/constants/paymentTypes';
+import { dateFormat } from '@/constants/dateFormat';
+import Litepicker from '@/components/Base/Litepicker';
+import dayjs from 'dayjs';
+import CompleteSaleConfirmModal from '@/components/Modals/CompleteSaleConfirmModal.vue';
 
 const router = useRouter();
 const route = useRoute();
 
-const confirmModal = ref<InstanceType<typeof ConfirmModal> | null>(null);
+const confirmModal = ref<InstanceType<typeof CompleteSaleConfirmModal> | null>(null);
 
 const notificationRef = ref<NotificationElement>();
 const basicNonStickyNotificationToggle = () => {
@@ -269,7 +334,6 @@ provide('bind[notificationRef]', (el: NotificationElement) => {
 
 const searchQuery = ref<string>('');
 const modalTitle = ref('Complete Sale');
-const content = ref('Do you really want to complete the sale ?');
 
 const saleForm = ref<SaleRequest>({
   saleId: null,
@@ -278,16 +342,36 @@ const saleForm = ref<SaleRequest>({
   taxes: 0,
   discount: 0,
   netDue: 0,
+  customerId: null,
+  paymentDateLimit: dayjs().format(dateFormat),
+  isOneTimePayment: true,
   saleItems: [],
+  isDeducted: false,
 });
 const cart = ref<SaleItemRequest[]>([]);
 const isRetail = ref<boolean>(true);
+const isNormalClient = ref<boolean>(true);
+const selectedCustomer = ref<Option>({
+  id: 0,
+  name: '',
+});
+const dateOptions = ref({
+  showWeekNumbers: true,
+  format: dateFormat,
+  dropdowns: {
+    minYear: 1900,
+    maxYear: null,
+    months: true,
+    years: true,
+  },
+});
 
 // STORE
 const tenantStore = useTenantStore();
 const toastStore = useToastStore();
 const productStore = useProductStore();
 const saleStore = useSaleStore();
+const customerStore = useCustomerStore();
 
 // COMPUTED
 const message = computed(() => toastStore.getMessage);
@@ -306,6 +390,7 @@ const iconType = computed(() => {
 const saleId = computed(() => (route.params.id ? parseInt(route.params.id.toString()) : null));
 const sale = computed(() => (saleId.value ? saleStore.getSale : null));
 const products = computed(() => productStore.getInStockProducts);
+const customers = computed(() => customerStore.getCustomers);
 const saleStatus = computed(() => (sale.value ? getSaleStatus(sale.value?.status) : ''));
 const currency = computed(() => {
   const data = localStorage.getItem('settings');
@@ -332,6 +417,15 @@ const netDue = computed(() => {
 const canComplete = computed(
   () => sale.value?.status !== SaleStatus.COMPLETED && cart.value.length > 0,
 );
+const content = computed(() => {
+  let message = 'Do you really want to complete the sale ?';
+  if (!saleForm.value.isOneTimePayment) {
+    message =
+      'You chose the installment / credit payment option. Do you want to complete and deduct from the inventory or just complete and deduct at the end of the payment ?';
+  }
+
+  return message;
+});
 
 // METHOD
 const tenantVerification = async () => {
@@ -353,6 +447,13 @@ const setSaleForm = async () => {
   if (sale.value) {
     saleForm.value.taxes = sale.value.taxes;
     saleForm.value.discount = sale.value.discount;
+    saleForm.value.customerId = sale.value.customer ? sale.value.customer.id : null;
+    if (saleForm.value.customerId) {
+      isNormalClient.value = false;
+    }
+    selectedCustomer.value = sale.value.customer ?? { id: 0, name: '' };
+    saleForm.value.isOneTimePayment = sale.value.isOneTimePayment;
+    saleForm.value.paymentDateLimit = sale.value.paymentDateLimit;
     cart.value = sale.value.saleItems.map((saleItem) => {
       return {
         productId: saleItem.product.id,
@@ -452,10 +553,11 @@ const addSale = async () => {
 };
 
 const openCompleteModal = () => {
-  confirmModal.value?.openConfirmModal();
+  confirmModal.value?.openConfirmModal(saleForm.value.isOneTimePayment);
 };
 
-const completeSale = async () => {
+const completeSale = async (canDeduct: boolean) => {
+  saleForm.value.isDeducted = canDeduct;
   saleForm.value.status = SaleStatus.COMPLETED;
   await addSale();
 };
@@ -472,9 +574,27 @@ const printProforma = () => {
   }
 };
 
+const getCustomersData = async (searchString: string = '') => {
+  await customerStore.getCustomersApi({
+    search: searchString,
+    sortBy: NAME,
+    sortOrder: SortOrder.ASC,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage,
+  });
+};
+
+const searchCustomer = async (searchString: string) => {
+  await getCustomersData(searchString);
+};
+
+const selectCustomer = (customer: Customer) => {
+  saleForm.value.customerId = customer.id;
+};
+
 onMounted(async () => {
   await tenantVerification();
   await getSaleData();
-  await getInStockProductsData();
+  await Promise.all([getInStockProductsData(), getCustomersData()]);
 });
 </script>

@@ -1,3 +1,5 @@
+import { LabelCode } from './LabelCode';
+
 export interface PrescriptionItem {
   id: number;
   product: {
@@ -11,4 +13,5 @@ export interface PrescriptionItem {
   tax: number;
   cost: number;
   total: number;
+  labelCodes: LabelCode[];
 }

@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sale_id')->constrained('sales');
             $table->tinyInteger('payment_method')->default(0);
+            $table->string('reference')->nullable();
+            $table->float('tendered')->default(0);
             $table->float('amount');
+            $table->float('change')->default(0);
+            $table->foreignId('cashier_id')->nullable()->constrained('users');
+            $table->foreignId('cash_register_id')->constrained('cash_registers');
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prescription_item_label_codes', function (Blueprint $table) {
-            $table->foreignId('prescription_item_id')->constrained('prescription_items');
+            $table->foreignId('prescription_item_id')->constrained('prescription_items')->cascadeOnDelete();
             $table->foreignId('label_code_id')->constrained('label_codes');
             $table->primary(['prescription_item_id', 'label_code_id']);
             $table->timestamps();

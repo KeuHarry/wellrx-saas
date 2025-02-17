@@ -47,7 +47,6 @@
           <Table.Tr
             v-for="(insurer, ckey) in insurers"
             :key="ckey"
-            class="intro-x"
             @click="openInsurerModal(insurer)"
           >
             <Table.Td

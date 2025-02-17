@@ -3,6 +3,7 @@ export interface Customer {
   name: string;
   email: string | null;
   creditLimit: number;
+  purchasedTotal: number;
   balance: number;
   deposit: number;
   phone: string;

@@ -11,6 +11,7 @@ import useGetPrescription from '@/composables/api/prescriptions/useGetPrescripti
 import { PrescriptionRequest } from '@/composables/models/PrescriptionRequest';
 import useCreatePrescription from '@/composables/api/prescriptions/useCreatePrescription';
 import useUpdatePrescription from '@/composables/api/prescriptions/useUpdatePrescription';
+import { useLoadingStore } from './loading';
 
 type PrescriptionState = {
   prescriptions: PrescriptionFragment[];
@@ -21,6 +22,7 @@ type PrescriptionState = {
 };
 
 const toastStore = useToastStore();
+const loadingStore = useLoadingStore();
 
 export const usePrescriptionStore = defineStore('prescription-store', {
   state: (): PrescriptionState => ({
@@ -47,13 +49,14 @@ export const usePrescriptionStore = defineStore('prescription-store', {
     async getPrescriptionsApi(searchParams: SearchParams | null = null) {
       const getPrescriptions = useGetPrescriptions(searchParams ? searchParams : this.searchParams);
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await getPrescriptions();
+        loadingStore.stopLoading();
         this.prescriptions = response.data ?? [];
         this.prescriptionTotal = response.total ?? 0;
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },

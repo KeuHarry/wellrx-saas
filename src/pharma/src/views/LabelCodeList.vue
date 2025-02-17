@@ -44,7 +44,6 @@
           <Table.Tr
             v-for="(labelCode, ckey) in labelCodes"
             :key="ckey"
-            class="intro-x"
             @click="openLabelCodeModal(labelCode)"
           >
             <Table.Td

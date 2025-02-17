@@ -21,9 +21,7 @@
         >
           Cancel
         </Button>
-        <Button variant="danger" type="button" class="w-24" ref="deleteRef" @click="handleSubmit"
-          >Delete</Button
-        >
+        <Button variant="danger" type="button" class="w-24" @click="handleSubmit">Delete</Button>
       </div>
     </Dialog.Panel>
   </Dialog>

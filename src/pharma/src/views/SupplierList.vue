@@ -47,7 +47,6 @@
           <Table.Tr
             v-for="(supplier, ckey) in suppliers"
             :key="ckey"
-            class="intro-x"
             @click="openSupplierModal(supplier)"
           >
             <Table.Td

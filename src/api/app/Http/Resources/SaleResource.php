@@ -23,6 +23,7 @@ class SaleResource extends JsonResource
             'cashierStatus' => $this->cashier_status,
             'type' => $this->type,
             'createdAt' => date('Y-m-d H:i:s', strtotime($this->created_at)),
+            'completedDate' => $this->completed_date ? date('Y-m-d H:i:s', strtotime($this->completed_date)) : '',
         ];
     }
 }

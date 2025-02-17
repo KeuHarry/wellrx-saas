@@ -18,6 +18,10 @@ import usePaySale from '@/composables/api/sales/usePaySale';
 import { CashierOneTimePaymentRequest } from '@/composables/models/CashierRequest';
 import useGetUnPaidSales from '@/composables/api/sales/useGetUnPaidSales';
 import { usePrintSaleProforma } from '@/composables/api/sales/usePrintSaleProforma';
+import { PartialPaymentRequest } from '@/composables/models/PartialPaymentRequest';
+import usePerformPartialPayment from '@/composables/api/sales/usePerformPartialPayment';
+import { usePrintPartialPaymentReceipt } from '@/composables/api/sales/usePrintPartialPaymentReceipt';
+import { useLoadingStore } from './loading';
 
 type SaleState = {
   sales: SaleFragment[];
@@ -28,6 +32,7 @@ type SaleState = {
 };
 
 const toastStore = useToastStore();
+const loadingStore = useLoadingStore();
 
 export const useSaleStore = defineStore('sale-store', {
   state: (): SaleState => ({
@@ -54,13 +59,14 @@ export const useSaleStore = defineStore('sale-store', {
     async getSalesApi(searchParams: SearchParams | null = null) {
       const getSales = useGetSales(searchParams ? searchParams : this.searchParams);
       try {
-        this.isPending = true;
+        loadingStore.startLoading();
         const response = await getSales();
         this.sales = response.data ?? [];
         this.saleTotal = response.total ?? 0;
+        loadingStore.stopLoading();
         return response;
       } catch (error) {
-        this.isPending = false;
+        loadingStore.stopLoading();
         throw error;
       }
     },
@@ -179,6 +185,41 @@ export const useSaleStore = defineStore('sale-store', {
           await this.printSaleReceiptApi(this.sale.id);
         }
         return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async performPartialPaymentApi(saleRequest: PartialPaymentRequest) {
+      const performPartialPayment = usePerformPartialPayment();
+      try {
+        this.isPending = true;
+        const response = await performPartialPayment(saleRequest);
+        this.sale = response.data;
+        if (this.sale?.id) {
+          toastStore.setMessage('Partial payment done!');
+          let salePayment = null;
+          if (this.sale.payments.length > 0) {
+            salePayment = this.sale.payments.reduce((latest, payment) =>
+              new Date(payment.createdAt) > new Date(latest.createdAt) ? payment : latest,
+            );
+          }
+          if (salePayment) {
+            await this.printPartialPaymentReceiptApi(salePayment.id);
+          }
+        }
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async printPartialPaymentReceiptApi(id: number) {
+      const { printPreview } = usePrintPartialPaymentReceipt();
+
+      try {
+        this.isPending = true;
+        printPreview(id);
       } catch (error) {
         this.isPending = false;
         throw error;

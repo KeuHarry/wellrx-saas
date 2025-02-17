@@ -223,6 +223,12 @@ const router = createRouter({
           component: () => import('../views/AddEditSale.vue'),
           meta: { requiresAuth: true },
         },
+        {
+          path: '/:identifier/sales-report',
+          name: 'sales-report',
+          component: () => import('../views/SalesReport.vue'),
+          meta: { requiresAuth: true },
+        },
       ],
     },
   ],

@@ -6,10 +6,14 @@ use App\Enums\CashierStatus;
 use App\Enums\InventoryType;
 use App\Enums\SaleStatus;
 use App\Http\Resources\SaleResource;
+use App\Models\Tenant\Customer;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Sale;
+use App\Models\Tenant\SalePayment;
+use App\Repositories\CashRegisterRepository;
 use App\Repositories\InventoryRepository;
+use App\Repositories\ReportRepository;
 use App\Repositories\SaleRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -24,12 +28,20 @@ class SaleService extends ApiService
         private SaleItemService $saleItemService,
         private ProductService $productService,
         private InventoryService $inventoryService,
-        private CashRegisterService $cashRegisterService
+        private CashRegisterService $cashRegisterService,
+        private SalePaymentService $salePaymentService,
+        private CashRegisterRepository $cashRegisterRepository,
+        private CustomerService $customerService,
+        private ReportRepository $reportRepository
     ) {
         $this->saleRepository = $saleRepository;
         $this->inventoryRepository = $inventoryRepository;
         $this->inventoryService = $inventoryService;
         $this->cashRegisterService = $cashRegisterService;
+        $this->salePaymentService = $salePaymentService;
+        $this->cashRegisterRepository = $cashRegisterRepository;
+        $this->customerService = $customerService;
+        $this->reportRepository = $reportRepository;
         parent::__construct($saleRepository);
     }
 
@@ -97,6 +109,7 @@ class SaleService extends ApiService
 
         $sale = DB::transaction(function () use ($saleItems, $content) {
             $saleId = $content['saleId'] ? intval($content['saleId']) : null;
+            $content['completedDate'] = intval($content['status']) === SaleStatus::COMPLETED->value ? now() : null;
 
             if ($saleId) {
                 $this->update($saleId, $content);
@@ -115,6 +128,16 @@ class SaleService extends ApiService
                     return $saleItem;
                 }, $saleItems);
                 $this->saleItemService->bulkCreate($saleItems);
+
+                if ($createdSale->status === SaleStatus::COMPLETED->value && $createdSale->customer_id && ! $createdSale->is_one_time_payment) {
+                    $this->customerService->updatePurchasedTotal($createdSale->customer_id);
+                    $this->customerService->addBalance($createdSale->customer_id, $createdSale->net_due);
+                }
+
+                $createdSale->refresh();
+                if ($createdSale->status === SaleStatus::COMPLETED->value && $createdSale->is_deducted) {
+                    $this->processSaleItems($createdSale->saleItems);
+                }
             }
 
             return $createdSale;
@@ -138,8 +161,8 @@ class SaleService extends ApiService
 
             if ($isOneTimePayment) {
                 $this->performPayment($sale, $content);
-
-                if ($sale->status === SaleStatus::PAID->value) {
+                $canDeduct = $sale->is_deducted;
+                if ($sale->status === SaleStatus::PAID->value && $canDeduct) {
                     $this->processSaleItems($sale->saleItems);
                 }
             }
@@ -151,12 +174,54 @@ class SaleService extends ApiService
         return $sale;
     }
 
+    public function performPartialPayment($content): Sale
+    {
+        $saleUpdated = DB::transaction(function () use ($content) {
+            $saleId = intval($content['saleId']);
+            $amount = floatval($content['amount']);
+            $sale = $this->getById($saleId);
+            $amount = floatval($sale->paid_amount) + $amount;
+            $status = $amount >= $sale->net_due ? SaleStatus::PAID->value : SaleStatus::COMPLETED->value;
+            $cashierStatus = $amount >= $sale->net_due ? CashierStatus::PAID->value : CashierStatus::IN_PROGRESS->value;
+
+            if ($content['amount'] > 0 && $content['tendered'] > 0) {
+                $saleContent = [
+                    'paid_amount' => $amount,
+                    'is_one_time_payment' => false,
+                    'status' => $status,
+                    'cashier_status' => $cashierStatus,
+                ];
+                $sale->update($saleContent);
+                $sale->refresh();
+
+                $content['cashRegisterId'] = $this->cashRegisterRepository->getCurrentCashRegisterId();
+                $authUser = Auth::user();
+                $content['cashierId'] = $authUser ? $authUser->id : 1;
+                $salePayment = $this->salePaymentService->create($content);
+                if (! $salePayment instanceof SalePayment) {
+                    throw new \Exception("Can't perform payment");
+                }
+                $this->cashRegisterService->updateCurrentCashRegisterAmount(floatval($content['amount']));
+                $customer = $sale->customer;
+                assert($customer instanceof Customer);
+                $customer->reduceBalance(floatval($content['amount']));
+                $customer->addDeposit(floatval($content['amount']));
+            }
+
+            return $sale;
+        });
+        assert($saleUpdated instanceof Sale);
+
+        return $saleUpdated;
+    }
+
     private function performPayment(Sale $sale, array $content): void
     {
         $content['status'] = SaleStatus::PAID->value;
         $content['cashierStatus'] = CashierStatus::PAID->value;
         $authUser = Auth::user();
         $content['cashierId'] = $authUser ? $authUser->id : 1;
+        $content['isDeducted'] = true;
         $content = $this->updateKey($content);
         $sale->update($content);
         $sale->refresh();

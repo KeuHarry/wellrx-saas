@@ -46,7 +46,6 @@
           <Table.Tr
             v-for="(prescriber, ckey) in prescribers"
             :key="ckey"
-            class="intro-x"
             @click="openPrescriberModal(prescriber)"
           >
             <Table.Td

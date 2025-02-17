@@ -55,7 +55,6 @@
           <Table.Tr
             v-for="(inventory, ckey) in inventories"
             :key="ckey"
-            class="intro-x"
             @click="openViewInventoryModal(inventory)"
           >
             <Table.Td
