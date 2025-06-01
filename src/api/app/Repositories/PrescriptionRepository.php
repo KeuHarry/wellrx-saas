@@ -53,4 +53,9 @@ class PrescriptionRepository extends BaseRepository
             'total' => $total,
         ];
     }
+
+    public function prescriptionsCount(): int
+    {
+        return $this->findAll()->count();
+    }
 }

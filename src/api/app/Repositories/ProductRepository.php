@@ -82,4 +82,9 @@ class ProductRepository extends BaseRepository
 
         return InStockProductResource::collection($inStockProducts);
     }
+
+    public function productsCount(): int
+    {
+        return $this->findAll()->count();
+    }
 }

@@ -546,6 +546,7 @@ const addSale = async () => {
   saleForm.value.total = subtotal.value;
   saleForm.value.netDue = netDue.value;
   saleForm.value.saleItems = cart.value;
+  saleForm.value.taxes = saleForm.value.taxes ?? 0;
   await saleStore.createSaleApi(saleForm.value);
   basicNonStickyNotificationToggle();
   closeAddEditSaleForm();

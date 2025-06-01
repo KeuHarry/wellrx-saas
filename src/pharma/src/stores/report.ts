@@ -8,11 +8,14 @@ import useGetPaidSalesReport from '@/composables/api/reports/useGetPaidSalesRepo
 import { useLoadingStore } from './loading';
 import useGetProfitLossReport from '@/composables/api/reports/useGetProfitLossReport';
 import { ProfitLossSummary } from '@/composables/models/ProfitLossSummary';
+import { ResourcesCount } from '@/composables/models/ResourcesCount';
+import useGetResourcesCount from '@/composables/api/reports/useGetResourcesCount';
 
 type ReportState = {
   paidSalesReport: SaleReportItem[];
   profitLossReport: ProfitLossSummary | null;
   paidSalesReportTotal: number;
+  resourcesCount: ResourcesCount | null;
   searchParams: SearchParams;
 };
 
@@ -24,6 +27,7 @@ export const useReportStore = defineStore('report-store', {
     paidSalesReport: [],
     profitLossReport: null,
     paidSalesReportTotal: 0,
+    resourcesCount: null,
     searchParams: {
       search: '',
       sortOrder: SortOrder.DESC,
@@ -36,6 +40,7 @@ export const useReportStore = defineStore('report-store', {
     getPaidSalesReport: (state) => state.paidSalesReport,
     getPaidSalesReportTotal: (state) => state.paidSalesReportTotal,
     getProfitLossReport: (state) => state.profitLossReport,
+    getResourcesCount: (state) => state.resourcesCount,
   },
 
   actions: {
@@ -67,6 +72,16 @@ export const useReportStore = defineStore('report-store', {
         return response;
       } catch (error) {
         loadingStore.stopLoading();
+        throw error;
+      }
+    },
+    async getResourcesCountApi() {
+      const getResourcesCount = useGetResourcesCount();
+      try {
+        const response = await getResourcesCount();
+        this.resourcesCount = response.data;
+        return response;
+      } catch (error) {
         throw error;
       }
     },
