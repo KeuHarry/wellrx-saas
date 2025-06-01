@@ -212,5 +212,6 @@ Route::group([
         // Reports
         Route::get('sales-report/paid', [ReportController::class, 'getPaidSalesReport']);
         Route::get('profit-loss-report', [ReportController::class, 'getProfitLossReport']);
+        Route::get('reports/resources-count', [ReportController::class, 'getResourcesCount']);
     });
 });

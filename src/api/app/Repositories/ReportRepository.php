@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Enums\SaleStatus;
 use App\Enums\SortBy;
+use App\Models\Tenant\Product;
+use Barryvdh\Reflection\DocBlock\Type\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ReportRepository

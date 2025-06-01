@@ -185,7 +185,7 @@ const formData = ref<Inventory>({
   quantity: 0,
   type: InventoryType.IN,
   expiryDate: '',
-  batchId: '',
+  batchId: 0,
   acqCost: 0,
   wholesaleCost: 0,
   retailCost: 0,
@@ -224,7 +224,7 @@ const resetForm = () => {
   formData.value.quantity = 0;
   formData.value.type = InventoryType.IN;
   formData.value.expiryDate = '';
-  formData.value.batchId = '';
+  formData.value.batchId = 0;
   formData.value.acqCost = 0;
   formData.value.wholesaleCost = 0;
   formData.value.retailCost = 0;

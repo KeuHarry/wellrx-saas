@@ -1,12 +1,10 @@
 <template>
-  <Dialog size="xl" :open="show">
+  <Dialog size="lg" :open="show">
     <Dialog.Panel>
       <div class="grid grid-cols-1 gap-4 p-12">
-        <div class="w-full">
-          <h2 class="text-center text-xl">You need to open the cash register</h2>
-        </div>
-        <div class="flex justify-center items-center">
+        <div class="flex flex-col justify-center items-center">
           <Lucide icon="AlertTriangle" class="w-1/2 h-1/2 mr-2 text-slate-200" />
+          <h2 class="text-center text-xl">You need to open the cash register</h2>
         </div>
       </div>
       <Dialog.Footer>

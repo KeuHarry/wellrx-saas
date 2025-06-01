@@ -28,13 +28,13 @@ class CashRegisterRepository extends BaseRepository
             ->get();
     }
 
-    public function getCurrentCashRegisterId(): int
+    public function getCurrentCashRegisterId(): ?int
     {
         $cashRegister = CashRegister::where('status', CashRegisterStatus::OPENED)
             ->orderBy('created_at', 'desc')
             ->take(1)->get()->first();
 
-        return $cashRegister->id;
+        return $cashRegister?->id;
     }
 
     public function getCurrentCashRegister(): CashRegister

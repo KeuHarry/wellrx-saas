@@ -111,17 +111,20 @@ class SaleService extends ApiService
             $saleId = $content['saleId'] ? intval($content['saleId']) : null;
             $content['completedDate'] = intval($content['status']) === SaleStatus::COMPLETED->value ? now() : null;
 
+            $createdSale = null;
             if ($saleId) {
                 $this->update($saleId, $content);
                 $createdSale = $this->getById($saleId);
                 assert($createdSale instanceof Sale);
                 $createdSale->saleItems()->delete();
             } else {
+                //var_dump($content);
+
                 $createdSale = $this->create($content);
             }
             assert($createdSale instanceof Sale);
 
-            if ($createdSale->id) {
+            if ($createdSale && $createdSale->id) {
                 $saleItems = array_map(function ($saleItem) use ($createdSale) {
                     $saleItem['saleId'] = $createdSale->id;
 

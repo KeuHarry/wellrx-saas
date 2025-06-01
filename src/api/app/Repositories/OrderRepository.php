@@ -41,4 +41,9 @@ class OrderRepository extends BaseRepository
     {
         return Order::where('id', $orderId)->with('order_items');
     }
+
+    public function ordersCount(): int
+    {
+        return $this->findAll()->count();
+    }
 }

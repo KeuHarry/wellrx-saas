@@ -1,38 +1,3 @@
-<script setup lang="ts">
-import _ from 'lodash';
-import { ref, provide } from 'vue';
-import fakerData from '@/utils/faker';
-import Button from '@/components/Base/Button';
-import Pagination from '@/components/Base/Pagination';
-import { FormInput, FormSelect } from '@/components/Base/Form';
-import TinySlider, { type TinySliderElement } from '@/components/Base/TinySlider';
-import Lucide from '@/components/Base/Lucide';
-import Tippy from '@/components/Base/Tippy';
-import Litepicker from '@/components/Base/Litepicker';
-import ReportDonutChart from '@/components/ReportDonutChart';
-import ReportLineChart from '@/components/ReportLineChart';
-import ReportPieChart from '@/components/ReportPieChart';
-import ReportDonutChart1 from '@/components/ReportDonutChart1';
-import SimpleLineChart1 from '@/components/SimpleLineChart1';
-import LeafletMap from '@/components/LeafletMap';
-import { Menu } from '@/components/Base/Headless';
-import Table from '@/components/Base/Table';
-
-const salesReportFilter = ref<string>('');
-const importantNotesRef = ref<TinySliderElement>();
-
-provide('bind[importantNotesRef]', (el: TinySliderElement) => {
-  importantNotesRef.value = el;
-});
-
-const prevImportantNotes = () => {
-  importantNotesRef.value?.tns.goTo('prev');
-};
-const nextImportantNotes = () => {
-  importantNotesRef.value?.tns.goTo('next');
-};
-</script>
-
 <template>
   <div class="grid grid-cols-12 gap-6">
     <div class="col-span-12 2xl:col-span-9">
@@ -67,8 +32,8 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">4.710</div>
-                  <div class="mt-1 text-base text-slate-500">Item Sales</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{ resourcesCount?.itemsSoldCount }}</div>
+                  <div class="mt-1 text-base text-slate-500">Items Sold</div>
                 </div>
               </div>
             </div>
@@ -93,7 +58,7 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">3.721</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{ resourcesCount?.ordersCount }}</div>
                   <div class="mt-1 text-base text-slate-500">New Orders</div>
                 </div>
               </div>
@@ -119,7 +84,7 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">2.149</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{ resourcesCount?.productsCount }}</div>
                   <div class="mt-1 text-base text-slate-500">Total Products</div>
                 </div>
               </div>
@@ -133,7 +98,7 @@ const nextImportantNotes = () => {
               >
                 <div class="p-5 box">
                   <div class="flex">
-                    <Lucide icon="User" class="w-[28px] h-[28px] text-success" />
+                    <Lucide icon="Clipboard" class="w-[28px] h-[28px] text-success" />
                     <div class="ml-auto">
                       <Tippy
                         as="div"
@@ -145,8 +110,8 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">152.040</div>
-                  <div class="mt-1 text-base text-slate-500">Unique Visitor</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{ resourcesCount?.prescriptionsCount }}</div>
+                  <div class="mt-1 text-base text-slate-500">Prescriptions</div>
                 </div>
               </div>
             </div>
@@ -224,8 +189,7 @@ const nextImportantNotes = () => {
         <!-- BEGIN: Weekly Top Seller -->
         <div class="col-span-12 mt-8 sm:col-span-6 lg:col-span-3">
           <div class="flex items-center h-10 intro-y">
-            <h2 class="mr-5 text-lg font-medium truncate">Weekly Top Seller</h2>
-            <a href="" class="ml-auto truncate text-primary"> Show More </a>
+            <h2 class="mr-5 text-lg font-medium truncate">Cashier Performance</h2>
           </div>
           <div class="p-5 mt-5 intro-y box">
             <div class="mt-3">
@@ -281,126 +245,6 @@ const nextImportantNotes = () => {
           </div>
         </div>
         <!-- END: Sales Report -->
-        <!-- BEGIN: Official Store -->
-        <div class="col-span-12 mt-6 xl:col-span-8">
-          <div class="items-center block h-10 intro-y sm:flex">
-            <h2 class="mr-5 text-lg font-medium truncate">Official Store</h2>
-            <div class="relative mt-3 sm:ml-auto sm:mt-0 text-slate-500">
-              <Lucide icon="MapPin" class="absolute inset-y-0 left-0 z-10 w-4 h-4 my-auto ml-3" />
-              <FormInput type="text" class="pl-10 sm:w-56 !box" placeholder="Filter by city" />
-            </div>
-          </div>
-          <div class="p-5 mt-12 intro-y box sm:mt-5">
-            <div>
-              250 Official stores in 21 countries, click the marker to see location details.
-            </div>
-            <LeafletMap class="h-[310px] mt-5 rounded-md bg-slate-200" />
-          </div>
-        </div>
-        <!-- END: Official Store -->
-        <!-- BEGIN: Weekly Best Sellers -->
-        <div class="col-span-12 mt-6 xl:col-span-4">
-          <div class="flex items-center h-10 intro-y">
-            <h2 class="mr-5 text-lg font-medium truncate">Weekly Best Sellers</h2>
-          </div>
-          <div class="mt-5">
-            <div v-for="(faker, fakerKey) in _.take(fakerData, 4)" :key="fakerKey" class="intro-y">
-              <div class="flex items-center px-4 py-4 mb-3 box zoom-in">
-                <div class="flex-none w-10 h-10 overflow-hidden rounded-md image-fit">
-                  <img alt="Midone Tailwind HTML Admin Template" :src="faker.photos[0]" />
-                </div>
-                <div class="ml-4 mr-auto">
-                  <div class="font-medium">{{ faker.users[0].name }}</div>
-                  <div class="text-slate-500 text-xs mt-0.5">
-                    {{ faker.dates[0] }}
-                  </div>
-                </div>
-                <div
-                  class="px-2 py-1 text-xs font-medium text-white rounded-full cursor-pointer bg-success"
-                >
-                  137 Sales
-                </div>
-              </div>
-            </div>
-            <a
-              href=""
-              class="block w-full py-4 text-center border border-dotted rounded-md intro-y border-slate-400 dark:border-darkmode-300 text-slate-500"
-            >
-              View More
-            </a>
-          </div>
-        </div>
-        <!-- END: Weekly Best Sellers -->
-        <!-- BEGIN: General Report -->
-        <div class="grid grid-cols-12 col-span-12 gap-6 mt-8">
-          <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-            <div class="p-5 box zoom-in">
-              <div class="flex items-center">
-                <div class="flex-none w-2/4">
-                  <div class="text-lg font-medium truncate">Target Sales</div>
-                  <div class="mt-1 text-slate-500">300 Sales</div>
-                </div>
-                <div class="relative flex-none ml-auto">
-                  <ReportDonutChart1 :width="90" :height="90" />
-                  <div
-                    class="absolute top-0 left-0 flex items-center justify-center w-full h-full font-medium"
-                  >
-                    20%
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-            <div class="p-5 box zoom-in">
-              <div class="flex">
-                <div class="mr-3 text-lg font-medium truncate">Social Media</div>
-                <div
-                  class="flex items-center px-2 py-1 ml-auto text-xs truncate rounded-full cursor-pointer bg-slate-100 dark:bg-darkmode-400 text-slate-500"
-                >
-                  320 Followers
-                </div>
-              </div>
-              <div class="mt-1">
-                <SimpleLineChart1 :height="58" class="-ml-1" />
-              </div>
-            </div>
-          </div>
-          <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-            <div class="p-5 box zoom-in">
-              <div class="flex items-center">
-                <div class="flex-none w-2/4">
-                  <div class="text-lg font-medium truncate">New Products</div>
-                  <div class="mt-1 text-slate-500">1450 Products</div>
-                </div>
-                <div class="relative flex-none ml-auto">
-                  <ReportDonutChart1 :width="90" :height="90" />
-                  <div
-                    class="absolute top-0 left-0 flex items-center justify-center w-full h-full font-medium"
-                  >
-                    45%
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-span-12 sm:col-span-6 2xl:col-span-3 intro-y">
-            <div class="p-5 box zoom-in">
-              <div class="flex">
-                <div class="mr-3 text-lg font-medium truncate">Posted Ads</div>
-                <div
-                  class="flex items-center px-2 py-1 ml-auto text-xs truncate rounded-full cursor-pointer bg-slate-100 dark:bg-darkmode-400 text-slate-500"
-                >
-                  180 Campaign
-                </div>
-              </div>
-              <div class="mt-1">
-                <SimpleLineChart1 :height="58" class="-ml-1" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END: General Report -->
         <!-- BEGIN: Weekly Top Products -->
         <div class="col-span-12 mt-6">
           <div class="items-center block h-10 intro-y sm:flex">
@@ -553,355 +397,93 @@ const nextImportantNotes = () => {
           <!-- BEGIN: Transactions -->
           <div class="col-span-12 mt-3 md:col-span-6 xl:col-span-4 2xl:col-span-12 2xl:mt-8">
             <div class="flex items-center h-10 intro-x">
-              <h2 class="mr-5 text-lg font-medium truncate">Transactions</h2>
+              <h2 class="mr-5 text-lg font-medium truncate">Weekly Best Sellers</h2>
             </div>
             <div class="mt-5">
-              <div
-                v-for="(faker, fakerKey) in _.take(fakerData, 5)"
-                :key="fakerKey"
-                class="intro-x"
-              >
-                <div class="flex items-center px-5 py-3 mb-3 box zoom-in">
-                  <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-                    <img alt="Midone Tailwind HTML Admin Template" :src="faker.photos[0]" />
-                  </div>
-                  <div class="ml-4 mr-auto">
-                    <div class="font-medium">{{ faker.users[0].name }}</div>
-                    <div class="text-slate-500 text-xs mt-0.5">
-                      {{ faker.dates[0] }}
-                    </div>
-                  </div>
-                  <div
-                    :class="{
-                      'text-success': faker.trueFalse[0],
-                      'text-danger': !faker.trueFalse[0],
-                    }"
-                  >
-                    {{ faker.trueFalse[0] ? '+' : '-' }}${{ faker.totals[0] }}
+            <div v-for="(faker, fakerKey) in _.take(fakerData, 4)" :key="fakerKey" class="intro-y">
+              <div class="flex items-center px-4 py-4 mb-3 box zoom-in">
+                <div class="flex-none w-10 h-10 overflow-hidden rounded-md image-fit">
+                  <img alt="Midone Tailwind HTML Admin Template" :src="faker.photos[0]" />
+                </div>
+                <div class="ml-4 mr-auto">
+                  <div class="font-medium">{{ faker.users[0].name }}</div>
+                  <div class="text-slate-500 text-xs mt-0.5">
+                    {{ faker.dates[0] }}
                   </div>
                 </div>
+                <div
+                  class="px-2 py-1 text-xs font-medium text-white rounded-full cursor-pointer bg-success"
+                >
+                  137 Sales
+                </div>
               </div>
-              <a
-                href=""
-                class="block w-full py-3 text-center border border-dotted rounded-md intro-x border-slate-400 dark:border-darkmode-300 text-slate-500"
-              >
-                View More
-              </a>
             </div>
+            <a
+              href=""
+              class="block w-full py-4 text-center border border-dotted rounded-md intro-y border-slate-400 dark:border-darkmode-300 text-slate-500"
+            >
+              View More
+            </a>
+          </div>
           </div>
           <!-- END: Transactions -->
-          <!-- BEGIN: Recent Activities -->
-          <div class="col-span-12 mt-3 md:col-span-6 xl:col-span-4 2xl:col-span-12">
-            <div class="flex items-center h-10 intro-x">
-              <h2 class="mr-5 text-lg font-medium truncate">Recent Activities</h2>
-              <a href="" class="ml-auto truncate text-primary"> Show More </a>
-            </div>
-            <div
-              class="mt-5 relative before:block before:absolute before:w-px before:h-[85%] before:bg-slate-200 before:dark:bg-darkmode-400 before:ml-5 before:mt-5"
-            >
-              <div class="relative flex items-center mb-3 intro-x">
-                <div
-                  class="before:block before:absolute before:w-20 before:h-px before:bg-slate-200 before:dark:bg-darkmode-400 before:mt-5 before:ml-5"
-                >
-                  <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-                    <img alt="Midone Tailwind HTML Admin Template" :src="fakerData[9].photos[0]" />
-                  </div>
-                </div>
-                <div class="flex-1 px-5 py-3 ml-4 box zoom-in">
-                  <div class="flex items-center">
-                    <div class="font-medium">
-                      {{ fakerData[9].users[0].name }}
-                    </div>
-                    <div class="ml-auto text-xs text-slate-500">07:00 PM</div>
-                  </div>
-                  <div class="mt-1 text-slate-500">Has joined the team</div>
-                </div>
-              </div>
-              <div class="relative flex items-center mb-3 intro-x">
-                <div
-                  class="before:block before:absolute before:w-20 before:h-px before:bg-slate-200 before:dark:bg-darkmode-400 before:mt-5 before:ml-5"
-                >
-                  <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-                    <img alt="Midone Tailwind HTML Admin Template" :src="fakerData[8].photos[0]" />
-                  </div>
-                </div>
-                <div class="flex-1 px-5 py-3 ml-4 box zoom-in">
-                  <div class="flex items-center">
-                    <div class="font-medium">
-                      {{ fakerData[8].users[0].name }}
-                    </div>
-                    <div class="ml-auto text-xs text-slate-500">07:00 PM</div>
-                  </div>
-                  <div class="text-slate-500">
-                    <div class="mt-1">Added 3 new photos</div>
-                    <div class="flex mt-2">
-                      <Tippy
-                        as="div"
-                        class="w-8 h-8 mr-1 image-fit zoom-in"
-                        :content="fakerData[0].products[0].name"
-                      >
-                        <img
-                          alt="Midone Tailwind HTML Admin Template"
-                          class="border border-white rounded-md"
-                          :src="fakerData[8].images[0]"
-                        />
-                      </Tippy>
-                      <Tippy
-                        as="div"
-                        class="w-8 h-8 mr-1 image-fit zoom-in"
-                        :content="fakerData[1].products[0].name"
-                      >
-                        <img
-                          alt="Midone Tailwind HTML Admin Template"
-                          class="border border-white rounded-md"
-                          :src="fakerData[8].images[1]"
-                        />
-                      </Tippy>
-                      <Tippy
-                        as="div"
-                        class="w-8 h-8 mr-1 image-fit zoom-in"
-                        :content="fakerData[2].products[0].name"
-                      >
-                        <img
-                          alt="Midone Tailwind HTML Admin Template"
-                          class="border border-white rounded-md"
-                          :src="fakerData[8].images[2]"
-                        />
-                      </Tippy>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="my-4 text-xs text-center intro-x text-slate-500">12 November</div>
-              <div class="relative flex items-center mb-3 intro-x">
-                <div
-                  class="before:block before:absolute before:w-20 before:h-px before:bg-slate-200 before:dark:bg-darkmode-400 before:mt-5 before:ml-5"
-                >
-                  <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-                    <img alt="Midone Tailwind HTML Admin Template" :src="fakerData[7].photos[0]" />
-                  </div>
-                </div>
-                <div class="flex-1 px-5 py-3 ml-4 box zoom-in">
-                  <div class="flex items-center">
-                    <div class="font-medium">
-                      {{ fakerData[7].users[0].name }}
-                    </div>
-                    <div class="ml-auto text-xs text-slate-500">07:00 PM</div>
-                  </div>
-                  <div class="mt-1 text-slate-500">
-                    Has changed
-                    <a class="text-primary" href="">
-                      {{ fakerData[7].products[0].name }}
-                    </a>
-                    price and description
-                  </div>
-                </div>
-              </div>
-              <div class="relative flex items-center mb-3 intro-x">
-                <div
-                  class="before:block before:absolute before:w-20 before:h-px before:bg-slate-200 before:dark:bg-darkmode-400 before:mt-5 before:ml-5"
-                >
-                  <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-                    <img alt="Midone Tailwind HTML Admin Template" :src="fakerData[6].photos[0]" />
-                  </div>
-                </div>
-                <div class="flex-1 px-5 py-3 ml-4 box zoom-in">
-                  <div class="flex items-center">
-                    <div class="font-medium">
-                      {{ fakerData[6].users[0].name }}
-                    </div>
-                    <div class="ml-auto text-xs text-slate-500">07:00 PM</div>
-                  </div>
-                  <div class="mt-1 text-slate-500">
-                    Has changed
-                    <a class="text-primary" href="">
-                      {{ fakerData[6].products[0].name }}
-                    </a>
-                    description
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- END: Recent Activities -->
-          <!-- BEGIN: Important Notes -->
-          <div
-            class="col-span-12 mt-3 md:col-span-6 xl:col-span-12 xl:col-start-1 xl:row-start-1 2xl:col-start-auto 2xl:row-start-auto"
-          >
-            <div class="flex items-center h-10 intro-x">
-              <h2 class="mr-auto text-lg font-medium truncate">Important Notes</h2>
-              <Button
-                data-carousel="important-notes"
-                data-target="prev"
-                class="px-2 mr-2 border-slate-300 text-slate-600 dark:text-slate-300"
-                @click="prevImportantNotes"
-              >
-                <Lucide icon="ChevronLeft" class="w-4 h-4" />
-              </Button>
-              <Button
-                data-carousel="important-notes"
-                data-target="next"
-                class="px-2 mr-2 border-slate-300 text-slate-600 dark:text-slate-300"
-                @click="nextImportantNotes"
-              >
-                <Lucide icon="ChevronRight" class="w-4 h-4" />
-              </Button>
-            </div>
-            <div class="mt-5 intro-x">
-              <div class="box zoom-in">
-                <TinySlider refKey="importantNotesRef">
-                  <div class="p-5">
-                    <div class="text-base font-medium truncate">
-                      Lorem Ipsum is simply dummy text
-                    </div>
-                    <div class="mt-1 text-slate-400">20 Hours ago</div>
-                    <div class="mt-1 text-justify text-slate-500">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    </div>
-                    <div class="flex mt-5 font-medium">
-                      <Button variant="secondary" type="button" class="px-2 py-1">
-                        View Notes
-                      </Button>
-                      <Button variant="outline-secondary" type="button" class="px-2 py-1 ml-auto">
-                        Dismiss
-                      </Button>
-                    </div>
-                  </div>
-                  <div class="p-5">
-                    <div class="text-base font-medium truncate">
-                      Lorem Ipsum is simply dummy text
-                    </div>
-                    <div class="mt-1 text-slate-400">20 Hours ago</div>
-                    <div class="mt-1 text-justify text-slate-500">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    </div>
-                    <div class="flex mt-5 font-medium">
-                      <Button variant="secondary" type="button" class="px-2 py-1">
-                        View Notes
-                      </Button>
-                      <Button variant="outline-secondary" type="button" class="px-2 py-1 ml-auto">
-                        Dismiss
-                      </Button>
-                    </div>
-                  </div>
-                  <div class="p-5">
-                    <div class="text-base font-medium truncate">
-                      Lorem Ipsum is simply dummy text
-                    </div>
-                    <div class="mt-1 text-slate-400">20 Hours ago</div>
-                    <div class="mt-1 text-justify text-slate-500">
-                      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    </div>
-                    <div class="flex mt-5 font-medium">
-                      <Button variant="secondary" type="button" class="px-2 py-1">
-                        View Notes
-                      </Button>
-                      <Button variant="outline-secondary" type="button" class="px-2 py-1 ml-auto">
-                        Dismiss
-                      </Button>
-                    </div>
-                  </div>
-                </TinySlider>
-              </div>
-            </div>
-          </div>
-          <!-- END: Important Notes -->
-          <!-- BEGIN: Schedules -->
-          <div
-            class="col-span-12 mt-3 md:col-span-6 xl:col-span-4 2xl:col-span-12 xl:col-start-1 xl:row-start-2 2xl:col-start-auto 2xl:row-start-auto"
-          >
-            <div class="flex items-center h-10 intro-x">
-              <h2 class="mr-5 text-lg font-medium truncate">Schedules</h2>
-              <a href="" class="flex items-center ml-auto truncate text-primary">
-                <Lucide icon="Plus" class="w-4 h-4 mr-1" /> Add New Schedules
-              </a>
-            </div>
-            <div class="mt-5">
-              <div class="intro-x box">
-                <div class="p-5">
-                  <div class="flex">
-                    <Lucide icon="ChevronLeft" class="w-5 h-5 text-slate-500" />
-                    <div class="mx-auto text-base font-medium">April</div>
-                    <Lucide icon="ChevronRight" class="w-5 h-5 text-slate-500" />
-                  </div>
-                  <div class="grid grid-cols-7 gap-4 mt-5 text-center">
-                    <div class="font-medium">Su</div>
-                    <div class="font-medium">Mo</div>
-                    <div class="font-medium">Tu</div>
-                    <div class="font-medium">We</div>
-                    <div class="font-medium">Th</div>
-                    <div class="font-medium">Fr</div>
-                    <div class="font-medium">Sa</div>
-                    <div class="py-0.5 rounded relative text-slate-500">29</div>
-                    <div class="py-0.5 rounded relative text-slate-500">30</div>
-                    <div class="py-0.5 rounded relative text-slate-500">31</div>
-                    <div class="py-0.5 rounded relative">1</div>
-                    <div class="py-0.5 rounded relative">2</div>
-                    <div class="py-0.5 rounded relative">3</div>
-                    <div class="py-0.5 rounded relative">4</div>
-                    <div class="py-0.5 rounded relative">5</div>
-                    <div class="py-0.5 bg-success/20 dark:bg-success/30 rounded relative">6</div>
-                    <div class="py-0.5 rounded relative">7</div>
-                    <div class="py-0.5 bg-primary text-white rounded relative">8</div>
-                    <div class="py-0.5 rounded relative">9</div>
-                    <div class="py-0.5 rounded relative">10</div>
-                    <div class="py-0.5 rounded relative">11</div>
-                    <div class="py-0.5 rounded relative">12</div>
-                    <div class="py-0.5 rounded relative">13</div>
-                    <div class="py-0.5 rounded relative">14</div>
-                    <div class="py-0.5 rounded relative">15</div>
-                    <div class="py-0.5 rounded relative">16</div>
-                    <div class="py-0.5 rounded relative">17</div>
-                    <div class="py-0.5 rounded relative">18</div>
-                    <div class="py-0.5 rounded relative">19</div>
-                    <div class="py-0.5 rounded relative">20</div>
-                    <div class="py-0.5 rounded relative">21</div>
-                    <div class="py-0.5 rounded relative">22</div>
-                    <div class="py-0.5 bg-pending/20 dark:bg-pending/30 rounded relative">23</div>
-                    <div class="py-0.5 rounded relative">24</div>
-                    <div class="py-0.5 rounded relative">25</div>
-                    <div class="py-0.5 rounded relative">26</div>
-                    <div class="py-0.5 bg-primary/10 dark:bg-primary/50 rounded relative">27</div>
-                    <div class="py-0.5 rounded relative">28</div>
-                    <div class="py-0.5 rounded relative">29</div>
-                    <div class="py-0.5 rounded relative">30</div>
-                    <div class="py-0.5 rounded relative text-slate-500">1</div>
-                    <div class="py-0.5 rounded relative text-slate-500">2</div>
-                    <div class="py-0.5 rounded relative text-slate-500">3</div>
-                    <div class="py-0.5 rounded relative text-slate-500">4</div>
-                    <div class="py-0.5 rounded relative text-slate-500">5</div>
-                    <div class="py-0.5 rounded relative text-slate-500">6</div>
-                    <div class="py-0.5 rounded relative text-slate-500">7</div>
-                    <div class="py-0.5 rounded relative text-slate-500">8</div>
-                    <div class="py-0.5 rounded relative text-slate-500">9</div>
-                  </div>
-                </div>
-                <div class="p-5 border-t border-slate-200/60">
-                  <div class="flex items-center">
-                    <div class="w-2 h-2 mr-3 rounded-full bg-pending"></div>
-                    <span class="truncate">UI/UX Workshop</span>
-                    <span class="font-medium xl:ml-auto">23th</span>
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <div class="w-2 h-2 mr-3 rounded-full bg-primary"></div>
-                    <span class="truncate"> VueJs Frontend Development </span>
-                    <span class="font-medium xl:ml-auto">10th</span>
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <div class="w-2 h-2 mr-3 rounded-full bg-warning"></div>
-                    <span class="truncate">Laravel Rest API</span>
-                    <span class="font-medium xl:ml-auto">31th</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- END: Schedules -->
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import _ from 'lodash';
+import { ref, provide, onMounted, computed } from 'vue';
+import fakerData from '@/utils/faker';
+import Button from '@/components/Base/Button';
+import Pagination from '@/components/Base/Pagination';
+import { FormSelect } from '@/components/Base/Form';
+import TinySlider, { type TinySliderElement } from '@/components/Base/TinySlider';
+import Lucide from '@/components/Base/Lucide';
+import Tippy from '@/components/Base/Tippy';
+import Litepicker from '@/components/Base/Litepicker';
+import ReportDonutChart from '@/components/ReportDonutChart';
+import ReportLineChart from '@/components/ReportLineChart';
+import ReportPieChart from '@/components/ReportPieChart';
+import { Menu } from '@/components/Base/Headless';
+import Table from '@/components/Base/Table';
+import useReportStore from '@/stores/report';
+import useTenantStore from '@/stores/tenant';
+import { useRoute } from 'vue-router';
+
+const salesReportFilter = ref<string>('');
+const importantNotesRef = ref<TinySliderElement>();
+
+provide('bind[importantNotesRef]', (el: TinySliderElement) => {
+  importantNotesRef.value = el;
+});
+
+const route = useRoute();
+
+const tenantStore = useTenantStore();
+const reportStore = useReportStore();
+
+const resourcesCount = computed(() => reportStore.getResourcesCount);
+
+const prevImportantNotes = () => {
+  importantNotesRef.value?.tns.goTo('prev');
+};
+const nextImportantNotes = () => {
+  importantNotesRef.value?.tns.goTo('next');
+};
+
+const accountVerification = async () => {
+  await tenantStore.accountVerificationApi(route.params.identifier as string);
+};
+
+const getResourcesCountData = async () => {
+  await reportStore.getResourcesCountApi();
+};
+
+onMounted(async () => {
+  await accountVerification();
+  await getResourcesCountData();
+});
+</script>
