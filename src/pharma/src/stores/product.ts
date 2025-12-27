@@ -12,10 +12,12 @@ import useDeleteProduct from '@/composables/api/products/useDeleteProduct';
 import useGetProduct from '@/composables/api/products/useGetProduct';
 import { InStockProduct } from '@/composables/models/InStockProduct';
 import useGetInStockProducts from '@/composables/api/products/useGetInStockProducts';
+import useGetGenericProducts from '@/composables/api/products/useGetGenericProducts';
 
 type ProductState = {
   products: Product[];
   inStockProducts: InStockProduct[];
+  genericProducts: {id: number; name: string;}[];
   productTotal: number;
   product: Product | null;
   searchParams: SearchParams;
@@ -28,6 +30,7 @@ export const useProductStore = defineStore('product-store', {
   state: (): ProductState => ({
     products: [],
     inStockProducts: [],
+    genericProducts: [],
     productTotal: 0,
     product: null,
     searchParams: {
@@ -46,6 +49,7 @@ export const useProductStore = defineStore('product-store', {
     getProduct: (state) => state.product,
     getProductTotal: (state) => state.productTotal,
     getInStockProducts: (state) => state.inStockProducts,
+    getGenericProducts: (state) => state.genericProducts,
   },
 
   actions: {
@@ -122,6 +126,23 @@ export const useProductStore = defineStore('product-store', {
         this.isPending = true;
         const response = await getProducts();
         this.inStockProducts = response.data ?? [];
+        return response;
+      } catch (error) {
+        this.isPending = false;
+        throw error;
+      }
+    },
+    async getGenericProductsApi(searchParams: SearchParams | null = null) {
+      const getProducts = useGetGenericProducts(searchParams ? searchParams : this.searchParams);
+      try {
+        this.isPending = true;
+        const response = await getProducts();
+        this.genericProducts = response.data?.map(product => {
+          return {
+            id: product.id,
+            name: product.label
+          }
+        }) ?? [];
         return response;
       } catch (error) {
         this.isPending = false;

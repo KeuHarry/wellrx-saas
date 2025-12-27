@@ -32,4 +32,8 @@ export interface Product {
     name: string;
     value: number;
   } | null;
+  generic: {
+    id: number;
+    name: string;
+  } | null;
 }

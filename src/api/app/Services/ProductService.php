@@ -58,4 +58,20 @@ class ProductService extends ApiService
             $sortBy
         );
     }
+
+    public function getGenericProducts(
+        int $offset = 0,
+        int $limit = 10,
+        string $sortOrder = 'ASC',
+        ?string $search = null,
+        ?string $sortBy = null
+    ): Collection {
+        return $this->productRepository->findGenericProducts(
+            $offset,
+            $limit,
+            $search,
+            $sortBy,
+            $sortOrder
+        );
+    }
 }

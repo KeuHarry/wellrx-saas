@@ -61,7 +61,7 @@ onMounted(() => {
 <template>
   <div
     :class="[
-      'rubick px-5 sm:px-8 py-5',
+      'rubick sm:pl-1',
       'before:content-[\'\'] before:bg-gradient-to-b before:from-theme-1 before:to-theme-2 dark:before:from-darkmode-800 dark:before:to-darkmode-800 before:fixed before:inset-0 before:z-[-1]',
     ]"
   >
@@ -204,11 +204,6 @@ onMounted(() => {
               :class="['cursor-pointer relative flex items-center', { 'mt-5': fakerKey }]"
             >
               <div class="relative flex-none w-12 h-12 mr-1 image-fit">
-                <img
-                  alt="Midone Tailwind HTML Admin Template"
-                  class="rounded-full"
-                  :src="faker.photos[0]"
-                />
                 <div
                   class="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-success dark:border-darkmode-600"
                 ></div>

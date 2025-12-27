@@ -99,4 +99,34 @@ class ProductController extends ApiController
             return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
+
+    public function getGenericProducts(SearchRequest $request): JsonResponse
+    {
+        try {
+            $search = $request->query->get('search');
+            $sortBy = $request->query->get('sortBy');
+            $sortOrder = $request->query->get('sortOrder');
+            $offset = $request->query->get('offset');
+            $limit = $request->query->get('limit');
+
+            $products = $this->productService->getGenericProducts(
+                $offset,
+                $limit,
+                $sortOrder,
+                $search,
+                $sortBy
+            );
+
+            return $this->successResponse(
+                $products,
+                class_basename($this->model).'s successfully retrieved!',
+                Response::HTTP_OK,
+                $products->count()
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get products');
+        }
+    }
 }

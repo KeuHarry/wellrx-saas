@@ -17,31 +17,21 @@
       <Popover.Panel class="w-[280px] sm:w-[350px] p-5 mt-2">
         <div class="mb-5 font-medium">Notifications</div>
         <div
-          v-for="(faker, fakerKey) in _.take(fakerData, 5)"
-          :key="fakerKey"
-          :class="['cursor-pointer relative flex items-center', { 'mt-5': fakerKey }]"
+          v-for="(notification, nKey) in notifications"
+          :key="nKey"
+          :class="['cursor-pointer relative flex items-center', { 'mt-5': nKey }]"
         >
-          <div class="relative flex-none w-12 h-12 mr-1 image-fit">
-            <img
-              alt="Midone Tailwind HTML Admin Template"
-              class="rounded-full"
-              :src="faker.photos[0]"
-            />
-            <div
-              class="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-success dark:border-darkmode-600"
-            ></div>
-          </div>
           <div class="ml-2 overflow-hidden">
             <div class="flex items-center">
               <a href="" class="mr-5 font-medium truncate">
-                {{ faker.users[0].name }}
+                {{ notification.title }}
               </a>
               <div class="ml-auto text-xs text-slate-400 whitespace-nowrap">
-                {{ faker.times[0] }}
+                {{ notification.timestamp }}
               </div>
             </div>
             <div class="w-full truncate text-slate-500 mt-0.5">
-              {{ faker.news[0].shortContent }}
+              {{ notification.message }}
             </div>
           </div>
         </div>
@@ -80,12 +70,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Lucide from '@/components/Base/Lucide';
 import Breadcrumb from '@/components/Base/Breadcrumb';
 import { Menu, Popover } from '@/components/Base/Headless';
-import fakerData from '@/utils/faker';
 import _ from 'lodash';
+import { useNotifications } from '@/composables/useNotifications';
 
 const searchDropdown = ref(false);
 const showSearchDropdown = () => {
@@ -97,8 +87,23 @@ const hideSearchDropdown = () => {
 
 const user = computed(() => {
   const data = sessionStorage.getItem('user');
-  const user = data ? JSON.parse(data) : null;
-
-  return user;
+  return data ? JSON.parse(data) : null;
 });
+
+const notifications = ref<
+  { title: string; message: string; type: string; timestamp: Date }[]
+>([])
+
+onMounted(() => {
+  if (user.value && user.value.id) {
+    // Destructure our composable here so it's called with a real user ID
+    const { notifications: incoming } = useNotifications(user.value.id)
+    // Mirror the incoming reactive array into our local one
+    notifications.value = incoming.value ?? incoming
+  } else {
+    console.warn('User not found in sessionStorage; skipping notifications subscription')
+  }
+})
+
+console.log(notifications);
 </script>
