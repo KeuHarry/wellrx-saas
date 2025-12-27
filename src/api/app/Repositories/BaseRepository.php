@@ -27,7 +27,6 @@ class BaseRepository
 
     public function create(array $content): Model
     {
-        var_dump($content);
         $resource = $this->model::create($content);
 
         return $resource;

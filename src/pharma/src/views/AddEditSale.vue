@@ -2,7 +2,8 @@
   <div class="grid grid-cols-1 backdrop-blur-xl bg-white/50 w-full">
     <div class="flex col-span-12 h-14 px-5 justify-between">
       <div class="flex items-center">
-        <h2 class="text-lg font-medium">Sale Details {{ saleCode }}</h2>
+        <h2 class="text-lg font-medium text-stone-800">Sale Details</h2>
+        <h2 class="text-lg font-medium">{{ saleCode }}</h2>
         <span
           v-if="sale"
           class="border rounded-full text-xs px-4 py-1 ml-1 bg-opacity-20 border-opacity-5"
@@ -447,7 +448,7 @@ const setSaleForm = async () => {
   if (sale.value) {
     saleForm.value.taxes = sale.value.taxes;
     saleForm.value.discount = sale.value.discount;
-    saleForm.value.customerId = sale.value.customer ? sale.value.customer.id : null;
+    saleForm.value.customerId = sale.value.customer && sale.value.customer.id > 0 ? sale.value.customer.id : null;
     if (saleForm.value.customerId) {
       isNormalClient.value = false;
     }

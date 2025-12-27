@@ -33,6 +33,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'is_active',
         'preferred_lang',
         'change_default_pass',
+        'role_id'
     ];
 
     /**

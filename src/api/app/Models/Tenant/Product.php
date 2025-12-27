@@ -102,7 +102,7 @@ class Product extends BaseModel
      */
     public function generic()
     {
-        return $this->belongsTo('App\Models\Product', 'generic_product_id');
+        return $this->belongsTo(Product::class, 'generic_product_id');
     }
 
     /**
@@ -260,13 +260,16 @@ class Product extends BaseModel
         ];
         $json['category'] = [
             'id' => $this->category->id,
-            'name' => $this->category->name,
-
+            'name' => $this->category->name
         ];
         $json['fee'] = $this->fee ? [
             'id' => $this->fee->id,
             'name' => $this->fee->name,
             'value' => $this->fee->value,
+        ] : null;
+        $json['generic'] = $this->generic ? [
+            'id' => $this->generic->id,
+            'name' => $this->generic->label
         ] : null;
 
         return $json;

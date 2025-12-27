@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\Enums\InventoryType;
+use App\Enums\ProductStatus;
 use App\Http\Resources\InStockProductResource;
 use App\Models\Tenant\Inventory;
 use App\Models\Tenant\Product;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductRepository extends BaseRepository
@@ -67,7 +69,7 @@ class ProductRepository extends BaseRepository
         ?string $sortBy = null
     ): AnonymousResourceCollection {
         $inStockProducts = Product::where('qoh', '>', 0)
-            ->where('is_active', 1)
+            ->where('is_active', ProductStatus::ACTIVE->value)
             ->whereNull('deleted_at')
             ->when($search, function ($query, $search) {
                 $query->where('label', 'LIKE', "%{$search}%");
@@ -86,5 +88,27 @@ class ProductRepository extends BaseRepository
     public function productsCount(): int
     {
         return $this->findAll()->count();
+    }
+
+    public function findGenericProducts(
+        int $offset = 0,
+        int $limit = 10,
+        ?string $search = null,
+        ?string $sortBy = null,
+        ?string $sortOrder = null
+    ): Collection {
+        return Product::where('is_active', ProductStatus::ACTIVE->value)
+        ->where('is_generic', 1)
+        ->whereNull('deleted_at')
+        ->when($search, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('label', 'LIKE', "%{$search}%")
+                    ->orWhere('barcode', 'LIKE', "%{$search}%");
+            });
+        })
+        ->offset($offset)
+        ->limit($limit)
+        ->orderBy($sortBy, $sortOrder)
+        ->get();
     }
 }

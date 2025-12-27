@@ -101,23 +101,18 @@
             />
             <label for="is-generic" class="mr-4">Generic</label>
           </div>
-          <div class="col-span-9">
+          <div v-if="!formData.isGeneric" class="col-span-9">
             <label for="generic-product" class="block text-sm/6 text-gray-600"
               >Generic Product</label
             >
-            <TomSelect
-              v-model="genericProductId"
-              :options="{
-                placeholder: 'Search generic product',
-              }"
-              class="w-full h-9 border-gray-300 rounded-md shadow-sm text-sm text-slate-900 sm:text-sm/6"
-            >
-              <option value="1d">Leonardo DiCaprio</option>
-              <option value="2e">Johnny Deep</option>
-              <option value="3sas">Robert Downey, Jr</option>
-              <option value="4s">Samuel L. Jackson</option>
-              <option value="5we">Morgan Freeman</option>
-            </TomSelect>
+            <ComboBox
+              :options="genericProducts"
+              @search="searchGenericProducts"
+              @selected="selectProduct"
+              :defaultOption="selectedGenericProduct"
+              placeholder="Select product"
+              clearable
+            />
           </div>
         </div>
         <div class="grid grid-cols-1 gap-1 mt-4">
@@ -247,11 +242,11 @@
               }"
               class="w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 sm:text-sm/6"
             >
-              <option value="1">Leonardo DiCaprio</option>
-              <option value="2">Johnny Deep</option>
-              <option value="3">Robert Downey, Jr</option>
-              <option value="4">Samuel L. Jackson</option>
-              <option value="5">Morgan Freeman</option>
+              <option value="1">Example 1</option>
+              <option value="2">Example 2</option>
+              <option value="3">Example 3</option>
+              <option value="4">Example 4</option>
+              <option value="5">Example 5</option>
             </TomSelect>
           </div>
           <div class="col-span-2">
@@ -409,11 +404,11 @@ const productCategoryId = ref('1');
 const feeId = ref('');
 const selectedLabels = ref([]);
 const isSearchable = ref(true);
-const selectedShelf = ref<Option>({
+const selectedShelf = ref<Option|null>({
   id: 0,
   name: '',
 });
-const selectedCategory = ref<Option>({
+const selectedCategory = ref<Option|null>({
   id: 0,
   name: '',
 });
@@ -452,6 +447,7 @@ const formData = ref<ProductRequest>({
   productCategoryId: 1,
   feeId: null,
 });
+const selectedGenericProduct = ref<Option|null>(null);
 
 // STORE
 const tenantStore = useTenantStore();
@@ -487,6 +483,7 @@ const iconType = computed(() => {
 
   return 'CheckCircle';
 });
+const genericProducts = computed(() => productStore.getGenericProducts);
 
 // METHOD
 const tenantVerification = async () => {
@@ -535,6 +532,7 @@ const setProductForm = async () => {
 
   selectedShelf.value = product.value?.shelf ?? { id: 0, name: '' };
   selectedCategory.value = product.value?.category ?? { id: 0, name: '' };
+  selectedGenericProduct.value = product.value?.generic ?? null;
 };
 
 const getShelvesData = async (query: string = '') => {
@@ -567,6 +565,16 @@ const getLabelCodesData = async (queryString: string = '') => {
   });
 };
 
+const getGenericProductsData = async (queryString: string = '') => {
+  await productStore.getGenericProductsApi({
+    search: queryString,
+    sortBy: LABEL,
+    sortOrder: SortOrder.ASC,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage,
+  });
+};
+
 const searchShelf = async (queryString: string) => {
   await getShelvesData(queryString);
 };
@@ -587,11 +595,20 @@ const selectLabels = async (value: Option[]) => {
   //
 };
 
+const searchGenericProducts = async (queryString: string) => {
+  await getGenericProductsData(queryString);
+};
+
+const selectProduct = async (value: Option|null) => {
+  formData.value.genericProductId = value ? value.id : null;
+}
+
 onMounted(async () => {
   await tenantVerification();
   await getProductData();
   await getShelvesData();
   await getCategoriesData();
   await getLabelCodesData();
+  await getGenericProductsData();
 });
 </script>

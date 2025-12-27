@@ -43,6 +43,13 @@
         :placeholder="placeholder"
         autocomplete="off"
       />
+      <button
+      v-if="!multiple && clearable && searchFilter.length > 0"
+      @click="clearSingleSelection"
+      class="absolute right-8 top-1/2 transform -translate-y-1/2 text-red-400 hover:text-red-500 text-sm"
+      >
+        <XIcon />
+      </button>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
@@ -94,6 +101,7 @@
 
 <script setup lang="ts">
 import { Option } from '@/composables/models/Option';
+import { XIcon } from 'lucide-vue-next';
 import { ref, defineProps, watchEffect, onMounted, watch } from 'vue';
 
 // Define the props for the component
@@ -130,6 +138,10 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  clearable: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -176,7 +188,6 @@ const selectOption = (option: Option) => {
   // filterOptions();
 };
 
-// Remove an option from selectedOptions (only in multi-selection mode)
 const removeOption = (option: Option) => {
   if (props.multiple) {
     selectedOptions.value = selectedOptions.value.filter((selected) => selected.id !== option.id);
@@ -185,7 +196,12 @@ const removeOption = (option: Option) => {
   }
 };
 
-// Watch for clicks outside of the component to close the dropdown
+const clearSingleSelection = () => {
+  selectedOptions.value = [];
+  searchFilter.value = '';
+  emit('selected', null);
+};
+
 watchEffect(() => {
   document.addEventListener('click', (event) => {
     const isClickInside = event.target instanceof HTMLElement && event.target.closest('.relative');
@@ -213,7 +229,7 @@ watch(
       emit('selected', selectedOptions.value);
     }
   },
-  { immediate: true }, // Run immediately to handle the initial value
+  { immediate: true },
 );
 
 onMounted(() => {
@@ -234,5 +250,4 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* You can add custom styles here if necessary */
 </style>
