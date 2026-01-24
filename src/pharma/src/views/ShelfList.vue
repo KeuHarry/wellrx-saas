@@ -145,7 +145,7 @@ import useTenantStore from '@/stores/tenant';
 import { useRoute } from 'vue-router';
 import SortOrder from '@/enums/sortOrder';
 import { SHELF_CODE } from '@/constants/properties';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 
 const shelfModal = ref<InstanceType<typeof AddUpdateShelfModal> | null>(null);
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);

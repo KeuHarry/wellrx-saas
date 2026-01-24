@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev  \
     locales \
     zip \
     sudo \
@@ -27,7 +28,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN docker-php-ext-install bcmath \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl gd \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install intl
+    && docker-php-ext-install intl  \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

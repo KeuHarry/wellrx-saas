@@ -161,7 +161,7 @@ import { SupplierRequest } from '@/composables/models/SupplierRequest';
 import useSupplierStore from '@/stores/supplier';
 import { NAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 
 const route = useRoute();
 const supplierModal = ref<InstanceType<typeof AddUpdateSupplierModal> | null>(null);

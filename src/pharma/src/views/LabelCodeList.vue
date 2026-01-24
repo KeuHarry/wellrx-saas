@@ -138,7 +138,7 @@ import useTenantStore from '@/stores/tenant';
 import { LabelCodeRequest } from '@/composables/models/LabelCodeRequest';
 import SortOrder from '@/enums/sortOrder';
 import { LABEL } from '@/constants/properties';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 
 const route = useRoute();
 const labelCodeModal = ref<InstanceType<typeof AddUpdateLabelCodeModal> | null>(null);

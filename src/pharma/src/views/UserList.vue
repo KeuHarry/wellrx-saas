@@ -182,7 +182,7 @@ import { UserRequest } from '@/composables/models/UserRequest';
 import Language from '@/enums/language';
 import useTenantStore from '@/stores/tenant';
 import { useRoute } from 'vue-router';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { FIRSTNAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 import { ACTIVE, INACTIVE } from '@/constants/status';

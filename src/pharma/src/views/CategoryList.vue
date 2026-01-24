@@ -155,7 +155,7 @@ import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
 import SortOrder from '@/enums/sortOrder';
 import { CATEGORY_CODE } from '@/constants/properties';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 
 const route = useRoute();
 const categoryModal = ref<InstanceType<typeof AddUpdateCategoryModal> | null>(null);

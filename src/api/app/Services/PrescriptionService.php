@@ -20,13 +20,15 @@ class PrescriptionService extends ApiService
         private ProductService $productService,
         private CashRegisterService $cashRegisterService,
         private PrescriptionItemService $prescriptionItemService,
-        private SaleService $saleService
+        private SaleService $saleService,
+        private NotificationService $notificationService
     ) {
         $this->prescriptionRepository = $prescriptionRepository;
         $this->saleRepository = $saleRepository;
         $this->cashRegisterService = $cashRegisterService;
         $this->prescriptionItemService = $prescriptionItemService;
         $this->saleService = $saleService;
+        $this->notificationService = $notificationService;
         parent::__construct($prescriptionRepository);
     }
 
@@ -80,6 +82,12 @@ class PrescriptionService extends ApiService
             return $createdPrescription;
         });
         assert($prescription instanceof Prescription);
+
+        $this->notificationService->send(
+            $prescription->created_by, 
+            'New Prescription',
+            'Prescription ' . $prescription->prescription_code . ' has been created.' 
+        );
 
         return $prescription;
     }

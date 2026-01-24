@@ -45,23 +45,32 @@ services:
         - /app/node_modules
 
   api:
-      build:
-        context: .
-        args:
-          uid: ${UID}
-        dockerfile: src/api/Dockerfile
-      restart: unless-stopped
-      labels: 
-        - traefik.enable=true
-        - traefik.http.routers.api_router.rule=Host(`${API_SUBDOMAIN}.${DOMAIN}`) || Host(`${DOMAIN}`) && PathPrefix(`/api`)
-      environment:
-        #APACHE_RUN_USER:  ${UID}
-        #APACHE_RUN_GROUP: ${UID}
-        PHP_INI_MEMORY_LIMIT: "1G"
-        STARTUP_COMMAND_1: "composer install"
-        STARTUP_COMMAND_2: "php artisan key:generate"
-      volumes:
-        - ./src/api:/var/www/html
+    build:
+      context: .
+      args:
+        uid: ${UID}
+      dockerfile: src/api/Dockerfile
+    restart: unless-stopped
+    labels: 
+      - traefik.enable=true
+      - traefik.http.routers.api_router.rule=Host(`${API_SUBDOMAIN}.${DOMAIN}`) || Host(`${DOMAIN}`) && PathPrefix(`/api`)
+    environment:
+      #APACHE_RUN_USER:  ${UID}
+      #APACHE_RUN_GROUP: ${UID}
+      PHP_INI_MEMORY_LIMIT: "1G"
+      STARTUP_COMMAND_1: "composer install"
+      STARTUP_COMMAND_2: "php artisan key:generate"
+    volumes:
+      - ./src/api:/var/www/html
+
+  redis:
+    image: redis:alpine
+    container_name: pharma_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
   mariadb:
       image: mariadb:10.4
@@ -111,10 +120,10 @@ services:
   
 #Volumes
 volumes:
-
   mysql_data:
     driver: local
-
+  redis_data:
+    driver: local
   minio_data:
     driver: local
   

@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Tenant\ShelfController;
 use App\Http\Controllers\Api\Tenant\SupplierController;
 use App\Http\Controllers\Api\Tenant\TaxController;
 use App\Http\Controllers\Api\Tenant\UserController;
+use Illuminate\Broadcasting\BroadcastController;
 use Illuminate\Support\Facades\Route;
 //use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
@@ -61,14 +62,16 @@ Route::group([
         //logout
         Route::post('logout', [AuthenticationController::class, 'logout']);
 
-        //users rest crud
+        Route::post('broadcasting/auth', [BroadcastController::class, 'authenticate']);
+
+        //users
         Route::get('users/{userId}', [UserController::class, 'show']);
         Route::get('users', [UserController::class, 'getUsers']);
         Route::post('users', [UserController::class, 'createUser']);
         Route::put('users/{userId}', [UserController::class, 'updateUser']);
         Route::delete('users/{userId}', [UserController::class, 'delete']);
 
-        //roles rest crud
+        //roles
         Route::get('roles/{roleId}', [RoleController::class, 'show']);
         Route::get('roles', [RoleController::class, 'getRoles']);
         Route::post('roles', [RoleController::class, 'createRole']);
@@ -77,35 +80,35 @@ Route::group([
         Route::get('permissions', [RoleController::class, 'getPermissions']);
         Route::post('assign', [RoleController::class, 'assign']);
 
-        //shelves rest crud
+        //shelves
         Route::get('shelves/{shelfId}', [ShelfController::class, 'show']);
         Route::get('shelves', [ShelfController::class, 'getShelves']);
         Route::post('shelves', [ShelfController::class, 'createShelf']);
         Route::put('shelves/{shelfId}', [ShelfController::class, 'updateShelf']);
         Route::delete('shelves/{shelfId}', [ShelfController::class, 'delete']);
 
-        //Categories rest crud
+        //Categories
         Route::get('categories/{categoryId}', [CategoryController::class, 'show']);
         Route::get('categories', [CategoryController::class, 'getCategories']);
         Route::post('categories', [CategoryController::class, 'createCategory']);
         Route::put('categories/{categoryId}', [CategoryController::class, 'updateCategory']);
         Route::delete('categories/{categoryId}', [CategoryController::class, 'delete']);
 
-        //Taxes rest crud
+        //Taxes
         Route::get('taxes/{taxId}', [TaxController::class, 'getTax']);
         Route::get('taxes', [TaxController::class, 'getTaxes']);
         Route::post('taxes', [TaxController::class, 'createTax']);
         Route::put('taxes/{taxId}', [TaxController::class, 'updateTax']);
         Route::delete('taxes/{taxId}', [TaxController::class, 'deleteTax']);
 
-        //Insurance rest crud
+        //Insurance
         Route::get('insurers/{insurerId}', [InsurerController::class, 'show']);
         Route::get('insurers', [InsurerController::class, 'getInsurers']);
         Route::post('insurers', [InsurerController::class, 'createInsurer']);
         Route::put('insurers/{insurerId}', [InsurerController::class, 'updateInsurer']);
         Route::delete('insurers/{insurerId}', [InsurerController::class, 'delete']);
 
-        //Customers rest crud
+        //Customers
         Route::get('customers/{customerId}', [CustomerController::class, 'show']);
         Route::get('customers', [CustomerController::class, 'getCustomers']);
         Route::post('customers', [CustomerController::class, 'createCustomer']);
@@ -119,7 +122,7 @@ Route::group([
         Route::patch('fees/{feeId}', [FeeController::class, 'updateFee']);
         Route::delete('fees/{feeId}', [FeeController::class, 'delete']);
 
-        //Supplier rest crud
+        //Supplier
         Route::get('suppliers/{supplierId}', [SupplierController::class, 'show']);
         Route::get('suppliers', [SupplierController::class, 'getSuppliers']);
         Route::post('suppliers', [SupplierController::class, 'createSupplier']);
@@ -133,6 +136,7 @@ Route::group([
         Route::put('products/{productId}', [ProductController::class, 'updateProduct']);
         Route::delete('products/{productId}', [ProductController::class, 'delete']);
         Route::get('in-stock', [ProductController::class, 'getProductsInStock']);
+        Route::get('generic-products', [ProductController::class, 'getGenericProducts']);
 
         //Inventory
         Route::get('inventories/{inventoryId}', [InventoryController::class, 'show']);
@@ -212,5 +216,6 @@ Route::group([
         // Reports
         Route::get('sales-report/paid', [ReportController::class, 'getPaidSalesReport']);
         Route::get('profit-loss-report', [ReportController::class, 'getProfitLossReport']);
+        Route::get('reports/resources-count', [ReportController::class, 'getResourcesCount']);
     });
 });

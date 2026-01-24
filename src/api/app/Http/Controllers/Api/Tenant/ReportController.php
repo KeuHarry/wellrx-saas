@@ -74,4 +74,21 @@ class ReportController extends ApiController
             return $this->errorResponse($e->getMessage(), 'Failed to get resources');
         }
     }
+
+    public function getResourcesCount(): JsonResponse
+    {
+        try {
+            $resourcesCount = $this->reportService->getDataCount();
+
+            return $this->successResponse(
+                $resourcesCount,
+                'resources count retrieved!',
+                Response::HTTP_OK
+            );
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->errors(), 'Validation failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Failed to get resources');
+        }
+    }
 }

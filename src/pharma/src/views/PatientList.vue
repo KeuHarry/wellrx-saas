@@ -156,7 +156,7 @@ import NotificationType from '@/enums/notification';
 import { Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { FIRSTNAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 import AddUpdatePatientModal from '@/components/Modals/AddUpdatePatientModal.vue';

@@ -1,4 +1,3 @@
-import useCsrfCookie from '@/composables/api/authentication/useCsrfCookie';
 import useLogin from '@/composables/api/authentication/useLogin';
 import { AuthUser } from '@/composables/models/AuthUser';
 import { Credentials } from '@/types/credentials';
@@ -33,17 +32,6 @@ export const useAuthStore = defineStore('auth-store', {
         const settingStore = useSettingStore();
         await settingStore.getSettingsApi();
         return response;
-      } catch (error) {
-        this.isPending = false;
-        throw error;
-      }
-    },
-
-    async csrfCookieApi() {
-      const csrfCookie = useCsrfCookie();
-      try {
-        this.isPending = true;
-        await csrfCookie();
       } catch (error) {
         this.isPending = false;
         throw error;

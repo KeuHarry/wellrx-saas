@@ -155,7 +155,7 @@ import NotificationType from '@/enums/notification';
 import { Ref } from 'vue';
 import useTenantStore from '@/stores/tenant';
 import { useRoute } from 'vue-router';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { NAME } from '@/constants/properties';
 import AddUpdateInsurerModal from '@/components/Modals/AddUpdateInsurerModal.vue';
