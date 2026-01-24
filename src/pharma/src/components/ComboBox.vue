@@ -102,7 +102,7 @@
 <script setup lang="ts">
 import { Option } from '@/composables/models/Option';
 import { XIcon } from 'lucide-vue-next';
-import { ref, defineProps, watchEffect, onMounted, watch } from 'vue';
+import { ref, watchEffect, onMounted, watch } from 'vue';
 
 // Define the props for the component
 const props = defineProps({

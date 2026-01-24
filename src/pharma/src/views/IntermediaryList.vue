@@ -145,7 +145,7 @@ import { Intermediary } from '@/composables/models/Intermediary';
 import { IntermediaryRequest } from '@/composables/models/IntermediaryRequest';
 import SortOrder from '@/enums/sortOrder';
 import { NAME } from '@/constants/properties';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 
 const route = useRoute();
 const intermediaryModal = ref<InstanceType<typeof AddUpdateIntermediaryModal> | null>(null);

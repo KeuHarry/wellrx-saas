@@ -148,7 +148,7 @@ import { Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
 import { PrescriberRequest } from '@/composables/models/PrescriberRequest';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { FIRSTNAME } from '@/constants/properties';
 import SortOrder from '@/enums/sortOrder';
 

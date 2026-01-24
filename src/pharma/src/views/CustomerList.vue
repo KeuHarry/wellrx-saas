@@ -161,7 +161,7 @@ import { Customer } from '@/composables/models/Customer';
 import useTenantStore from '@/stores/tenant';
 import { useRoute } from 'vue-router';
 import { CustomerRequest } from '@/composables/models/CustomerRequest';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { NAME } from '@/constants/properties';
 import { formatPrice } from '@/utils/helper';

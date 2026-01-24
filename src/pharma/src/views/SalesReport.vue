@@ -312,7 +312,7 @@ import { UPDATED_AT } from '@/constants/properties';
 import useTenantStore from '@/stores/tenant';
 import { useRoute } from 'vue-router';
 import { PROFIT_LOSS, SALE_REPORT, salesReportType } from '@/constants/salesReportType';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { formatPrice } from '@/utils/helper';
 
 const route = useRoute();

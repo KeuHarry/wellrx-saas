@@ -159,7 +159,7 @@ import { useRoute } from 'vue-router';
 import useTenantStore from '@/stores/tenant';
 import SortOrder from '@/enums/sortOrder';
 import { FEE_CODE } from '@/constants/properties';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { getFeeTypeName } from '@/utils/helper';
 
 const feeModal = ref<InstanceType<typeof AddUpdateFeeModal> | null>(null);

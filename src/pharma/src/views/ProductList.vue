@@ -31,108 +31,15 @@
       </div>
     </div>
     <!-- BEGIN: Data List -->
-    <div class="col-span-12 overflow-auto intro-y lg:overflow-visible">
-      <Table class="border-spacing-y-[5px] border-separate -mt-2">
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th class="border-b-0 whitespace-nowrap">CODE</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">NAME</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">TYPE</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">RETAIL PRICE</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">QOH</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">SHELF</Table.Th>
-            <Table.Th class="border-b-0 whitespace-nowrap">STATUS</Table.Th>
-            <Table.Th class="text-center border-b-0 whitespace-nowrap">ACTIONS</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          <Table.Tr
-            v-for="(product, ckey) in products"
-            :key="ckey"
-            @click="openAddEditProduct(product.id)"
-          >
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ product.productCode }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ product.label }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ product.isPrescription ? RX : OTC }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ formatPrice(product.retailCost) }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ product.qoh }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              {{ product.shelf?.name }}
-            </Table.Td>
-            <Table.Td
-              class="box rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              <span
-                class="text-xs border rounded-full px-4 py-1 bg-opacity-20 border-opacity-5"
-                :class="[
-                  product.isActive
-                    ? 'bg-green-600 border-green-600 text-green-600'
-                    : 'bg-red-600 border-red-600 text-red-600',
-                ]"
-              >
-                {{ product.isActive ? ACTIVE : INACTIVE }}
-              </span>
-            </Table.Td>
-            <Table.Td
-              @click="
-                (event) => {
-                  event.stopPropagation();
-                }
-              "
-              :class="[
-                'box w-56 rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600',
-                'before:absolute before:inset-y-0 before:left-0 before:my-auto before:block before:h-8 before:w-px before:bg-slate-200 before:dark:bg-darkmode-400',
-              ]"
-            >
-              <div class="flex items-center justify-center">
-                <Tippy content="Delete">
-                  <a
-                    class="flex items-center text-danger"
-                    href="#"
-                    @click="openDeleteProductModal(product)"
-                  >
-                    <Lucide icon="Trash2" class="w-4 h-4 mr-1" />
-                  </a>
-                </Tippy>
-              </div>
-            </Table.Td>
-          </Table.Tr>
-          <Table.Tr v-if="!hasProduct">
-            <Table.Td
-              :colspan="colspan"
-              class="box w-full rounded-l-none rounded-r-none border-x-0 shadow-[5px_3px_5px_#00000005] first:rounded-l-[0.6rem] first:border-l last:rounded-r-[0.6rem] last:border-r dark:bg-darkmode-600 cursor-pointer"
-            >
-              <div class="grid grid-cols-1 p-5 text-center">
-                <span class="text-slate-400">No Records</span>
-              </div>
-            </Table.Td>
-          </Table.Tr>
-        </Table.Tbody>
-      </Table>
+    <div class="col-span-12">
+      <ProductTable
+        :products="products"
+        @edit="openAddEditProduct"
+        @delete="openDeleteProductModal"
+      />
     </div>
     <!-- END: Data List -->
+
     <PaginationComponent
       :totalItems="productTotal"
       :initialItemsPerPage="paginate"
@@ -161,23 +68,18 @@ import { FormInput } from '@/components/Base/Form';
 import Notification from '@/components/Base/Notification';
 import { type NotificationElement } from '@/components/Base/Notification';
 import Lucide from '@/components/Base/Lucide';
-import Tippy from '@/components/Base/Tippy';
 import { Menu } from '@/components/Base/Headless';
-import Table from '@/components/Base/Table';
 import DeleteModal from '@/components/Modals/DeleteModal.vue';
 import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
-import { Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import useProductStore from '@/stores/product';
-import { OTC, RX } from '@/constants/productType';
 import { Product } from '@/composables/models/Product';
 import useTenantStore from '@/stores/tenant';
-import PaginationComponent from '@/components/PaginationComponent.vue';
-import { ACTIVE, INACTIVE } from '@/constants/status';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { LABEL } from '@/constants/properties';
-import { formatPrice } from '@/utils/helper';
+import ProductTable from '@/components/ProductTable.vue';
 
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 

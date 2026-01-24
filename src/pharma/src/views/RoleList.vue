@@ -130,7 +130,7 @@ import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import useRoleStore from '@/stores/role';
 import AddUpdateRoleModal from '@/components/Modals/AddUpdateRoleModal.vue';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import { Role } from '@/composables/models/Role';
 import PermissionSlideover from '@/components/PermissionSlideover.vue';
 import useTenantStore from '@/stores/tenant';

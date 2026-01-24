@@ -172,7 +172,7 @@ import useToastStore from '@/stores/toast';
 import NotificationType from '@/enums/notification';
 import useTenantStore from '@/stores/tenant';
 import { useRoute, useRouter } from 'vue-router';
-import PaginationComponent from '@/components/PaginationComponent.vue';
+import PaginationComponent from '@/components/shared/PaginationComponent.vue';
 import SortOrder from '@/enums/sortOrder';
 import { INVOICE_DATE } from '@/constants/properties';
 import { getOrderStatus } from '@/utils/helper';
