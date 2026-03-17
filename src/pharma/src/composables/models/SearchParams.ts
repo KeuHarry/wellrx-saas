@@ -11,4 +11,5 @@ export interface SearchParams {
   cashierStatus?: number | null;
   startDate?: string | null;
   endDate?: string | null;
+  productId?: number | null;
 }

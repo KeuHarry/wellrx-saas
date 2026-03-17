@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { computed, onMounted, provide, Ref, ref } from 'vue';
 import Button from '@/components/Base/Button';
 import { FormInput } from '@/components/Base/Form';

@@ -21,21 +21,24 @@ class PrescriptionItemService extends ApiService
     {
         $prescriptionItemIds = [];
         foreach ($contents as $content) {
-            $labelCodes = $content['labelCodes'];
+            $labelCodes = $content['labelCodes'] ?? [];
+            unset($content['labelCodes']);
             $input = $this->updateKey($content);
             $prescriptionItem = $this->prescriptionItemRepository->create($input);
             assert($prescriptionItem instanceof PrescriptionItem);
             $prescriptionItemIds[] = $prescriptionItem->id;
 
-            $prescriptionItemLabelCodes = array_map(function ($labelCode) use ($prescriptionItem) {
-                return [
-                    'prescription_item_id' => $prescriptionItem->id,
-                    'label_code_id' => $labelCode['id'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }, $labelCodes);
-            PrescriptionItemLabelCode::insert($prescriptionItemLabelCodes);
+            if (! empty($labelCodes)) {
+                $prescriptionItemLabelCodes = array_map(function ($labelCode) use ($prescriptionItem) {
+                    return [
+                        'prescription_item_id' => $prescriptionItem->id,
+                        'label_code_id' => $labelCode['id'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }, $labelCodes);
+                PrescriptionItemLabelCode::insert($prescriptionItemLabelCodes);
+            }
         }
 
         return $prescriptionItemIds;

@@ -1,7 +1,7 @@
 <template>
   <h2 class="mt-10 text-lg font-medium intro-y">Products</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
+    <div class="relative z-10 flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
       <Button @click="openAddEditProduct()" variant="primary" class="mr-2 shadow-md">
         Add Product
       </Button>
@@ -12,11 +12,30 @@
           </span>
         </Menu.Button>
         <Menu.Items class="w-40">
-          <Menu.Item> <Lucide icon="FileDown" class="w-4 h-4 mr-2" /> Import </Menu.Item>
-          <Menu.Item> <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel </Menu.Item>
+          <Menu.Item @click="exportProducts">
+            <Lucide icon="FileText" class="w-4 h-4 mr-2" /> Export to Excel
+          </Menu.Item>
         </Menu.Items>
       </Menu>
       <div class="hidden mx-auto md:block text-slate-500"></div>
+      <div class="mr-3 h-9">
+        <select
+          v-model="shelfId"
+          class="h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 w-48"
+          name="shelf-filter"
+          id="shelf-filter"
+          @change="getProductsData"
+        >
+          <option :value="null">All shelves</option>
+          <option
+            v-for="shelf in shelves"
+            :key="shelf.id"
+            :value="shelf.id"
+          >
+            {{ shelf.name }}
+          </option>
+        </select>
+      </div>
       <div class="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
         <div class="relative w-80 text-slate-500">
           <FormInput
@@ -31,7 +50,7 @@
       </div>
     </div>
     <!-- BEGIN: Data List -->
-    <div class="col-span-12">
+    <div class="relative z-0 col-span-12">
       <ProductTable
         :products="products"
         @edit="openAddEditProduct"
@@ -61,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { computed, onMounted, provide, ref } from 'vue';
 import Button from '@/components/Base/Button';
 import { FormInput } from '@/components/Base/Form';
@@ -76,10 +95,14 @@ import { useRoute, useRouter } from 'vue-router';
 import useProductStore from '@/stores/product';
 import { Product } from '@/composables/models/Product';
 import useTenantStore from '@/stores/tenant';
+import useShelfStore from '@/stores/shelf';
 import PaginationComponent from '@/components/shared/PaginationComponent.vue';
+import { NAME } from '@/constants/properties';
+import { defaultItemsPerPage, defaultOffset } from '@/constants/pagination';
 import SortOrder from '@/enums/sortOrder';
 import { LABEL } from '@/constants/properties';
 import ProductTable from '@/components/ProductTable.vue';
+import useExportProducts from '@/composables/api/products/useExportProducts';
 
 const deleteModalRef = ref<InstanceType<typeof DeleteModal> | null>(null);
 
@@ -101,10 +124,14 @@ const colspan = ref(0);
 // STORE
 const tenantStore = useTenantStore();
 const productStore = useProductStore();
+const shelfStore = useShelfStore();
 const toastStore = useToastStore();
+
+const shelfId = ref<number | null>(null);
 
 // COMPUTED
 const products = computed(() => productStore.getProducts);
+const shelves = computed(() => shelfStore.getShelves);
 const productTotal = computed(() => productStore.getProductTotal);
 const message = computed(() => toastStore.getMessage);
 const iconType = computed(() => {
@@ -144,6 +171,7 @@ const getProductsData = async () => {
     sortOrder: SortOrder.ASC,
     offset: (currentPage.value - 1) * paginate.value,
     limit: paginate.value,
+    shelfId: shelfId.value,
   });
 };
 
@@ -183,9 +211,28 @@ const deleteProduct = async (id: number) => {
   await productStore.deleteProductApi(id);
 };
 
+const exportProductsFn = useExportProducts();
+const exportProducts = async () => {
+  try {
+    await exportProductsFn();
+    toastStore.setMessage('Products exported successfully.');
+    basicNonStickyNotificationToggle();
+  } catch {
+    toastStore.setMessage('Export failed.', NotificationType.ERROR);
+    basicNonStickyNotificationToggle();
+  }
+};
+
 onMounted(async () => {
   await accountVerification();
   getColspan();
+  await shelfStore.getShelvesApi({
+    search: '',
+    sortBy: NAME,
+    sortOrder: SortOrder.ASC,
+    offset: defaultOffset,
+    limit: defaultItemsPerPage * 10,
+  });
   await getProductsData();
 });
 </script>

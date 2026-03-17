@@ -253,6 +253,11 @@ const handleItemsPerPageChange = (itemsPerPage: number) => {
   currentPage.value = 1;
 };
 
+const productIdFilter = computed(() => {
+  const id = route.query.productId;
+  return id != null && id !== '' ? Number(id) : null;
+});
+
 const getInventoriesData = async () => {
   await inventoryStore.getInventoryListApi({
     search: search.value,
@@ -261,6 +266,7 @@ const getInventoriesData = async () => {
     offset: (currentPage.value - 1) * paginate.value,
     limit: paginate.value,
     type: inventoryType.value,
+    productId: productIdFilter.value,
   });
 };
 
@@ -305,6 +311,10 @@ const saveInventoryOutEntry = async (formData: Ref<InventoryOutRequest>) => {
 watch(inventoryType, async () => {
   await getInventoriesData();
 });
+
+watch(productIdFilter, async () => {
+  await getInventoriesData();
+}, { immediate: false });
 
 onMounted(async () => {
   await accountVerification();

@@ -21,7 +21,8 @@ class InventoryRepository extends BaseRepository
         string $sortOrder = 'ASC',
         ?string $search = null,
         ?string $sortBy = null,
-        ?int $type = null
+        ?int $type = null,
+        ?int $productId = null
     ): Collection {
         return Inventory::when($search, function ($query, $search) {
             $query->whereHas('product', function ($q) use ($search) {
@@ -32,9 +33,12 @@ class InventoryRepository extends BaseRepository
             ->when($type !== null, function ($query) use ($type) {
                 $query->where('type', $type);
             })
+            ->when($productId !== null && $productId > 0, function ($query) use ($productId) {
+                $query->where('product_id', $productId);
+            })
             ->offset($offset)
             ->limit($limit)
-            ->orderBy($sortBy, $sortOrder)
+            ->orderBy($sortBy ?? 'id', $sortOrder)
             ->get();
     }
 

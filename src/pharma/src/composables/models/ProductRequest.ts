@@ -20,4 +20,5 @@ export interface ProductRequest {
   shelfId: number;
   productCategoryId: number;
   feeId: number | null;
+  labelCodeIds: number[] | null;
 }

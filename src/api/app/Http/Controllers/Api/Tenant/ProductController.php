@@ -11,7 +11,9 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response as ResponseFacade;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductController extends ApiController
 {
@@ -128,5 +130,43 @@ class ProductController extends ApiController
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Failed to get products');
         }
+    }
+
+    public function exportProducts(): StreamedResponse
+    {
+        $products = $this->productService->getProductsForExport();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="products.csv"',
+        ];
+
+        return ResponseFacade::stream(function () use ($products) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'Product Code', 'Label', 'Barcode', 'CIP', 'Category', 'Shelf', 'QOH', 'Min', 'Max',
+                'Acq Cost', 'Wholesale', 'Retail', 'Unit Cost', 'Active', 'Prescription', 'Generic',
+            ]);
+            foreach ($products as $product) {
+                fputcsv($handle, [
+                    $product->product_code,
+                    $product->label,
+                    $product->barcode ?? '',
+                    $product->cip_code ?? '',
+                    $product->category?->name ?? '',
+                    $product->shelf?->name ?? '',
+                    $product->qoh,
+                    $product->min_quantity ?? '',
+                    $product->max_quantity ?? '',
+                    $product->acq_cost ?? '',
+                    $product->wholesale_cost ?? '',
+                    $product->retail_cost ?? '',
+                    $product->unit_cost ?? '',
+                    $product->is_active ? 'Yes' : 'No',
+                    $product->is_prescription ? 'Yes' : 'No',
+                    $product->is_generic ? 'Yes' : 'No',
+                ]);
+            }
+            fclose($handle);
+        }, 200, $headers);
     }
 }

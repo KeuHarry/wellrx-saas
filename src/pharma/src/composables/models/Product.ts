@@ -36,4 +36,5 @@ export interface Product {
     id: number;
     name: string;
   } | null;
+  labelCodes?: { id: number; labelCode: string; label: string }[];
 }

@@ -6,6 +6,7 @@ use App\Models\Tenant\Product;
 use App\Repositories\ProductRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
 
 class ProductService extends ApiService
 {
@@ -15,9 +16,44 @@ class ProductService extends ApiService
         parent::__construct($productRepository);
     }
 
+    public function create(array $content): Product
+    {
+        $labelCodeIds = Arr::get($content, 'labelCodeIds');
+        Arr::forget($content, 'labelCodeIds');
+        /** @var Product $product */
+        $product = parent::create($content);
+        if (is_array($labelCodeIds) && ! empty($labelCodeIds)) {
+            $product->labelCodes()->sync($labelCodeIds);
+        }
+
+        return $product;
+    }
+
+    public function update(string $id, array $content): int
+    {
+        $labelCodeIds = Arr::get($content, 'labelCodeIds');
+        Arr::forget($content, 'labelCodeIds');
+        $id = parent::update($id, $content);
+        if (is_array($labelCodeIds)) {
+            Product::find($id)->labelCodes()->sync($labelCodeIds);
+        }
+
+        return (int) $id;
+    }
+
+    public function getById(int $id): Product
+    {
+        return Product::with('labelCodes')->findOrFail($id);
+    }
+
     public function getProducts(): Collection
     {
         return Product::all();
+    }
+
+    public function getProductsForExport(): Collection
+    {
+        return Product::with(['category', 'shelf'])->get();
     }
 
     public function search(

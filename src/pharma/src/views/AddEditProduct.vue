@@ -2,7 +2,14 @@
   <div class="grid grid-cols-1 backdrop-blur-xl bg-white/50 w-full">
     <div class="flex col-span-12 h-12 px-5 justify-end">
       <Button variant="primary" @click="createUpdateProduct" class="mt-3 mr-3"> Save </Button>
-      <Button v-if="productId" variant="soft-success" class="mt-3 mr-3"> View Inventory </Button>
+      <Button
+    v-if="productId"
+    variant="soft-success"
+    class="mt-3 mr-3"
+    @click="goToProductInventory"
+  >
+    View Inventory
+  </Button>
       <Button variant="outline-secondary" @click="closeAddProductForm" class="mt-3">
         Cancel
       </Button>
@@ -236,17 +243,20 @@
           <div class="col-span-2">
             <label for="tax" class="block text-sm/6 text-gray-600">Tax</label>
             <TomSelect
-              v-model="feeId"
+              :model-value="formData.feeId != null ? String(formData.feeId) : ''"
+              @update:model-value="onFeeSelect"
               :options="{
                 placeholder: 'Select Tax',
               }"
               class="w-full h-9 border border-gray-300 rounded-md shadow-sm text-sm text-slate-900 sm:text-sm/6"
             >
-              <option value="1">Example 1</option>
-              <option value="2">Example 2</option>
-              <option value="3">Example 3</option>
-              <option value="4">Example 4</option>
-              <option value="5">Example 5</option>
+              <option
+                v-for="fee in feeOptions"
+                :key="fee.id"
+                :value="fee.id"
+              >
+                {{ fee.name || fee.feeCode }}
+              </option>
             </TomSelect>
           </div>
           <div class="col-span-2">
@@ -394,6 +404,7 @@ import useCategoryStore from '@/stores/category';
 import { Option } from '@/composables/models/Option';
 import { defaultItemsPerPage, defaultOffset } from '@/constants/pagination';
 import useLabelCodeStore from '@/stores/labelCode';
+import useFeeStore from '@/stores/fee';
 
 const router = useRouter();
 const route = useRoute();
@@ -401,8 +412,7 @@ const route = useRoute();
 const genericProductId = ref('');
 const shelfId = ref('1');
 const productCategoryId = ref('1');
-const feeId = ref('');
-const selectedLabels = ref([]);
+const selectedLabels = ref<Option[]>([]);
 const isSearchable = ref(true);
 const selectedShelf = ref<Option|null>({
   id: 0,
@@ -446,6 +456,7 @@ const formData = ref<ProductRequest>({
   shelfId: 1,
   productCategoryId: 1,
   feeId: null,
+  labelCodeIds: null,
 });
 const selectedGenericProduct = ref<Option|null>(null);
 
@@ -456,6 +467,7 @@ const categoryStore = useCategoryStore();
 const toastStore = useToastStore();
 const productStore = useProductStore();
 const labelCodeStore = useLabelCodeStore();
+const feeStore = useFeeStore();
 
 // COMPUTED
 const shelves = computed(() => shelfStore.getShelves);
@@ -484,8 +496,23 @@ const iconType = computed(() => {
   return 'CheckCircle';
 });
 const genericProducts = computed(() => productStore.getGenericProducts);
+const feeOptions = computed(() => feeStore.getFees);
 
 // METHOD
+const goToProductInventory = () => {
+  if (productId.value) {
+    router.push({
+      name: 'inventory',
+      params: { identifier: route.params.identifier },
+      query: { productId: String(productId.value) },
+    });
+  }
+};
+
+const onFeeSelect = (value: string | string[]) => {
+  const v = Array.isArray(value) ? value[0] : value;
+  formData.value.feeId = v ? Number(v) : null;
+};
 const tenantVerification = async () => {
   await tenantStore.accountVerificationApi(route.params.identifier as string);
 };
@@ -529,10 +556,18 @@ const setProductForm = async () => {
   formData.value.minQuantity = product.value?.minQuantity ?? null;
   formData.value.maxQuantity = product.value?.maxQuantity ?? null;
   formData.value.qoh = product.value?.qoh ?? 0;
+  formData.value.feeId = product.value?.fee?.id ?? null;
+  formData.value.isDecomposable = product.value?.isDecomposable ?? false;
+  formData.value.pkgSize = product.value?.pkgSize ?? 1;
 
   selectedShelf.value = product.value?.shelf ?? { id: 0, name: '' };
   selectedCategory.value = product.value?.category ?? { id: 0, name: '' };
   selectedGenericProduct.value = product.value?.generic ?? null;
+  selectedLabels.value = (product.value?.labelCodes ?? []).map((lc) => ({
+    id: lc.id,
+    name: lc.labelCode ?? lc.label,
+  }));
+  formData.value.labelCodeIds = (product.value?.labelCodes ?? []).map((lc) => lc.id);
 };
 
 const getShelvesData = async (query: string = '') => {
@@ -591,8 +626,8 @@ const selectCategory = (value: { id: number; name: string }) => {
   formData.value.productCategoryId = value.id;
 };
 
-const selectLabels = async (value: Option[]) => {
-  //
+const selectLabels = (value: Option[]) => {
+  formData.value.labelCodeIds = value?.length ? value.map((o) => o.id) : null;
 };
 
 const searchGenericProducts = async (queryString: string) => {
@@ -610,5 +645,6 @@ onMounted(async () => {
   await getCategoriesData();
   await getLabelCodesData();
   await getGenericProductsData();
+  await feeStore.getFeesApi({ offset: 0, limit: 500, sortBy: 'fee_code', sortOrder: SortOrder.ASC });
 });
 </script>
