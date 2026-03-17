@@ -39,6 +39,7 @@ class ProductRepository extends BaseRepository
 
         $total = $query->count();
 
+        $sortBy = $sortBy ?? 'id';
         $products = $query->offset($offset)
             ->limit($limit)
             ->orderBy($sortBy, $sortOrder)
@@ -79,7 +80,7 @@ class ProductRepository extends BaseRepository
             }])
             ->offset($offset)
             ->limit($limit)
-            ->orderBy($sortBy, $sortOrder)
+            ->orderBy($sortBy ?? 'id', $sortOrder)
             ->get();
 
         return InStockProductResource::collection($inStockProducts);
@@ -108,7 +109,7 @@ class ProductRepository extends BaseRepository
         })
         ->offset($offset)
         ->limit($limit)
-        ->orderBy($sortBy, $sortOrder)
+        ->orderBy($sortBy ?? 'id', $sortOrder)
         ->get();
     }
 }

@@ -109,4 +109,15 @@ class PrintingController extends ApiController
 
         return $this->printingService->showPrintPreview($template, [$dataKey => $data, 'pharmacy' => $pharmacyDetails, 'user' => $user]);
     }
+
+    public function printPrescriptionLabels(int $prescriptionId)
+    {
+        $prescription = $this->prescriptionService->getById($prescriptionId);
+        $pharmacyDetails = $this->settingService->getPharmacyDetails();
+
+        return $this->printingService->showPrintPreview('pdf.prescriptionLabels', [
+            'prescription' => $prescription,
+            'pharmacy' => $pharmacyDetails,
+        ]);
+    }
 }

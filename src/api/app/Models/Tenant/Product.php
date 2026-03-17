@@ -142,16 +142,12 @@ class Product extends BaseModel
     }*/
 
     /**
-     * Get the label codes data.
+     * Get the label codes (many-to-many via product_label_codes pivot).
      */
-    /*public function label_codes_get_data()
+    public function labelCodes()
     {
-        $label_codes = [];
-        foreach ($this->label_codes as $item) {
-            $label_codes[] = $item->label_code->getItemData();
-        }
-        return $label_codes;
-    }*/
+        return $this->belongsToMany(LabelCode::class, 'product_label_codes');
+    }
 
     /**
      * Get the tax.
@@ -271,6 +267,9 @@ class Product extends BaseModel
             'id' => $this->generic->id,
             'name' => $this->generic->label
         ] : null;
+        $json['labelCodes'] = $this->relationLoaded('labelCodes')
+            ? $this->labelCodes->map(fn ($lc) => ['id' => $lc->id, 'labelCode' => $lc->label_code, 'label' => $lc->label])
+            : [];
 
         return $json;
     }

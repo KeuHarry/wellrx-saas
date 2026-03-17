@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
             ShelfSeeder::class,
             ProductSeeder::class,
             InventorySeeder::class,
+            LabelCodeSeeder::class,
+            InsurerSeeder::class,
+            PrescriberSeeder::class,
+            CustomerSeeder::class,
+            PatientSeeder::class,
         ]);
     }
 }

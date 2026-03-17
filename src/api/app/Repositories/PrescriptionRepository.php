@@ -18,7 +18,7 @@ class PrescriptionRepository extends BaseRepository
         int $offset = 0,
         int $limit = 10,
         string $sortOrder = 'ASC',
-        string $sortBy = SortBy::CREATED_AT->value,
+        ?string $sortBy = null,
         ?string $search = null,
         ?int $status = null,
         ?string $fromDate = null,
@@ -43,6 +43,7 @@ class PrescriptionRepository extends BaseRepository
             });
 
         $total = $query->count();
+        $sortBy = $sortBy ?? SortBy::CREATED_AT->value;
         $prescriptions = $query->offset($offset)
             ->limit($limit)
             ->orderBy($sortBy, $sortOrder)

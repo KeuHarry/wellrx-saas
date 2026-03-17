@@ -7,7 +7,9 @@ import { Menu, Popover } from '@/components/Base/Headless';
 import fakerData from '@/utils/faker';
 import _ from 'lodash';
 import { TransitionRoot } from '@headlessui/vue';
+import useAuthStore from '@/stores/auth';
 
+const authStore = useAuthStore();
 const searchDropdown = ref(false);
 const showSearchDropdown = () => {
   searchDropdown.value = true;
@@ -198,7 +200,7 @@ const hideSearchDropdown = () => {
           <Lucide icon="HelpCircle" class="w-4 h-4 mr-2" /> Help
         </Menu.Item>
         <Menu.Divider class="bg-white/[0.08]" />
-        <Menu.Item class="hover:bg-white/5">
+        <Menu.Item class="hover:bg-white/5" @click="authStore.logoutApi()">
           <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> Logout
         </Menu.Item>
       </Menu.Items>

@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Enums\CashierStatus;
 use App\Enums\InventoryType;
+use App\Enums\PrescriptionStatus;
 use App\Enums\SaleStatus;
 use App\Http\Resources\SaleResource;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Inventory;
+use App\Models\Tenant\Prescription;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\SalePayment;
@@ -164,10 +166,12 @@ class SaleService extends ApiService
 
             if ($isOneTimePayment) {
                 $this->performPayment($sale, $content);
+                $sale->refresh();
                 $canDeduct = $sale->is_deducted;
                 if ($sale->status === SaleStatus::PAID->value && $canDeduct) {
                     $this->processSaleItems($sale->saleItems);
                 }
+                $this->markPrescriptionAsPaidIfApplicable($sale);
             }
 
             return $sale;
@@ -211,11 +215,28 @@ class SaleService extends ApiService
                 $customer->addDeposit(floatval($content['amount']));
             }
 
+            if ($status === SaleStatus::PAID->value) {
+                $this->markPrescriptionAsPaidIfApplicable($sale);
+            }
+
             return $sale;
         });
         assert($saleUpdated instanceof Sale);
 
         return $saleUpdated;
+    }
+
+    /**
+     * Updates the linked prescription status to PAID when the sale is paid.
+     */
+    private function markPrescriptionAsPaidIfApplicable(Sale $sale): void
+    {
+        if ($sale->status !== SaleStatus::PAID->value || ! $sale->prescription_id) {
+            return;
+        }
+        Prescription::where('id', $sale->prescription_id)->update([
+            'status' => PrescriptionStatus::PAID->value,
+        ]);
     }
 
     private function performPayment(Sale $sale, array $content): void

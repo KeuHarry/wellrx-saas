@@ -19,8 +19,11 @@ export const useTenantStore = defineStore('tenant-store', {
   }),
 
   getters: {
-    getTenantIdentifier: (state) => state.tenantIdentifier,
-    getTenantUrl: (state) => state.tenantUrl,
+    getTenantIdentifier: (state) =>
+      state.tenantIdentifier || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('tenantIdentifier') : null) || '',
+    /** URL de base API du tenant (ex: https://api.example.com/tenant-id/v1). Persistée en sessionStorage pour survivre au rechargement. */
+    getTenantUrl: (state) =>
+      state.tenantUrl || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('tenantUrl') : null) || '',
   },
 
   actions: {
@@ -45,6 +48,10 @@ export const useTenantStore = defineStore('tenant-store', {
         const response = await verifyTenant(account);
         this.tenantIdentifier = response.tenant.identifier;
         this.tenantUrl = `${API_URL}/${response.tenant.id}/v1`;
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.setItem('tenantIdentifier', this.tenantIdentifier);
+          sessionStorage.setItem('tenantUrl', this.tenantUrl);
+        }
         return response;
       } catch (error) {
         this.isPending = false;

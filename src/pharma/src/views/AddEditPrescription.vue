@@ -31,7 +31,7 @@
             <Menu.Item v-if="isPaid" @click="printInvoice"
               ><Lucide icon="FileDown" class="w-4 h-4 mr-2" />Invoice</Menu.Item
             >
-            <Menu.Item v-if="isPaid" @click="printLabels"
+            <Menu.Item v-if="isCompleteOrPaid" @click="printLabels"
               ><Lucide icon="FileDown" class="w-4 h-4 mr-2" />Labels</Menu.Item
             >
           </Menu.Items>
@@ -1020,7 +1020,12 @@ const printProforma = () => {
     printingStore.printProformaApi(prescriptionId.value, EntityType.PRESCRIPTION);
   }
 };
-const printLabels = () => {};
+
+const printLabels = () => {
+  if (prescriptionId.value) {
+    printingStore.printLabelsApi(prescriptionId.value);
+  }
+};
 
 onMounted(async () => {
   await tenantVerification();

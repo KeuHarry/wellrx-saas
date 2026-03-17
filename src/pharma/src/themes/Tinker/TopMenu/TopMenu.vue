@@ -20,7 +20,9 @@ import { FormInput } from '@/components/Base/Form';
 import { Menu, Popover } from '@/components/Base/Headless';
 import { TransitionRoot } from '@headlessui/vue';
 import { watch, reactive, computed, onMounted, ref, provide } from 'vue';
+import useAuthStore from '@/stores/auth';
 
+const authStore = useAuthStore();
 const searchDropdown = ref(false);
 const showSearchDropdown = () => {
   searchDropdown.value = true;
@@ -262,7 +264,7 @@ onMounted(() => {
               <Lucide icon="HelpCircle" class="w-4 h-4 mr-2" /> Help
             </Menu.Item>
             <Menu.Divider class="bg-white/[0.08]" />
-            <Menu.Item class="hover:bg-white/5">
+            <Menu.Item class="hover:bg-white/5" @click="authStore.logoutApi()">
               <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> Logout
             </Menu.Item>
           </Menu.Items>

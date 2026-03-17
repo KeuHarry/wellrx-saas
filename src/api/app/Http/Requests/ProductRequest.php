@@ -43,6 +43,8 @@ class ProductRequest extends FormRequest
             'productCategoryId' => 'integer|required',
             'isDecomposable' => 'boolean|required',
             'pkgSize' => 'integer|required',
+            'labelCodeIds' => 'array|nullable',
+            'labelCodeIds.*' => 'integer|exists:label_codes,id',
         ];
     }
 }

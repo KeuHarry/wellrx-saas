@@ -34,6 +34,7 @@ class InventoryController extends ApiController
             $offset = $request->query->get('offset');
             $limit = $request->query->get('limit');
             $type = $request->query->get('type');
+            $productId = $request->query->get('productId') !== null ? (int) $request->query->get('productId') : null;
 
             $inventories = $this->inventoryService->search(
                 $offset,
@@ -41,7 +42,8 @@ class InventoryController extends ApiController
                 $sortOrder,
                 $search,
                 $sortBy,
-                $type
+                $type,
+                $productId
             );
 
             return $this->successResponse(

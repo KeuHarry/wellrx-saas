@@ -16,6 +16,16 @@
       </Popover.Button>
       <Popover.Panel class="w-[280px] sm:w-[350px] p-5 mt-2">
         <div class="mb-5 font-medium">Notifications</div>
+        <button
+          type="button"
+          class="mb-4 text-xs text-primary hover:underline"
+          @click="sendTestNotification"
+        >
+          Envoyer une notification test (Reverb)
+        </button>
+        <p v-if="notifications.length === 0" class="text-sm text-slate-500">
+          Aucune notification. Cliquez sur le bouton ci‑dessus pour en recevoir une.
+        </p>
         <div
           v-for="(notification, nKey) in notifications"
           :key="nKey"
@@ -23,11 +33,11 @@
         >
           <div class="ml-2 overflow-hidden">
             <div class="flex items-center">
-              <a href="" class="mr-5 font-medium truncate">
+              <span class="mr-5 font-medium truncate">
                 {{ notification.title }}
-              </a>
+              </span>
               <div class="ml-auto text-xs text-slate-400 whitespace-nowrap">
-                {{ notification.timestamp }}
+                {{ formatTimestamp(notification.timestamp) }}
               </div>
             </div>
             <div class="w-full truncate text-slate-500 mt-0.5">
@@ -60,7 +70,7 @@
           <Lucide icon="HelpCircle" class="w-4 h-4 mr-2" /> Help
         </Menu.Item>
         <Menu.Divider class="bg-white/[0.08]" />
-        <Menu.Item class="hover:bg-white/5">
+        <Menu.Item class="hover:bg-white/5" @click="authStore.logoutApi()">
           <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> Logout
         </Menu.Item>
       </Menu.Items>
@@ -70,40 +80,56 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import Lucide from '@/components/Base/Lucide';
+import type { NotificationItem } from '@/composables/useNotifications';
+import { useSendTestNotification } from '@/composables/api/broadcasting/useSendTestNotification';
+import { useNotifications } from '@/composables/useNotifications';
+import useAuthStore from '@/stores/auth';
+import useTenantStore from '@/stores/tenant';
 import Breadcrumb from '@/components/Base/Breadcrumb';
 import { Menu, Popover } from '@/components/Base/Headless';
-import _ from 'lodash';
-import { useNotifications } from '@/composables/useNotifications';
+import Lucide from '@/components/Base/Lucide';
+import { computed, ref, watch } from 'vue';
 
-const searchDropdown = ref(false);
-const showSearchDropdown = () => {
-  searchDropdown.value = true;
-};
-const hideSearchDropdown = () => {
-  searchDropdown.value = false;
-};
-
+const authStore = useAuthStore();
+const tenantStore = useTenantStore();
 const user = computed(() => {
   const data = sessionStorage.getItem('user');
   return data ? JSON.parse(data) : null;
 });
 
-const notifications = ref<
-  { title: string; message: string; type: string; timestamp: Date }[]
->([])
+const notifications = ref<NotificationItem[]>([]);
+const hasSubscribed = ref(false);
 
-onMounted(() => {
-  if (user.value && user.value.id) {
-    // Destructure our composable here so it's called with a real user ID
-    const { notifications: incoming } = useNotifications(user.value.id)
-    // Mirror the incoming reactive array into our local one
-    notifications.value = incoming.value ?? incoming
-  } else {
-    console.warn('User not found in sessionStorage; skipping notifications subscription')
+watch(
+  () => [user.value?.id, tenantStore.getTenantUrl] as const,
+  ([userId, tenantUrl]) => {
+    if (hasSubscribed.value || !userId || !tenantUrl) return;
+    hasSubscribed.value = true;
+    try {
+      const { notifications: incoming } = useNotifications(userId);
+      watch(
+        incoming,
+        (val) => {
+          notifications.value = val ?? [];
+        },
+        { immediate: true, deep: true }
+      );
+    } catch {
+      hasSubscribed.value = false;
+    }
+  },
+  { immediate: true }
+);
+
+async function sendTestNotification() {
+  try {
+    await useSendTestNotification();
+  } catch (e) {
+    console.error('Test Reverb:', e);
   }
-})
+}
 
-console.log(notifications);
+function formatTimestamp(ts: Date): string {
+  return ts instanceof Date ? ts.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : String(ts);
+}
 </script>

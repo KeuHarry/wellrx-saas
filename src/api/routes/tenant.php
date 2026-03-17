@@ -25,7 +25,9 @@ use App\Http\Controllers\Api\Tenant\ShelfController;
 use App\Http\Controllers\Api\Tenant\SupplierController;
 use App\Http\Controllers\Api\Tenant\TaxController;
 use App\Http\Controllers\Api\Tenant\UserController;
+use App\Services\NotificationService;
 use Illuminate\Broadcasting\BroadcastController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 //use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
@@ -63,6 +65,15 @@ Route::group([
         Route::post('logout', [AuthenticationController::class, 'logout']);
 
         Route::post('broadcasting/auth', [BroadcastController::class, 'authenticate']);
+        Route::post('broadcasting/test', function (Request $request) {
+            NotificationService::send(
+                (int) $request->user()->id,
+                'Test Reverb',
+                'Si vous voyez ceci, la diffusion en temps réel fonctionne.',
+                'success'
+            );
+            return response()->json(['ok' => true]);
+        });
 
         //users
         Route::get('users/{userId}', [UserController::class, 'show']);
@@ -137,6 +148,7 @@ Route::group([
         Route::delete('products/{productId}', [ProductController::class, 'delete']);
         Route::get('in-stock', [ProductController::class, 'getProductsInStock']);
         Route::get('generic-products', [ProductController::class, 'getGenericProducts']);
+        Route::get('products/export/csv', [ProductController::class, 'exportProducts']);
 
         //Inventory
         Route::get('inventories/{inventoryId}', [InventoryController::class, 'show']);
@@ -205,6 +217,7 @@ Route::group([
         Route::get('receipt/sale/{saleId}/print', [PrintingController::class, 'printSaleReceipt']);
         Route::get('proforma/{entity}/{entityId}/print', [PrintingController::class, 'printProformaInvoice']);
         Route::get('receipt/sale-payment/{salePaymentId}/print', [PrintingController::class, 'printPartialPaymentReceipt']);
+        Route::get('labels/prescription/{prescriptionId}/print', [PrintingController::class, 'printPrescriptionLabels']);
 
         // Prescription
         Route::get('prescriptions/{prescriptionId}', [PrescriptionController::class, 'show']);

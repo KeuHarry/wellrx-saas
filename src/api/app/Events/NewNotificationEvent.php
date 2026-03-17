@@ -7,9 +7,14 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Diffusion immédiate (ShouldBroadcastNow) pour que le message parte vers Reverb
+ * sans passer par une queue. PrivateChannel = canal privé, l’auth se fait via broadcasting/auth.
+ */
 class NewNotificationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -30,6 +35,14 @@ class NewNotificationEvent implements ShouldBroadcast
     public function broadcastOn(): Channel
     {
         return new PrivateChannel('user.' . $this->data['userId']);
+    }
+
+    /**
+     * Nom de l'événement côté client (Echo.listen('NewNotificationEvent', ...)).
+     */
+    public function broadcastAs(): string
+    {
+        return 'NewNotificationEvent';
     }
 
     public function broadcastWith(): array

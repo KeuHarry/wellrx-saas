@@ -1,7 +1,7 @@
 <template>
   <h2 class="mt-10 text-lg font-medium intro-y">Prescriptions</h2>
   <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
+    <div class="relative z-10 flex flex-wrap items-center col-span-12 mt-2 intro-y sm:flex-nowrap">
       <Button @click="openAddEditPrescription()" variant="primary" class="mr-2 shadow-md">
         <span>Add Prescription</span>
       </Button>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <!-- BEGIN: Data List -->
-    <div class="col-span-12 overflow-auto intro-y lg:overflow-visible">
+    <div class="relative z-0 col-span-12 overflow-auto intro-y lg:overflow-visible">
       <Table class="border-spacing-y-[4px] border-separate -mt-2">
         <Table.Thead>
           <Table.Tr>
@@ -196,7 +196,7 @@ import { CREATED_AT, PRESCRIPTION_DATE } from '@/constants/properties';
 import { formatPrice, getSaleStatus } from '@/utils/helper';
 import Litepicker from '@/components/Base/Litepicker';
 import { dateFormat } from '@/constants/dateFormat';
-import { watchEffect } from 'vue';
+import { watch } from 'vue';
 import { prescriptionStatusList } from '@/constants/prescriptionStatusList';
 import usePrescriptionStore from '@/stores/prescription';
 import { PrescriptionFragment } from '@/composables/models/PrescriptionFragment';
@@ -304,6 +304,7 @@ const openDeletePrescriptionModal = (prescription: PrescriptionFragment) => {
 
 const deletePrescription = async (id: number) => {
   await prescriptionStore.deletePrescriptionApi(id);
+  await getPrescriptionsData();
 };
 
 const openAddEditPrescription = (prescriptionId: number | null = null) => {
@@ -320,8 +321,9 @@ const openAddEditPrescription = (prescriptionId: number | null = null) => {
   }
 };
 
-watchEffect(async () => {
-  await getPrescriptionsData();
+watch([prescriptionStatus, fromDate, toDate], () => {
+  currentPage.value = 1;
+  getPrescriptionsData();
 });
 
 onMounted(async () => {

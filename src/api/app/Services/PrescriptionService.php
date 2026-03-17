@@ -32,11 +32,21 @@ class PrescriptionService extends ApiService
         parent::__construct($prescriptionRepository);
     }
 
+    public function getById(int $id): Prescription
+    {
+        return Prescription::with([
+            'patient',
+            'prescriber',
+            'prescriptionItems.product',
+            'prescriptionItems.labelCodes',
+        ])->findOrFail($id);
+    }
+
     public function search(
         int $offset = 0,
         int $limit = 10,
         string $sortOrder = 'ASC',
-        string $sortBy = SortBy::CREATED_AT->value,
+        ?string $sortBy = null,
         ?string $search = null,
         ?int $status = null,
         ?string $fromDate = null,
@@ -83,11 +93,11 @@ class PrescriptionService extends ApiService
         });
         assert($prescription instanceof Prescription);
 
-        $this->notificationService->send(
-            $prescription->created_by, 
-            'New Prescription',
-            'Prescription ' . $prescription->prescription_code . ' has been created.' 
-        );
+        // $this->notificationService->send(
+        //     $prescription->created_by, 
+        //     'New Prescription',
+        //     'Prescription ' . $prescription->prescription_code . ' has been created.' 
+        // );
 
         return $prescription;
     }
@@ -95,8 +105,12 @@ class PrescriptionService extends ApiService
     public function updatePrescription(int $id, array $content): int
     {
         $prescriptionId = DB::transaction(function () use ($id, $content) {
+            $previousPrescription = Prescription::find($id);
+            $previousStatus = $previousPrescription ? (int) $previousPrescription->status : null;
+
             $prescriptionItems = $content['prescriptionItems'] ?? [];
             unset($content['prescriptionItems']);
+            $newStatus = isset($content['status']) ? (int) $content['status'] : null;
 
             $this->update($id, $content);
             $prescription = $this->getById($id);
@@ -107,7 +121,9 @@ class PrescriptionService extends ApiService
             $this->updatePrescriptionItems($prescription, $prescriptionItems);
             $prescription->refresh();
 
-            if (intval($content['status']) === PrescriptionStatus::COMPLETED->value) {
+            $isTransitioningToCompleted = $newStatus === PrescriptionStatus::COMPLETED->value
+                && $previousStatus !== PrescriptionStatus::COMPLETED->value;
+            if ($isTransitioningToCompleted) {
                 $this->createSaleForPrescription($prescription);
             }
 

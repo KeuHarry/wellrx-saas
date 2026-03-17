@@ -25,7 +25,8 @@ class InventoryService extends ApiService
         string $sortOrder = 'ASC',
         ?string $search = null,
         ?string $sortBy = null,
-        ?int $type = null
+        ?int $type = null,
+        ?int $productId = null
     ): Collection {
         return $this->inventoryRepository->search(
             $offset,
@@ -33,7 +34,8 @@ class InventoryService extends ApiService
             $sortOrder,
             $search,
             $sortBy,
-            $type
+            $type,
+            $productId
         );
     }
 
